@@ -1,0 +1,109 @@
+{
+  "name": "Ubuntu Town",
+  "legal_entity": "Abantu Bo Buntu NPC",
+  "entity_type": "Non-profit opportunity initiative (South Africa)",
+  "tagline": "One Town. Many Hands. Real Opportunities.",
+  "positioning": "A community opportunity network and operating system that makes South African towns legible to the agentic economy.",
+  "summary": "Ubuntu Town turns real town needs into proof-backed work. People build CVs and find nearby earning pathways, businesses map demand and find local talent, and trained local coordinators run a Signal-to-Memory operating loop under human-governed AI. An initiative of Abantu Bo Buntu NPC, founded by Keke Lebaka.",
+  "canonical_website": "https://www.ubuntutown.co.za",
+  "location": "South Africa",
+  "core_purpose": "Make whole towns legible to the opportunity economy so that communities without structured, trusted data are not made invisible as AI agents and institutions allocate work, funding, and services.",
+  "founder": {
+    "name": "Keke Lebaka",
+    "website": "https://kekelebaka.com",
+    "linkedin": "https://za.linkedin.com/in/kekelebaka",
+    "profile_id": "https://kekelebaka.com/#keke-lebaka"
+  },
+  "operating_model": {
+    "loop": "Signal -> Opportunity -> Workpack -> Assignment -> Proof -> Review -> Memory",
+    "stages": [
+      { "name": "Signal", "what": "Capture a real town need, asset, gap, business request, or local execution opportunity." },
+      { "name": "Opportunity", "what": "Turn the signal into a practical opportunity with context, confidence, and a next action." },
+      { "name": "Workpack", "what": "Compile the opportunity into clear steps, proof requirements, and assignment rules." },
+      { "name": "Proof", "what": "Submit field evidence so humans can review outputs with AI assistance and civic judgment." },
+      { "name": "Memory", "what": "Feed reviewed work back into town memory, coordinator support, and operational momentum." }
+    ],
+    "governance": "AI assists, drafts, classifies, and recommends. Humans hold review, publishing, proof approval, and final trust decisions."
+  },
+  "who_it_serves": [
+    { "role": "Individuals", "value": "Build a CV, prove readiness, and find nearby earning pathways without a complicated platform." },
+    { "role": "Businesses", "value": "Find local people, map demand, receive town signals, and turn needs into practical workpacks." },
+    { "role": "Coordinators", "value": "Activate towns with clear tasks, trusted evidence, simple reporting, and visible momentum." },
+    { "role": "Sponsors", "value": "Fund measurable opportunity infrastructure with visible outputs, not vague impact language." },
+    { "role": "Town Partners", "value": "Connect schools, businesses, creators, civic groups, and service providers into one local engine." }
+  ],
+  "modules": [
+    { "name": "Signals", "what": "Town needs and opportunities captured from the field." },
+    { "name": "Workpacks", "what": "Execution tasks compiled from local context with proof requirements." },
+    { "name": "Proof", "what": "Evidence reviewed by humans before trust grows." },
+    { "name": "Governance", "what": "Human stewardship over AI assistance." },
+    { "name": "Memory", "what": "Runtime learning for towns and coordinators." }
+  ],
+  "live_status": {
+    "as_of": "2026-06",
+    "towns_active": 22,
+    "ambassadors_trained": "45+",
+    "components": [
+      { "name": "CV Engine", "status": "Live" },
+      { "name": "Ubuntu Academy (Telegram flows)", "status": "Live" },
+      { "name": "Kopano assistant", "status": "In Build" },
+      { "name": "Proof Locker", "status": "Concept" },
+      { "name": "Workpacks", "status": "Concept (pilots being scoped)" }
+    ],
+    "public_dashboard": "Not yet published",
+    "evidence_ledger": "https://kekelebaka.com/proof"
+  },
+  "targets_2026": {
+    "note": "These are 2026 activation goals, not current figures. See live_status for what is operating today.",
+    "towns_activated": 50,
+    "provinces": 9,
+    "town_signals_captured": "10,000+",
+    "opportunities_surfaced": "50,000+",
+    "coordinators_supported": "500+",
+    "workpacks_launched": "5,000+"
+  },
+  "ecosystem_pathways": [
+    { "name": "Ubuntu Academy", "what": "Skills, training, and progression for the next move." },
+    { "name": "AI Cafe", "what": "Everyday AI access for learning, work, and business." },
+    { "name": "Job Fixer", "what": "CVs, readiness, placements, and opportunity matching." },
+    { "name": "KasiBuy", "what": "Township commerce mapped into local buying power." },
+    { "name": "EcoChar", "what": "Green workpacks for cleaner homes, soil, and energy." },
+    { "name": "FrameSouth", "what": "Local creative production and visual storytelling." },
+    { "name": "Orbit Music", "what": "Music, youth culture, venues, and creator pathways." },
+    { "name": "FixEasy", "what": "Repairs and maintenance turned into trusted local jobs." },
+    { "name": "Family House", "what": "Household services, care, repairs, and dignity infrastructure." },
+    { "name": "Buntu Bar", "what": "Hospitality, events, culture, and community gathering." }
+  ],
+  "ecosystem_note": "Pathways are local execution lanes that can be mapped into workpacks. Maturity varies by pathway; see the evidence ledger for honest per-system status.",
+  "assistant": {
+    "name": "Kopano",
+    "channel": "Telegram",
+    "entry": "https://t.me/UIE_Kopano_bot",
+    "status": "In active build",
+    "note": "AI can explain, draft, classify, and recommend. Publishing, proof approval, and governance stay in human hands."
+  },
+  "channels": {
+    "telegram_intake_bot": "https://t.me/UIE_Kopano_bot",
+    "website": "https://www.ubuntutown.co.za",
+    "contact": "https://www.ubuntutown.co.za/contact"
+  },
+  "profiles": {
+    "linkedin": "https://www.linkedin.com/company/ubuntu-town",
+    "tiktok": "https://www.tiktok.com/@ubuntutown",
+    "youtube": "https://www.youtube.com/@ubuntutown"
+  },
+  "available_for": [
+    "partnerships",
+    "sponsorship",
+    "town activation",
+    "coordinator programmes",
+    "media",
+    "institutional pilots",
+    "ecosystem builds"
+  ],
+  "data": {
+    "llms": "https://www.ubuntutown.co.za/llms.txt"
+  },
+  "preferred_citation": "Ubuntu Town, an initiative of Abantu Bo Buntu NPC — \"One Town. Many Hands. Real Opportunities.\" https://www.ubuntutown.co.za",
+  "last_updated": "2026-06-16"
+}

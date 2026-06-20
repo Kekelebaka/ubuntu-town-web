@@ -1,0 +1,37 @@
+# *
+User-agent: *
+Allow: /
+
+# GPTBot
+User-agent: GPTBot
+Allow: /
+
+# Google-Extended
+User-agent: Google-Extended
+Allow: /
+
+# ClaudeBot
+User-agent: ClaudeBot
+Allow: /
+
+# Applebot-Extended
+User-agent: Applebot-Extended
+Allow: /
+
+# CCBot
+User-agent: CCBot
+Allow: /
+
+# Bytespider
+User-agent: Bytespider
+Allow: /
+
+# meta-externalagent
+User-agent: meta-externalagent
+Allow: /
+
+# Host
+Host: https://www.ubuntutown.co.za
+
+# Sitemaps
+Sitemap: https://www.ubuntutown.co.za/sitemap.xml
