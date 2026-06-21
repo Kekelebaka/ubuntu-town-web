@@ -12,7 +12,7 @@ export function AboutHero() {
       </Badge>
       <T.H1 className="text-4xl sm:text-5xl md:text-6xl">
         An initiative of{' '}
-        <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-ubuntu-gold to-ubuntu-gold-dark bg-clip-text text-transparent">
           Abantu Bo Buntu NPC
         </span>
       </T.H1>

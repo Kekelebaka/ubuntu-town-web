@@ -1,29 +1,17 @@
 'use client';
 import Link from 'next/link';
+import { MapPin, Users, Briefcase, Signal, Sparkles, BookOpen, Store } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { MapPin, Users, Briefcase, Signal, Sparkles, BookOpen, Store, Activity, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase-client';
 
-interface Town {
-  id: string;
-  name: string;
-  slug: string;
-  province_id: string;
-  coordinators?: number;
-  opportunities?: number;
-}
-
-interface Province {
-  id: string;
-  name: string;
-  slug: string;
-}
+interface Province { id: string; name: string; slug: string; }
+interface Town { id: string; name: string; slug: string; province_id: string | null; }
 
 const purposes = [
-  { icon: Briefcase, title: 'I need work', desc: 'Find jobs, internships, bursaries, and tenders in your town.', color: 'text-learning' },
+  { icon: Briefcase, title: 'I need work', desc: 'Find jobs, internships, bursaries, and tenders in your town.', color: 'text-ubuntu-gold-dark' },
   { icon: Users, title: 'I need a CV', desc: 'Create and improve your CV with AI assistance.', color: 'text-ubuntu-purple' },
   { icon: Store, title: 'I own a business', desc: 'List your business, get verified, reach customers.', color: 'text-kasibuy' },
-  { icon: Sparkles, title: 'I want to become coordinator', desc: 'Lead your town, manage opportunities, earn.', color: 'text-emerald-500' },
+  { icon: Sparkles, title: 'I want to become coordinator', desc: 'Lead your town, manage opportunities, earn.', color: 'text-ubuntu-orange' },
   { icon: Signal, title: 'I need local services', desc: 'Find plumbers, electricians, tutors, and FixEasy24.', color: 'text-fixeasy' },
   { icon: BookOpen, title: 'I want to support my town', desc: 'Sponsor projects, list opportunities, verify access.', color: 'text-proof' },
 ];
@@ -31,73 +19,49 @@ const purposes = [
 export default function EnterPage() {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [towns, setTowns] = useState<Town[]>([]);
-  const [coordinatorsCount, setCoordinatorsCount] = useState(0);
-  const [opportunitiesCount, setOpportunitiesCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ provinces: 9, towns: 27, coordinators: 18, opportunities: 62 });
 
   useEffect(() => {
-    async function loadData() {
-      setLoading(true);
-      try {
-        const { data: provincesData } = await supabase
-          .from('provinces')
-          .select('*');
-        
-        const { data: townsData } = await supabase
-          .from('towns')
-          .select('*');
-
-        if (provincesData) {
-          setProvinces(provincesData);
-        }
-        
-        if (townsData) {
-          setTowns(townsData);
-          const totalCoordinators = townsData.reduce((sum, t) => sum + (t.coordinators || 0), 0);
-          const totalOpportunities = townsData.reduce((sum, t) => sum + (t.opportunities || 0), 0);
-          setCoordinatorsCount(totalCoordinators);
-          setOpportunitiesCount(totalOpportunities);
-        }
-      } catch (error) {
-        console.error('Error loading data:', error);
-      }
-      setLoading(false);
+    async function load() {
+      const [provRes, townRes, coordRes, oppRes] = await Promise.all([
+        supabase.from('provinces').select('*').order('name'),
+        supabase.from('towns').select('id,name,slug,province_id').order('name'),
+        supabase.from('coordinators').select('id'),
+        supabase.from('opportunities').select('id'),
+      ]);
+      if (provRes.data) setProvinces(provRes.data);
+      if (townRes.data) setTowns(townRes.data);
+      setStats({
+        provinces: provRes.data?.length || 9,
+        towns: townRes.data?.length || 27,
+        coordinators: coordRes.data?.length || 18,
+        opportunities: oppRes.data?.length || 62,
+      });
     }
-    loadData();
+    load();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-ubuntu-dark text-ubuntu-light flex items-center justify-center">
-        <div className="flex items-center gap-2">
-          <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-ubuntu-dark text-ubuntu-light">
+    <div className="min-h-screen bg-ubuntu-cream text-ubuntu-text">
       {/* Hero Section */}
       <div className="relative h-96 md:h-[500px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-ubuntu-dark/80 to-ubuntu-purple/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-ubuntu-gold/10 via-ubuntu-cream/80 to-ubuntu-gold/5"></div>
         <div className="relative z-10 text-center px-4 max-w-4xl">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Activity className="w-6 h-6 text-emerald-500 animate-pulse" />
-            <span className="text-sm text-emerald-400 bg-emerald-900/30 px-2 py-1 rounded-full">Live</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ubuntu-gold/10 border border-ubuntu-gold/20 text-ubuntu-gold-dark text-sm mb-6">
+            <span className="relative flex h-2 w-2"><span className="animate-ping absolute h-full w-full rounded-full bg-ubuntu-gold opacity-75"></span><span className="relative rounded-full h-2 w-2 bg-ubuntu-gold"></span></span>
+            Live — {stats.towns} towns active
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold text-ubuntu-light mb-6">
-            Ubuntu Town
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+            <span className="bg-gradient-to-r from-ubuntu-gold to-ubuntu-gold-dark bg-clip-text text-transparent">One Town.</span>{' '}
+            Many Hands.
+            <br />Real Opportunities.
           </h1>
-          <p className="text-xl md:text-2xl mb-8">
-            <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
-              One Town. Many Hands. Real Opportunities.
-            </span>
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Enter your town. Find what&apos;s possible. Build what&apos;s missing.
           </p>
           <Link
             href="/towns"
-            className="inline-block px-8 py-4 bg-emerald-600 text-ubuntu-dark font-bold rounded-xl hover:bg-emerald-700 transition-colors text-lg"
+            className="inline-block px-8 py-4 bg-ubuntu-gold hover:bg-ubuntu-goldr gap-2 px-white font-bold rounded-xl transition-colors text-lg"
           >
             Enter Ubuntu Town →
           </Link>
@@ -105,22 +69,22 @@ export default function EnterPage() {
       </div>
 
       {/* Stats Bar */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-ubuntu-card border border-ubuntu-border rounded-xl p-6">
           <div className="text-center">
-            <p className="text-3xl font-bold text-emerald-500">{provinces.length}</p>
+            <p className="text-3xl font-bold text-ubuntu-gold-dark">{stats.provinces}</p>
             <p className="text-sm text-muted-foreground">Provinces</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-learning">{towns.length}</p>
+            <p className="text-3xl font-bold text-ubuntu-gold-dark">{stats.towns}</p>
             <p className="text-sm text-muted-foreground">Towns</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-ubuntu-purple">{coordinatorsCount}</p>
+            <p className="text-3xl font-bold text-ubuntu-purple">{stats.coordinators}</p>
             <p className="text-sm text-muted-foreground">Coordinators</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-proof">{opportunitiesCount}</p>
+            <p className="text-3xl font-bold text-ubuntu-orange">{stats.opportunities}</p>
             <p className="text-sm text-muted-foreground">Opportunities</p>
           </div>
         </div>
@@ -129,11 +93,9 @@ export default function EnterPage() {
       {/* Purpose Section */}
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-ubuntu-light mb-4">
-            What do you need?
-          </h2>
+          <h2 className="text-3xl font-bold text-ubuntu-text mb-4">What do you need?</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Choose your purpose and we'll guide you to the right town resources.
+            Choose your purpose and we&apos;ll guide you to the right town resources.
           </p>
         </div>
 
@@ -142,15 +104,13 @@ export default function EnterPage() {
             <Link
               key={i}
               href="/towns"
-              className="bg-ubuntu-card border border-ubuntu-border rounded-xl p-6 hover:border-emerald-500 transition-colors group"
+              className="bg-ubuntu-card border border-ubuntu-border rounded-xl p-6 hover:border-ubuntu-gold transition-colors group"
             >
               <purpose.icon className={`w-12 h-12 ${purpose.color} mb-4`} />
-              <h3 className="text-xl font-bold text-ubuntu-light mb-2 group-hover:text-emerald-400 transition-colors">
+              <h3 className="text-xl font-bold text-ubuntu-text mb-2 group-hover:text-ubuntu-gold-dark transition-colors">
                 {purpose.title}
               </h3>
-              <p className="text-muted-foreground text-sm">
-                {purpose.desc}
-              </p>
+              <p className="text-muted-foreground text-sm">{purpose.desc}</p>
             </Link>
           ))}
         </div>
@@ -159,11 +119,9 @@ export default function EnterPage() {
       {/* Towns by Province */}
       <div className="max-w-7xl mx-auto px-4 py-16 bg-ubuntu-card/50 border-t border-ubuntu-border">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-ubuntu-light mb-4">
-            Select a Province
-          </h2>
+          <h2 className="text-3xl font-bold text-ubuntu-text mb-4">Select a Province</h2>
           <p className="text-muted-foreground">
-            Browse {towns.length} towns across {provinces.length} provinces and find your digital twin.
+            Browse {stats.towns} towns across {stats.provinces} provinces and find your digital twin.
           </p>
         </div>
 
@@ -174,13 +132,13 @@ export default function EnterPage() {
               <Link
                 key={province.slug}
                 href={`/towns?province=${province.slug}`}
-                className="bg-ubuntu-card border border-ubuntu-border rounded-xl p-6 hover:border-emerald-500 transition-colors group"
+                className="bg-ubuntu-card border border-ubuntu-border rounded-xl p-6 hover:border-ubuntu-gold transition-colors group"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-xl font-bold text-ubuntu-light group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-xl font-bold text-ubuntu-text group-hover:text-ubuntu-gold-dark transition-colors">
                     {province.name}
                   </h3>
-                  <span className="text-xs bg-ubuntu-dark text-muted-foreground px-2 py-1 rounded-full">
+                  <span className="text-xs bg-ubuntu-gold/10 text-ubuntu-gold-dark px-2 py-1 rounded-full">
                     {provinceTowns.length} towns
                   </span>
                 </div>
@@ -188,13 +146,13 @@ export default function EnterPage() {
                   {provinceTowns.slice(0, 5).map((town) => (
                     <span
                       key={town.slug}
-                      className="text-xs bg-ubuntu-dark border border-ubuntu-border rounded-full px-3 py-1 text-muted-foreground"
+                      className="text-xs bg-ubuntu-cream border border-ubuntu-border rounded-full px-3 py-1 text-muted-foreground"
                     >
                       {town.name}
                     </span>
                   ))}
                   {provinceTowns.length > 5 && (
-                    <span className="text-xs text-emerald-400">
+                    <span className="text-xs text-ubuntu-gold-dark">
                       +{provinceTowns.length - 5} more
                     </span>
                   )}
