@@ -34,7 +34,6 @@ export default function KopanoChatPage() {
 
   const getResponse = (userMessage: string): Message => {
     const lower = userMessage.toLowerCase();
-    
     if (lower.includes('opportunity') || lower.includes('job') || lower.includes('internship')) {
       return {
         id: Date.now().toString(),
@@ -44,8 +43,7 @@ export default function KopanoChatPage() {
         suggestions: ['Apply to SAPS program', 'Tell me about Tech Skills', 'Help me prepare application'],
       };
     }
-    
-    if (lower.includes('cv') || lower.includes('resume') || lower.includes('cv')) {
+    if (lower.includes('cv') || lower.includes('resume')) {
       return {
         id: Date.now().toString(),
         role: 'assistant',
@@ -54,7 +52,6 @@ export default function KopanoChatPage() {
         suggestions: ['Start with personal info', 'Write objective statement', 'Add education'],
       };
     }
-    
     if (lower.includes('signal') || lower.includes('report') || lower.includes('issue')) {
       return {
         id: Date.now().toString(),
@@ -64,7 +61,6 @@ export default function KopanoChatPage() {
         suggestions: ['Road damage', 'Safety concern', 'Water problem', 'Electricity issue'],
       };
     }
-    
     if (lower.includes('coordinator') || lower.includes('contact') || lower.includes('meet')) {
       return {
         id: Date.now().toString(),
@@ -74,7 +70,6 @@ export default function KopanoChatPage() {
         suggestions: ['Find coordinator in my town', 'How to become a coordinator', 'Contact coordinator'],
       };
     }
-    
     return {
       id: Date.now().toString(),
       role: 'assistant',
@@ -86,19 +81,15 @@ export default function KopanoChatPage() {
 
   const handleSend = async () => {
     if (!input.trim()) return;
-
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
       content: input,
       timestamp: new Date(),
     };
-
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsTyping(true);
-
-    // Simulate AI response delay
     setTimeout(() => {
       const response = getResponse(userMessage.content);
       setMessages(prev => [...prev, response]);
@@ -111,8 +102,7 @@ export default function KopanoChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ubuntu-dark text-ubuntu-light flex flex-col">
-      {/* Header */}
+    <div className="min-h-screen bg-ubuntu-cream text-ubuntu-text flex flex-col">
       <div className="border-b border-ubuntu-border bg-ubuntu-card/50 backdrop-blur">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
@@ -120,45 +110,33 @@ export default function KopanoChatPage() {
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-ubuntu-light">Kopano AI</h1>
+              <h1 className="text-xl font-bold text-ubuntu-text">Kopano AI</h1>
               <p className="text-sm text-muted-foreground">Your Ubuntu Town Assistant</p>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
           {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+            <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {message.role === 'assistant' && (
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-ubuntu-orange to-ubuntu-purple flex items-center justify-center flex-shrink-0">
                   <Bot className="w-5 h-5 text-white" />
                 </div>
               )}
-              
               <div className={`max-w-[80%] ${message.role === 'user' ? 'bg-ubuntu-purple/20 border-ubuntu-purple/30' : 'bg-ubuntu-card border-ubuntu-border'} border rounded-xl p-4`}>
                 <p className="whitespace-pre-wrap">{message.content}</p>
-                
                 {message.suggestions && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {message.suggestions.map((suggestion) => (
-                      <button
-                        key={suggestion}
-                        onClick={() => handleSuggestion(suggestion)}
-                        className="text-xs bg-ubuntu-dark border border-ubuntu-border rounded-full px-3 py-1 hover:border-ubuntu-orange hover:text-ubuntu-orange transition-colors"
-                      >
+                      <button key={suggestion} onClick={() => handleSuggestion(suggestion)} className="text-xs bg-ubuntu-cream border border-ubuntu-border rounded-full px-3 py-1 hover:border-ubuntu-orange hover:text-ubuntu-orange transition-colors">
                         {suggestion}
                       </button>
                     ))}
                   </div>
                 )}
               </div>
-              
               {message.role === 'user' && (
                 <div className="w-8 h-8 rounded-full bg-ubuntu-orange flex items-center justify-center flex-shrink-0">
                   <User className="w-5 h-5 text-white" />
@@ -166,7 +144,6 @@ export default function KopanoChatPage() {
               )}
             </div>
           ))}
-          
           {isTyping && (
             <div className="flex gap-3 justify-start">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-ubuntu-orange to-ubuntu-purple flex items-center justify-center">
@@ -181,12 +158,9 @@ export default function KopanoChatPage() {
               </div>
             </div>
           )}
-          
           <div ref={messagesEndRef} />
         </div>
       </div>
-
-      {/* Input */}
       <div className="border-t border-ubuntu-border bg-ubuntu-card/50 backdrop-blur">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex gap-2">
@@ -196,7 +170,7 @@ export default function KopanoChatPage() {
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Ask Kopano anything about Ubuntu Town..."
-              className="flex-1 bg-ubuntu-dark border border-ubuntu-border rounded-xl px-4 py-3 text-ubuntu-light placeholder:text-muted-foreground focus:outline-none focus:border-ubuntu-orange"
+              className="flex-1 bg-ubuntu-cream border border-ubuntu-border rounded-xl px-4 py-3 text-ubuntu-text placeholder:text-muted-foreground focus:outline-none focus:border-ubuntu-orange"
             />
             <button
               onClick={handleSend}

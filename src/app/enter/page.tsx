@@ -43,7 +43,6 @@ export default function EnterPage() {
 
   return (
     <div className="min-h-screen bg-ubuntu-cream text-ubuntu-text">
-      {/* Hero Section */}
       <div className="relative h-96 md:h-[500px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-ubuntu-gold/10 via-ubuntu-cream/80 to-ubuntu-gold/5"></div>
         <div className="relative z-10 text-center px-4 max-w-4xl">
@@ -61,14 +60,13 @@ export default function EnterPage() {
           </p>
           <Link
             href="/towns"
-            className="inline-block px-8 py-4 bg-ubuntu-gold hover:bg-ubuntu-goldr gap-2 px-white font-bold rounded-xl transition-colors text-lg"
+            className="inline-block px-8 py-4 bg-ubuntu-gold hover:bg-ubuntu-gold-dark text-white font-bold rounded-xl transition-colors text-lg"
           >
             Enter Ubuntu Town →
           </Link>
         </div>
       </div>
 
-      {/* Stats Bar */}
       <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-ubuntu-card border border-ubuntu-border rounded-xl p-6">
           <div className="text-center">
@@ -90,7 +88,6 @@ export default function EnterPage() {
         </div>
       </div>
 
-      {/* Purpose Section */}
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-ubuntu-text mb-4">What do you need?</h2>
@@ -98,63 +95,37 @@ export default function EnterPage() {
             Choose your purpose and we&apos;ll guide you to the right town resources.
           </p>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {purposes.map((purpose, i) => (
-            <Link
-              key={i}
-              href="/towns"
-              className="bg-ubuntu-card border border-ubuntu-border rounded-xl p-6 hover:border-ubuntu-gold transition-colors group"
-            >
+            <Link key={i} href="/towns" className="bg-ubuntu-card border border-ubuntu-border rounded-xl p-6 hover:border-ubuntu-gold transition-colors group">
               <purpose.icon className={`w-12 h-12 ${purpose.color} mb-4`} />
-              <h3 className="text-xl font-bold text-ubuntu-text mb-2 group-hover:text-ubuntu-gold-dark transition-colors">
-                {purpose.title}
-              </h3>
+              <h3 className="text-xl font-bold text-ubuntu-text mb-2 group-hover:text-ubuntu-gold-dark transition-colors">{purpose.title}</h3>
               <p className="text-muted-foreground text-sm">{purpose.desc}</p>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* Towns by Province */}
       <div className="max-w-7xl mx-auto px-4 py-16 bg-ubuntu-card/50 border-t border-ubuntu-border">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-ubuntu-text mb-4">Select a Province</h2>
-          <p className="text-muted-foreground">
-            Browse {stats.towns} towns across {stats.provinces} provinces and find your digital twin.
-          </p>
+          <p className="text-muted-foreground">Browse {stats.towns} towns across {stats.provinces} provinces and find your digital twin.</p>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {provinces.map((province) => {
             const provinceTowns = towns.filter(t => t.province_id === province.id);
             return (
-              <Link
-                key={province.slug}
-                href={`/towns?province=${province.slug}`}
-                className="bg-ubuntu-card border border-ubuntu-border rounded-xl p-6 hover:border-ubuntu-gold transition-colors group"
-              >
+              <Link key={province.slug} href={`/towns?province=${province.slug}`} className="bg-ubuntu-card border border-ubuntu-border rounded-xl p-6 hover:border-ubuntu-gold transition-colors group">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-xl font-bold text-ubuntu-text group-hover:text-ubuntu-gold-dark transition-colors">
-                    {province.name}
-                  </h3>
-                  <span className="text-xs bg-ubuntu-gold/10 text-ubuntu-gold-dark px-2 py-1 rounded-full">
-                    {provinceTowns.length} towns
-                  </span>
+                  <h3 className="text-xl font-bold text-ubuntu-text group-hover:text-ubuntu-gold-dark transition-colors">{province.name}</h3>
+                  <span className="text-xs bg-ubuntu-gold/10 text-ubuntu-gold-dark px-2 py-1 rounded-full">{provinceTowns.length} towns</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {provinceTowns.slice(0, 5).map((town) => (
-                    <span
-                      key={town.slug}
-                      className="text-xs bg-ubuntu-cream border border-ubuntu-border rounded-full px-3 py-1 text-muted-foreground"
-                    >
-                      {town.name}
-                    </span>
+                    <span key={town.slug} className="text-xs bg-ubuntu-cream border border-ubuntu-border rounded-full px-3 py-1 text-muted-foreground">{town.name}</span>
                   ))}
                   {provinceTowns.length > 5 && (
-                    <span className="text-xs text-ubuntu-gold-dark">
-                      +{provinceTowns.length - 5} more
-                    </span>
+                    <span className="text-xs text-ubuntu-gold-dark">+{provinceTowns.length - 5} more</span>
                   )}
                 </div>
               </Link>
