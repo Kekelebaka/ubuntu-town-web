@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import Link from 'next/link';
 import { MapPinned, Users, Briefcase, Sparkles } from 'lucide-react';
 import { getTownBySlug, getOpportunitiesForTown, getBusinessesForTown, getSignalsForTown, getCoordinatorsForTown, getMetricsForTown, getAllTowns, type Town } from '@/lib/mock-data';
