@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { MapPinned, Users, Briefcase, Sparkles } from 'lucide-react';
-import { getTownBySlug, getOpportunitiesForTown, getBusinessesForTown, getSignalsForTown, getCoordinatorsForTown, getMetricsForTown, type Town } from '@/lib/data-layer';
+import { getTownBySlug, getOpportunitiesForTown, getBusinessesForTown, getSignalsForTown, getCoordinatorsForTown, getMetricsForTown, type Town } from '@/lib/mock-data';
 
 export const runtime = 'edge'
 export const dynamic = 'force-dynamic';
