@@ -24,7 +24,7 @@ export default async function TownPage({ params }: { params: Promise<{ slug: str
   const businesses = await getBusinessesForTown(slug);
   const signals = await getSignalsForTown(slug);
   const coordinators = await getCoordinatorsForTown(slug);
-  const metrics = await getMetricsForTown(townNonNull.id);
+  const metrics = await getMetricsForTown(townNonNull);
 
   return (
     <div className="min-h-screen bg-ubuntu-cream text-ubuntu-text">
