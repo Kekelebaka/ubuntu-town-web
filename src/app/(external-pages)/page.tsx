@@ -114,7 +114,7 @@ export default function HomePage() {
           <h3 className="text-2xl font-extrabold mb-3">Make Your Town Visible</h3>
           <p className="text-ubuntu-text-muted mb-8 leading-relaxed max-w-[500px] mx-auto">Whether you&apos;re an entrepreneur, community leader, or someone mapping demand — Ubuntu Town needs people who build.</p>
           <div className="flex gap-3 justify-center flex-wrap">
-            <Link href="/sign-up" className="bg-ubuntu-gold hover:bg-ubuntu-gold-dark text-white px-8 py-3.5 rounded-xl font-bold text-sm transition-all">Apply to Become a Coordinator</Link>
+            <Link href="/apply" className="bg-ubuntu-gold hover:bg-ubuntu-gold-dark text-white px-8 py-3.5 rounded-xl font-bold text-sm transition-all">Apply to Become a Coordinator</Link>
             <Link href="/about" className="border border-ubuntu-border hover:border-ubuntu-gold text-ubuntu-text-muted hover:text-ubuntu-gold-dark px-8 py-3.5 rounded-xl font-semibold text-sm transition-all">About Ubuntu Town</Link>
           </div>
         </div>
