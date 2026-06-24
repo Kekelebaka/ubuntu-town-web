@@ -28,12 +28,15 @@ export default function TownDetail({ slug }: { slug: string }) {
   const [sigs, setSigs] = useState<Sig[]>([]);
   const [coords, setCoords] = useState<Coord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [tab, setTab] = useState('opps');
   const [expandedOpp, setExpandedOpp] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     async function load() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) setIsLoggedIn(true);
       const { data: t } = await supabase.from('towns').select('*').eq('slug', slug).single();
       if (!t) { setLoading(false); return; }
       setTown(t);
@@ -98,6 +101,18 @@ export default function TownDetail({ slug }: { slug: string }) {
         </div>
       </div>
 
+      {!isLoggedIn && (
+        <div className="max-w-5xl mx-auto px-4 mt-4 mb-2">
+          <div className="bg-ubuntu-gold/8 border border-ubuntu-gold/20 rounded-xl p-4 flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <p className="text-sm font-semibold text-ubuntu-text">Register to apply for opportunities in {town.name}</p>
+              <p className="text-xs text-ubuntu-text-muted">Save your CV, apply to opportunities, and track your applications.</p>
+            </div>
+            <Link href={`/sign-up?next=/town/${slug}`} className="bg-ubuntu-gold hover:bg-ubuntu-gold-dark text-white px-5 py-2 rounded-lg font-bold text-sm transition-all flex-shrink-0">Register Free →</Link>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-5xl mx-auto px-4 -mt-5 relative z-10">
         <div className="grid grid-cols-4 gap-2">
           {[
@@ -152,9 +167,9 @@ export default function TownDetail({ slug }: { slug: string }) {
                       </button>
                       {isExpanded && (
                         <div className="mt-2 p-3 bg-ubuntu-gold/[0.03] border border-ubuntu-gold/10 rounded-lg space-y-2">
-                          <input placeholder="Your name" className="w-full px-3 py-2 text-sm border border-ubuntu-border rounded-lg bg-ubuntu-card focus:border-ubuntu-gold outline-none" />
+                          <input placeholder="Your name" value={iName} onChange={(e)=>setIName(e.target.value)} className="w-full px-3 py-2 text-sm border border-ubuntu-border rounded-lg bg-ubuntu-card focus:border-ubuntu-gold outline-none" />
                           <input placeholder="Phone" className="w-full px-3 py-2 text-sm border border-ubuntu-border rounded-lg bg-ubuntu-card focus:border-ubuntu-gold outline-none" />
-                          <input placeholder="Email" className="w-full px-3 py-2 text-sm border border-ubuntu-border rounded-lg bg-ubuntu-card focus:border-ubuntu-gold outline-none" />
+                          <input placeholder="Email" value={iEmail} onChange={(e)=>setIEmail(e.target.value)} className="w-full px-3 py-2 text-sm border border-ubuntu-border rounded-lg bg-ubuntu-card focus:border-ubuntu-gold outline-none" />
                           <button onClick={() => submitInterest(o.id)} className="w-full py-2 bg-ubuntu-gold hover:bg-ubuntu-gold-dark text-white text-sm font-bold rounded-lg">Submit Interest →</button>
                         </div>
                       )}
