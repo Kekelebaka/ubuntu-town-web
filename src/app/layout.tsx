@@ -185,6 +185,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${robotoMono.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <script defer data-domain="enter.ubuntutown.co.za" src="https://plausible.io/js/script.js"></script>
         <link rel="canonical" href="https://www.ubuntutown.co.za" />
         <meta name="theme-color" content="#1a7f37" />
         <meta name="msapplication-TileColor" content="#1a7f37" />
