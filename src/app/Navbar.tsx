@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { MapPin, Sparkles, FileText } from 'lucide-react';
+import { Sparkles, FileText, Hammer } from 'lucide-react';
 
 export default function Navbar() {
   return (
@@ -15,19 +14,32 @@ export default function Navbar() {
             </div>
           </Link>
           <nav className="hidden md:flex items-center gap-5 text-sm font-semibold" style={{ color: 'rgba(31,22,32,0.6)' }}>
-            <Link href="/enter" className="transition-colors hover:text-[#b98114]">Enter</Link>
+            <Link href="/enter" className="transition-colors hover:text-[#b98114]">Enter OS</Link>
             <Link href="/towns" className="transition-colors hover:text-[#b98114]">Towns</Link>
-            <Link href="/chat" className="transition-colors hover:text-[#b98114] flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" />Kopano</Link>
+            <Link href="/chat" className="transition-colors hover:text-[#b98114] flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" />Kopano AI</Link>
             <Link href="/cv" className="transition-colors hover:text-[#b98114] flex items-center gap-1"><FileText className="w-3.5 h-3.5" />CV Builder</Link>
             <Link href="/about" className="transition-colors hover:text-[#b98114]">About</Link>
-            <Link href="/contact" className="transition-colors hover:text-[#b98114]">Contact</Link>
           </nav>
         </div>
         <div className="flex items-center gap-2">
           <Link href="/login" className="text-sm font-semibold px-3 py-1.5" style={{ color: 'rgba(31,22,32,0.7)' }}>Sign in</Link>
-          <a href="https://t.me/Ubuntu_Town_Ops_Intake_bot" target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all hover:-translate-y-0.5" style={{ background: '#eeb849', color: '#070509' }}>
-            Start on Telegram
+          <a
+            href="https://forge.ubuntutown.co.za"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5 border"
+            style={{ borderColor: 'rgba(238,184,73,0.5)', color: '#b98114', background: 'rgba(238,184,73,0.06)' }}
+          >
+            <Hammer className="w-3.5 h-3.5" />
+            Forge
           </a>
+          <Link
+            href="/enter"
+            className="hidden md:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all hover:-translate-y-0.5"
+            style={{ background: '#eeb849', color: '#070509' }}
+          >
+            Enter Town OS →
+          </Link>
         </div>
       </div>
     </header>
