@@ -23,22 +23,12 @@ export default function Navbar() {
         </div>
         <div className="flex items-center gap-2">
           <Link href="/login" className="text-sm font-semibold px-3 py-1.5" style={{ color: 'rgba(31,22,32,0.7)' }}>Sign in</Link>
-          <a
-            href="https://forge.ubuntutown.co.za"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5 border"
-            style={{ borderColor: 'rgba(238,184,73,0.5)', color: '#b98114', background: 'rgba(238,184,73,0.06)' }}
-          >
+          <a href="https://forge.ubuntutown.co.za" target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5 border" style={{ borderColor: 'rgba(238,184,73,0.5)', color: '#b98114', background: 'rgba(238,184,73,0.06)' }}>
             <Hammer className="w-3.5 h-3.5" />
             Forge
           </a>
-          <Link
-            href="/enter"
-            className="hidden md:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all hover:-translate-y-0.5"
-            style={{ background: '#eeb849', color: '#070509' }}
-          >
-            Enter Town OS →
+          <Link href="/enter" className="hidden md:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all hover:-translate-y-0.5" style={{ background: '#eeb849', color: '#070509' }}>
+            Enter Town OS
           </Link>
         </div>
       </div>
