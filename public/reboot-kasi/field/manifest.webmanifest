@@ -1,0 +1,67 @@
+{
+  "name": "Ubuntu Town OS — Coordinator",
+  "short_name": "Ubuntu Town OS",
+  "description": "The installable field operating system for Ubuntu Town coordinators — signals, workpacks, proof, memory. Works offline.",
+  "id": "/field/",
+  "start_url": "/field/?source=pwa",
+  "scope": "/field/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait-primary",
+  "background_color": "#FBF7F2",
+  "theme_color": "#6B1F66",
+  "lang": "en-ZA",
+  "dir": "ltr",
+  "categories": [
+    "productivity",
+    "business",
+    "government"
+  ],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Signal",
+      "short_name": "Signal",
+      "url": "/field/?action=signal",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Capture Proof",
+      "short_name": "Proof",
+      "url": "/field/?action=proof",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

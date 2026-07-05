@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ubuntu Town OS — The Township Opportunity Operating System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ===== UBUNTU TOWN REAL CI — LIGHT (default) ===== */
+    --canvas:#FBF7F2;
+    --canvas-raised:#FFFFFF;
+    --ink:#1F1329;
+    --sand:#F1E9DD;
+    --sand-2:#EBE0D0;
+    --line:#E7DFD2;
+    --clay:#6B1F66;            /* Ubuntu Purple — primary */
+    --clay-deep:#521350;
+    --gold:#F79412;            /* Ubuntu Orange — accent */
+    --amber:#FFB02E;
+    --green:#4F9E1E;
+    --pink:#F3B7D7;
+    --indigo:#3B2E8C;
+    --dark:#231A2E;
+    --dark-panel:#2E2340;
+    --paper-on-dark:#F4EFEA;
+    --muted:#6E6560;
+    --muted-on-dark:#B8AFC4;
+    --pad-x: 5.5%;
+
+    /* RGB triplets so existing rgba() overlays re-theme automatically */
+    --clay-rgb:107,31,102;
+    --gold-rgb:247,148,18;
+    --green-rgb:79,158,30;
+    --indigo-rgb:59,46,140;
+    --paper-rgb:244,239,234;
+    --canvas-rgb:251,247,242;
+    --dark-rgb:35,26,46;
+    --ink-rgb:31,19,41;
+  }
+
+  [data-theme="dark"]{
+    /* ===== UBUNTU TOWN REAL CI — DARK ===== */
+    --canvas:#150F1F;
+    --canvas-raised:#211830;
+    --ink:#F4EFEA;
+    --sand:#241B33;
+    --sand-2:#2C2140;
+    --line:#352A46;
+    --clay:#B266A8;
+    --clay-deep:#8A4682;
+    --gold:#FA9E23;
+    --amber:#FFBB2B;
+    --green:#7FD400;
+    --pink:#F3C1DA;
+    --indigo:#5B49B8;
+    --dark:#0E0916;
+    --dark-panel:#1A1327;
+    --paper-on-dark:#F4EFEA;
+    --muted:#B8AFC4;
+    --muted-on-dark:#B8AFC4;
+
+    --clay-rgb:178,102,168;
+    --gold-rgb:250,158,35;
+    --green-rgb:127,212,0;
+    --indigo-rgb:91,73,184;
+    --paper-rgb:244,239,234;
+    --canvas-rgb:21,15,31;
+    --dark-rgb:14,9,22;
+    --ink-rgb:244,239,234;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--canvas);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    transition:background-color .35s ease, color .35s ease;
+  }
+  body *{
+    transition-property:background-color, border-color;
+    transition-duration:.25s;
+    transition-timing-function:ease;
+  }
+  img,svg{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ul{margin:0;padding:0;list-style:none;}
+  h1,h2,h3,h4{
+    font-family:'Bricolage Grotesque',system-ui,sans-serif;
+    font-weight:800;
+    margin:0;
+    letter-spacing:-0.01em;
+    line-height:1.05;
+  }
+  p{margin:0;}
+  button{font-family:inherit;cursor:pointer;}
+
+  .mono{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+  }
+
+  /* Human tagline — used sparingly, once or twice */
+  .tagline-hand{
+    font-family:'Caveat',cursive;
+    font-weight:700;
+    font-size:1.5rem;
+    line-height:1.2;
+  }
+
+  /* "an initiative of Abantu Bobuntu" byline */
+  .parent-byline{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted-on-dark);
+    opacity:.85;
+  }
+  .parent-byline.on-light{color:var(--muted);}
+  .parent-byline b{color:inherit;font-weight:600;}
+
+  /* Theme toggle button */
+  .theme-toggle{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    width:auto;
+    height:38px;
+    padding:0 13px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--canvas-raised);
+    color:var(--ink);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    font-weight:600;
+    letter-spacing:.04em;
+    flex-shrink:0;
+    transition:background .2s ease, border-color .2s ease, color .2s ease, transform .15s ease;
+  }
+  .theme-toggle:hover{border-color:var(--clay);color:var(--clay-deep);transform:translateY(-1px);}
+
+  .section{
+    padding:64px var(--pad-x);
+  }
+  @media(min-width:900px){
+    .section{padding:96px var(--pad-x);}
+  }
+  .section-dark{
+    background:var(--dark);
+    color:var(--paper-on-dark);
+  }
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:.72rem;
+    padding:7px 14px;
+    border-radius:999px;
+    background:rgba(var(--clay-rgb),.1);
+    color:var(--clay-deep);
+    border:1px solid rgba(var(--clay-rgb),.25);
+  }
+  .eyebrow.gold{background:rgba(var(--gold-rgb),.14);color:#8a5407;border-color:rgba(var(--gold-rgb),.35);}
+  .eyebrow.green{background:rgba(var(--green-rgb),.1);color:var(--green);border-color:rgba(var(--green-rgb),.3);}
+  .eyebrow.on-dark{background:rgba(var(--clay-rgb),.18);color:var(--pink);border-color:rgba(var(--clay-rgb),.4);}
+  .eyebrow.on-dark.gold{background:rgba(var(--gold-rgb),.16);color:var(--gold);border-color:rgba(var(--gold-rgb),.4);}
+  .eyebrow.on-dark.green{background:rgba(var(--green-rgb),.2);color:#5FD8A2;border-color:rgba(var(--green-rgb),.45);}
+
+  /* ============ BUTTONS ============ */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:.98rem;
+    padding:15px 26px;
+    border-radius:14px;
+    border:1px solid transparent;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+    white-space:nowrap;
+  }
+  .btn-clay{
+    background:var(--clay);
+    color:#fff;
+    box-shadow:0 8px 22px -6px rgba(var(--clay-rgb),.55);
+  }
+  .btn-clay:hover{background:var(--clay-deep);transform:translateY(-1px);}
+  .btn-outline-dark{
+    border-color:rgba(var(--paper-rgb),.35);
+    color:var(--paper-on-dark);
+  }
+  .btn-outline-dark:hover{background:rgba(var(--paper-rgb),.08);}
+  .btn-outline-light{
+    border-color:var(--line);
+    color:var(--ink);
+    background:var(--canvas-raised);
+  }
+  .btn-outline-light:hover{border-color:var(--clay);color:var(--clay-deep);}
+  .btn-sm{padding:10px 18px;font-size:.85rem;border-radius:11px;}
+
+  /* ============ NAV ============ */
+  .nav{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(var(--canvas-rgb),.92);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1180px;
+    margin:0 auto;
+    padding:14px var(--pad-x);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+  }
+  .brand-mark{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:1.15rem;
+    color:var(--clay);
+    letter-spacing:-.02em;
+    white-space:nowrap;
+  }
+  .brand-mark b{color:var(--ink);}
+  .brand-sub{
+    display:none;
+    font-size:.65rem;
+  }
+  @media(min-width:640px){
+    .brand-sub{display:inline-block;color:var(--muted);}
+  }
+  .nav-links{
+    display:none;
+    align-items:center;
+    gap:26px;
+    font-size:.92rem;
+    font-weight:500;
+  }
+  .nav-links a{color:var(--ink);opacity:.78;transition:opacity .15s;}
+  .nav-links a:hover{opacity:1;color:var(--clay-deep);}
+  @media(min-width:980px){
+    .nav-links{display:flex;}
+  }
+  .nav-cta{flex-shrink:0;}
+  .nav-burger{
+    display:inline-flex;
+    width:40px;height:40px;
+    align-items:center;justify-content:center;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:var(--canvas-raised);
+    color:var(--ink);
+  }
+  @media(min-width:980px){
+    .nav-burger{display:none;}
+  }
+  .mobile-menu{
+    display:none;
+    flex-direction:column;
+    gap:2px;
+    padding:6px var(--pad-x) 18px;
+    border-bottom:1px solid var(--line);
+    background:var(--canvas);
+  }
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{
+    padding:12px 4px;
+    border-bottom:1px solid var(--line);
+    font-weight:500;
+    font-size:.98rem;
+  }
+  .mobile-menu a:last-child{border-bottom:none;}
+
+  /* ============ HERO ============ */
+  .hero{
+    background:
+      radial-gradient(ellipse 900px 500px at 85% -10%, rgba(var(--clay-rgb),.35), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 5% 110%, rgba(var(--indigo-rgb),.4), transparent 60%),
+      var(--dark);
+    color:var(--paper-on-dark);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(var(--paper-rgb),.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(var(--paper-rgb),.045) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(ellipse 900px 600px at 60% 0%, black, transparent 75%);
+    pointer-events:none;
+  }
+  .hero-inner{position:relative;z-index:1;}
+  .hero-top{
+    display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px;
+  }
+  .hero h1{
+    font-size:clamp(2.2rem, 8vw, 4.4rem);
+    color:#fff;
+    max-width:15ch;
+  }
+  .hero h1 .accent{color:var(--clay);}
+  .hero h1 .accent2{color:var(--gold);}
+  .hero-lede{
+    margin-top:22px;
+    font-size:clamp(1.05rem,2.4vw,1.32rem);
+    color:var(--muted-on-dark);
+    max-width:44ch;
+    font-weight:400;
+  }
+  .hero-lede b{color:var(--paper-on-dark);font-weight:600;}
+  .hero-ctas{
+    margin-top:34px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:center;
+  }
+  .hero-note{
+    font-size:.82rem;
+    color:var(--muted-on-dark);
+  }
+
+  /* OS loop chevron */
+  .os-loop{
+    margin-top:60px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .os-node{
+    position:relative;
+    flex:1 1 150px;
+    background:rgba(var(--paper-rgb),.05);
+    border:1px solid rgba(var(--paper-rgb),.15);
+    border-radius:14px;
+    padding:18px 18px 16px;
+    min-width:130px;
+  }
+  .os-node .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;
+    font-weight:600;
+    color:var(--gold);
+    letter-spacing:.1em;
+  }
+  .os-node .label{
+    margin-top:8px;
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:700;
+    font-size:1.02rem;
+    color:#fff;
+  }
+  .os-chevron{
+    display:none;
+    align-items:center;
+    color:var(--clay);
+    font-size:1.3rem;
+    font-weight:700;
+    padding:0 2px;
+  }
+  @media(min-width:760px){
+    .os-loop{flex-wrap:nowrap;align-items:stretch;}
+    .os-chevron{display:flex;}
+  }
+
+  /* Counters row */
+  .counters{
+    margin-top:52px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+    border-top:1px solid rgba(var(--paper-rgb),.15);
+    padding-top:32px;
+  }
+  @media(min-width:700px){
+    .counters{grid-template-columns:repeat(4,1fr);}
+  }
+  .counter-item .num{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:clamp(1.5rem,3.4vw,2.1rem);
+    color:var(--gold);
+    line-height:1;
+  }
+  .counter-item .lbl{
+    margin-top:8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    font-weight:500;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted-on-dark);
+  }
+
+  /* ============ HERO OS-FRAME LINE ============ */
+  .os-frame-line{
+    margin-top:14px;
+    font-size:clamp(.92rem,2.1vw,1.08rem);
+    color:var(--gold);
+    font-weight:600;
+    letter-spacing:.01em;
+  }
+
+  /* ============ 1 MILLION PEOPLE STRIP ============ */
+  .people-strip{
+    margin-top:26px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    background:rgba(var(--paper-rgb),.06);
+    border:1px solid rgba(var(--paper-rgb),.18);
+    border-radius:999px;
+    padding:9px 18px;
+  }
+  .people-strip .ps-num{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:1rem;
+    color:#fff;
+  }
+  .people-strip .ps-txt{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted-on-dark);
+  }
+
+  /* ============ OPPORTUNITY LITANY BAND ============ */
+  .litany-band{
+    background:var(--dark-panel);
+    color:var(--paper-on-dark);
+    position:relative;
+    overflow:hidden;
+    border-top:1px solid rgba(var(--clay-rgb),.4);
+    border-bottom:1px solid rgba(var(--clay-rgb),.4);
+  }
+  .litany-band::before{
+    content:"";
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse 800px 400px at 15% 0%, rgba(var(--clay-rgb),.22), transparent 65%);
+    pointer-events:none;
+  }
+  .litany-head{
+    position:relative;z-index:1;
+    text-align:center;
+    margin-bottom:40px;
+  }
+  .litany-head .lh-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.14em;
+    color:var(--gold);
+  }
+  .litany-band h2{
+    margin-top:14px;
+    font-size:clamp(2rem,7vw,3.6rem);
+    color:#fff;
+    max-width:20ch;
+    margin-left:auto;margin-right:auto;
+  }
+  .litany-band h2 .accent{color:var(--clay);}
+  .litany-list{
+    position:relative;z-index:1;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+  @media(min-width:760px){
+    .litany-list{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(min-width:1180px){
+    .litany-list{grid-template-columns:repeat(5,1fr);}
+  }
+  .litany-item{
+    background:rgba(var(--paper-rgb),.05);
+    border:1px solid rgba(var(--paper-rgb),.15);
+    border-radius:14px;
+    padding:20px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .litany-item .li-q{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--muted-on-dark);
+  }
+  .litany-item .li-a{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:700;
+    font-size:1.12rem;
+    color:#fff;
+  }
+  .litany-item .li-a .arrow{color:var(--clay);}
+
+  /* ============ REBOOT KASI BAND ============ */
+  .kasi-band{
+    background:
+      linear-gradient(115deg, var(--clay) 0%, var(--clay-deep) 100%);
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+  .kasi-band::after{
+    content:"";
+    position:absolute;
+    right:-8%;
+    top:-25%;
+    width:520px;height:520px;
+    background:radial-gradient(circle, rgba(255,255,255,.16), transparent 68%);
+    border-radius:50%;
+  }
+  .kasi-grid{
+    position:relative;z-index:1;
+    display:grid;
+    gap:36px;
+  }
+  @media(min-width:940px){
+    .kasi-grid{grid-template-columns:1.15fr .85fr;align-items:center;}
+  }
+  .kasi-eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:.72rem;
+    padding:7px 14px;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.35);
+  }
+  .kasi-band h2{
+    margin-top:20px;
+    font-size:clamp(1.9rem,5.4vw,3rem);
+    color:#fff;
+    max-width:14ch;
+  }
+  .kasi-band .kasi-copy{
+    margin-top:18px;
+    font-size:1.08rem;
+    max-width:52ch;
+    color:rgba(255,255,255,.92);
+  }
+  .kasi-tiers{
+    margin-top:26px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .kasi-tier{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:12px;
+    padding:12px 14px;
+    font-size:.9rem;
+  }
+  .kasi-tier .tier-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    font-size:.68rem;
+    letter-spacing:.08em;
+    background:rgba(255,255,255,.22);
+    padding:4px 8px;
+    border-radius:6px;
+    flex-shrink:0;
+    margin-top:1px;
+  }
+  .kasi-actions{
+    margin-top:30px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .btn-white{
+    background:#fff;
+    color:var(--clay-deep);
+    box-shadow:0 10px 24px -8px rgba(0,0,0,.35);
+  }
+  .btn-white:hover{background:#fbeaf7;transform:translateY(-1px);}
+  .btn-ghost-white{
+    border:1px solid rgba(255,255,255,.55);
+    color:#fff;
+  }
+  .btn-ghost-white:hover{background:rgba(255,255,255,.12);}
+
+  .kasi-counter-card{
+    position:relative;z-index:1;
+    background:rgba(var(--dark-rgb),.92);
+    border-radius:20px;
+    padding:34px 28px;
+    border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 24px 50px -18px rgba(0,0,0,.5);
+  }
+  .kasi-counter-card .kcc-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted-on-dark);
+  }
+  .kasi-counter-card .kcc-num{
+    margin-top:10px;
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:clamp(2.6rem,7vw,3.6rem);
+    color:var(--gold);
+    line-height:1;
+  }
+  .kasi-counter-card .kcc-sub{
+    margin-top:6px;
+    color:var(--paper-on-dark);
+    font-size:.95rem;
+    font-weight:500;
+  }
+  .kcc-bar-track{
+    margin-top:20px;
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.14);
+    overflow:hidden;
+  }
+  .kcc-bar-fill{
+    height:100%;
+    width:52%;
+    border-radius:999px;
+    background:linear-gradient(90deg, var(--gold), #fff2c9);
+  }
+  .kcc-bar-meta{
+    margin-top:10px;
+    display:flex;
+    justify-content:space-between;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    color:var(--muted-on-dark);
+    letter-spacing:.06em;
+  }
+  .kcc-deadline{
+    margin-top:22px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding-top:18px;
+    border-top:1px solid rgba(255,255,255,.14);
+    font-size:.85rem;
+    color:var(--paper-on-dark);
+  }
+  .kcc-flag{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    color:var(--green);
+    background:rgba(var(--green-rgb),.22);
+    border:1px solid rgba(var(--green-rgb),.4);
+    padding:3px 9px;
+    border-radius:7px;
+    font-size:.66rem;
+    letter-spacing:.08em;
+  }
+
+  /* ============ HOW OS WORKS ============ */
+  .section-head{
+    max-width:640px;
+    margin-bottom:44px;
+  }
+  .section-head h2{
+    margin-top:16px;
+    font-size:clamp(1.8rem,4.6vw,2.7rem);
+  }
+  .section-head p{
+    margin-top:16px;
+    font-size:1.08rem;
+    color:var(--muted);
+    max-width:56ch;
+  }
+
+  .loop-steps{
+    display:grid;
+    gap:16px;
+    grid-template-columns:1fr;
+  }
+  @media(min-width:720px){
+    .loop-steps{grid-template-columns:repeat(3,1fr);}
+  }
+  @media(min-width:1080px){
+    .loop-steps{grid-template-columns:repeat(5,1fr);}
+  }
+  .loop-step{
+    background:var(--sand);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 20px;
+    position:relative;
+  }
+  .loop-step .step-num{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    font-size:.72rem;
+    letter-spacing:.1em;
+    color:var(--clay);
+  }
+  .loop-step h4{
+    margin-top:12px;
+    font-size:1.16rem;
+  }
+  .loop-step p{
+    margin-top:10px;
+    font-size:.92rem;
+    color:var(--muted);
+  }
+  .loop-arrow-row{
+    display:none;
+    justify-content:center;
+    color:var(--clay);
+    font-weight:700;
+  }
+  @media(min-width:720px){
+    .loop-arrow-row{display:none;}
+  }
+
+  .kopano-note{
+    margin-top:34px;
+    background:var(--indigo);
+    color:#fff;
+    border-radius:18px;
+    padding:26px 26px;
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+  .kopano-note .kn-icon{
+    font-size:1.8rem;
+    flex-shrink:0;
+    background:rgba(255,255,255,.12);
+    border-radius:12px;
+    width:52px;height:52px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .kopano-note .kn-body{flex:1;min-width:220px;}
+  .kopano-note h4{
+    color:#fff;
+    font-size:1.1rem;
+  }
+  .kopano-note p{
+    margin-top:8px;
+    color:rgba(255,255,255,.82);
+    font-size:.95rem;
+    max-width:60ch;
+  }
+  .kopano-controls{
+    display:flex;
+    gap:10px;
+    margin-top:14px;
+    flex-wrap:wrap;
+  }
+  .kn-chip{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.06em;
+    padding:7px 12px;
+    border-radius:8px;
+    font-weight:600;
+  }
+  .kn-chip.suggest{background:rgba(var(--gold-rgb),.22);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.4);}
+  .kn-chip.approve{background:rgba(var(--green-rgb),.28);color:#6FE0A9;border:1px solid rgba(var(--green-rgb),.5);}
+
+  /* ============ ECOSYSTEM ============ */
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    margin-bottom:36px;
+    font-size:.85rem;
+    color:var(--muted);
+  }
+  .legend-item{display:flex;align-items:center;gap:8px;}
+  .legend-dot{
+    width:12px;height:12px;
+    border-radius:4px;
+    flex-shrink:0;
+  }
+  .legend-dot.original{background:var(--indigo);}
+  .legend-dot.kasi{background:var(--clay);}
+  .legend-dot.node{background:var(--gold);}
+
+  .cluster{
+    margin-bottom:44px;
+  }
+  .cluster-head{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+  }
+  .cluster-head h3{
+    font-size:1.4rem;
+  }
+  .cluster-count{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.08em;
+    color:var(--muted);
+    background:var(--sand);
+    border:1px solid var(--line);
+    padding:4px 10px;
+    border-radius:999px;
+  }
+  .pathway-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  @media(min-width:640px){
+    .pathway-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(min-width:1000px){
+    .pathway-grid{grid-template-columns:repeat(3,1fr);}
+  }
+  .pathway-card{
+    background:var(--canvas-raised);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px;
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    position:relative;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .pathway-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 28px -14px rgba(var(--ink-rgb),.22);
+    border-color:var(--clay);
+  }
+  .pathway-card.is-kasi{border-left:4px solid var(--clay);}
+  .pathway-card.is-original{border-left:4px solid var(--indigo);}
+  .pathway-card.is-node{
+    border-left:4px solid var(--gold);
+    background:linear-gradient(135deg, rgba(var(--gold-rgb),.12), var(--canvas-raised));
+  }
+  .pw-glyph{
+    flex-shrink:0;
+    width:46px;height:46px;
+    border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.35rem;
+    background:var(--sand);
+  }
+  .pathway-card.is-kasi .pw-glyph{background:rgba(var(--clay-rgb),.12);}
+  .pathway-card.is-original .pw-glyph{background:rgba(var(--indigo-rgb),.1);}
+  .pathway-card.is-node .pw-glyph{background:rgba(var(--gold-rgb),.2);}
+  .pw-body{min-width:0;flex:1;}
+  .pw-name{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:700;
+    font-size:1.02rem;
+  }
+  .pw-line{
+    margin-top:5px;
+    font-size:.86rem;
+    color:var(--muted);
+    line-height:1.4;
+  }
+  .pw-tag{
+    display:inline-block;
+    margin-top:9px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.62rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  /* Anchor / scale-engine card (e.g. HubWorks) */
+  .pathway-card.is-anchor{
+    grid-column:1/-1;
+    border-left:4px solid var(--indigo);
+    background:linear-gradient(120deg, var(--canvas-raised), var(--sand));
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .pathway-card.is-anchor .pw-glyph{
+    background:rgba(var(--indigo-rgb),.12);
+    width:56px;height:56px;
+    font-size:1.6rem;
+  }
+  .pathway-card.is-anchor .pw-name{font-size:1.2rem;}
+  .anchor-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.64rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    background:rgba(var(--indigo-rgb),.12);
+    color:var(--indigo);
+    border:1px solid rgba(var(--indigo-rgb),.3);
+    padding:4px 10px;
+    border-radius:999px;
+    margin-top:9px;
+  }
+  .anchor-seats{
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    font-size:.95rem;
+    color:var(--ink);
+    background:var(--canvas-raised);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 16px;
+  }
+  .anchor-seats .as-arrow{color:var(--clay);}
+
+  /* ============ SUB-BRAND REAL ACCENT COLOURS (Revision 3) ============ */
+  /* Each pathway card carries its own real brand hex on top of the is-kasi/is-original/is-anchor base. */
+  .pathway-card.brand-academy{border-left-color:#6B1F66;}
+  .pathway-card.brand-academy .pw-glyph{background:rgba(107,31,102,.14);color:#F79412;}
+
+  .pathway-card.brand-aicafe{border-left-color:#FE7602;}
+  .pathway-card.brand-aicafe .pw-glyph{background:rgba(254,118,2,.16);color:#000;}
+  .flagship-card.brand-aicafe{border-color:rgba(254,118,2,.5);}
+  .flagship-card.brand-aicafe .fh-glyph{background:rgba(254,118,2,.2);}
+  .flagship-card.brand-aicafe .flagship-badge{background:rgba(254,118,2,.22);color:#FE7602;border-color:rgba(254,118,2,.5);}
+  .flagship-card.brand-aicafe::after{background:radial-gradient(circle, rgba(254,118,2,.32), transparent 68%);}
+
+  .pathway-card.brand-kasibuy{border-left-color:#FE5E06;}
+  .pathway-card.brand-kasibuy .pw-glyph{background:rgba(254,94,6,.14);color:#68BE00;}
+
+  .pathway-card.brand-fixeasy{border-left-color:#063C6A;}
+  .pathway-card.brand-fixeasy .pw-glyph{background:rgba(6,60,106,.14);color:#F7AF0B;}
+
+  .pathway-card.brand-jobfixer{border-left-color:#F0A61F;}
+  .pathway-card.brand-jobfixer .pw-glyph{background:rgba(240,166,31,.16);color:#1F1F24;}
+
+  .pathway-card.brand-orbit{border-left-color:#992DD2;}
+  .pathway-card.brand-orbit .pw-glyph{background:rgba(153,45,210,.16);color:#151517;}
+
+  .pathway-card.brand-framesouth{border-left-color:#101010;}
+  .pathway-card.brand-framesouth .pw-glyph{background:rgba(131,131,126,.2);color:#101010;}
+
+  .pathway-card.brand-familyhouse{border-left-color:#101213;}
+  .pathway-card.brand-familyhouse .pw-glyph{background:rgba(180,154,130,.24);color:#101213;}
+
+  .pathway-card.brand-memorial{border-left-color:#FFBB2B;}
+  .pathway-card.brand-memorial .pw-glyph{background:rgba(255,187,43,.2);color:#101213;}
+
+  /* HubWorks / Ubuntu Finance / Ubuntu Health / The Plug — no supplied logo yet: master purple/orange */
+  .pathway-card.brand-master{border-left-color:#6B1F66;}
+  .pathway-card.brand-master .pw-glyph{background:rgba(107,31,102,.14);color:#F79412;}
+  .pathway-card.is-anchor.brand-master{border-left-color:#6B1F66;background:linear-gradient(120deg, var(--canvas-raised), rgba(107,31,102,.08));}
+  .pathway-card.is-anchor.brand-master .pw-glyph{background:rgba(107,31,102,.16);}
+  .pathway-card.is-anchor.brand-master .anchor-tag{background:rgba(107,31,102,.14);color:#6B1F66;border-color:rgba(107,31,102,.3);}
+  .pathway-card.is-anchor.brand-master .as-arrow{color:#F79412;}
+
+  /* AI Café flagship feature card */
+  .flagship-card{
+    margin-top:16px;
+    background:linear-gradient(135deg, var(--dark), var(--dark-panel));
+    color:var(--paper-on-dark);
+    border-radius:20px;
+    padding:32px 26px;
+    position:relative;
+    overflow:hidden;
+    border:1px solid rgba(var(--clay-rgb),.4);
+  }
+  .flagship-card::after{
+    content:"";
+    position:absolute;
+    right:-10%;top:-30%;
+    width:420px;height:420px;
+    background:radial-gradient(circle, rgba(var(--clay-rgb),.28), transparent 68%);
+    border-radius:50%;
+    pointer-events:none;
+  }
+  .flagship-top{
+    position:relative;z-index:1;
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    justify-content:space-between;
+  }
+  .flagship-head{display:flex;gap:14px;align-items:flex-start;min-width:240px;flex:1;}
+  .flagship-head .fh-glyph{
+    flex-shrink:0;
+    width:52px;height:52px;
+    border-radius:14px;
+    background:rgba(var(--gold-rgb),.18);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.6rem;
+  }
+  .flagship-head h3{color:#fff;font-size:1.5rem;}
+  .flagship-head p{
+    margin-top:8px;
+    color:var(--muted-on-dark);
+    font-size:.96rem;
+    max-width:44ch;
+  }
+  .flagship-badge{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    background:rgba(var(--gold-rgb),.2);
+    color:var(--gold);
+    border:1px solid rgba(var(--gold-rgb),.45);
+    padding:6px 12px;
+    border-radius:999px;
+    flex-shrink:0;
+  }
+  .flagship-offers{
+    position:relative;z-index:1;
+    margin-top:24px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+  @media(min-width:700px){
+    .flagship-offers{grid-template-columns:repeat(4,1fr);}
+  }
+  .flagship-offer{
+    background:rgba(var(--paper-rgb),.06);
+    border:1px solid rgba(var(--paper-rgb),.16);
+    border-radius:12px;
+    padding:13px 14px;
+    font-size:.86rem;
+    font-weight:600;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  /* 10 Opportunity Nodes feature strip inside ecosystem */
+  .node-feature{
+    margin-top:10px;
+    background:linear-gradient(120deg, var(--dark), var(--dark-panel));
+    color:var(--paper-on-dark);
+    border-radius:20px;
+    padding:32px 26px;
+    display:grid;
+    gap:26px;
+  }
+  @media(min-width:900px){
+    .node-feature{grid-template-columns:1fr 1fr;align-items:center;}
+  }
+  .node-feature h3{
+    color:#fff;
+    font-size:1.7rem;
+    margin-top:14px;
+  }
+  .node-feature p{
+    margin-top:14px;
+    color:var(--muted-on-dark);
+    font-size:1rem;
+    max-width:48ch;
+  }
+  .node-feature .wf-strong{color:var(--gold);font-weight:600;}
+  .node-rail-list{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+  .node-rail{
+    background:rgba(var(--paper-rgb),.06);
+    border:1px solid rgba(var(--paper-rgb),.15);
+    border-radius:12px;
+    padding:14px;
+    font-size:.86rem;
+  }
+  .node-rail .wr-glyph{font-size:1.2rem;margin-bottom:6px;}
+
+  /* ============ ROLES ============ */
+  .roles-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  @media(min-width:700px){
+    .roles-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(min-width:1080px){
+    .roles-grid{grid-template-columns:repeat(5,1fr);}
+  }
+  .role-card{
+    background:var(--sand);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 18px;
+  }
+  .role-card .role-glyph{
+    font-size:1.6rem;
+    width:48px;height:48px;
+    border-radius:12px;
+    background:var(--canvas-raised);
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid var(--line);
+  }
+  .role-card h4{
+    margin-top:14px;
+    font-size:1.05rem;
+  }
+  .role-card p{
+    margin-top:8px;
+    font-size:.88rem;
+    color:var(--muted);
+  }
+
+  /* ============ 10 OPPORTUNITY NODES (dedicated section) ============ */
+  .node-section{
+    background:var(--sand-2);
+  }
+  .node-grid{
+    display:grid;
+    gap:36px;
+  }
+  @media(min-width:940px){
+    .node-grid{grid-template-columns:1fr 1fr;align-items:center;}
+  }
+  .node-copy h2{
+    font-size:clamp(1.8rem,4.6vw,2.6rem);
+    margin-top:16px;
+  }
+  .node-copy p{
+    margin-top:16px;
+    font-size:1.06rem;
+    color:var(--muted);
+    max-width:52ch;
+  }
+  .node-not-bank{
+    margin-top:22px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:var(--dark);
+    color:var(--paper-on-dark);
+    padding:12px 18px;
+    border-radius:12px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.78rem;
+    letter-spacing:.04em;
+  }
+  .node-not-bank b{color:var(--gold);}
+  .node-uses{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+  }
+  .node-use-card{
+    background:var(--canvas-raised);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+  }
+  .node-use-card .wu-glyph{font-size:1.3rem;}
+  .node-use-card .wu-name{
+    margin-top:8px;
+    font-weight:700;
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-size:.98rem;
+  }
+  .node-use-card .wu-line{
+    margin-top:6px;
+    font-size:.82rem;
+    color:var(--muted);
+  }
+
+  /* 10 Opportunity Nodes — chip grid */
+  .node-simple{
+    text-align:center;
+  }
+  .node-simple .ws-eyebrow{
+    display:inline-flex;
+  }
+  .node-simple h2{
+    margin-top:18px;
+    font-size:clamp(2rem,6vw,3.2rem);
+    max-width:18ch;
+    margin-left:auto;margin-right:auto;
+  }
+  .node-simple h2 .ws-not{color:var(--muted);}
+  .big-words{
+    margin-top:44px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+  }
+  @media(min-width:760px){
+    .big-words{grid-template-columns:repeat(4,1fr);}
+  }
+  .big-word{
+    background:var(--canvas-raised);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:34px 16px;
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:clamp(1.6rem,4vw,2.1rem);
+    color:var(--clay);
+  }
+  .big-word:nth-child(2){color:var(--gold);}
+  .big-word:nth-child(3){color:var(--green);}
+  .big-word:nth-child(4){color:var(--indigo);}
+
+  /* ============ IMPACT DASHBOARD ============ */
+  .dash-section{
+    background:var(--dark);
+    color:var(--paper-on-dark);
+  }
+  .dash-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+  }
+  @media(min-width:720px){
+    .dash-grid{grid-template-columns:repeat(3,1fr);}
+  }
+  .dash-card{
+    background:rgba(var(--paper-rgb),.05);
+    border:1px solid rgba(var(--paper-rgb),.15);
+    border-radius:16px;
+    padding:24px 20px;
+  }
+  .dash-card .dc-num{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:clamp(1.7rem,4vw,2.3rem);
+    color:var(--gold);
+    line-height:1;
+  }
+  .dash-card.is-green .dc-num{color:var(--green);}
+  .dash-card .dc-lbl{
+    margin-top:10px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted-on-dark);
+  }
+  .dash-card.is-green{
+    border-color:rgba(var(--green-rgb),.45);
+    background:rgba(var(--green-rgb),.1);
+  }
+  .dash-card.is-green .dc-lbl{color:#8fe6bb;}
+
+  .dash-highlight{
+    margin-top:24px;
+    background:linear-gradient(115deg, var(--clay), var(--clay-deep));
+    border-radius:18px;
+    padding:26px 24px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .dash-highlight .dh-text{max-width:38ch;}
+  .dash-highlight .dh-text .dh-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.08em;
+    color:rgba(255,255,255,.85);
+  }
+  .dash-highlight .dh-text h4{
+    margin-top:8px;
+    color:#fff;
+    font-size:1.4rem;
+  }
+  .dash-highlight .dh-num{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:2.6rem;
+    color:#fff;
+    text-align:right;
+  }
+  .dash-highlight .dh-num span{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    font-size:.68rem;
+    letter-spacing:.06em;
+    color:rgba(255,255,255,.85);
+    margin-top:4px;
+  }
+
+  /* ============ UBUNTU INTELLIGENCE STRIP ============ */
+  .ui-strip{
+    background:var(--indigo);
+    color:#fff;
+    text-align:center;
+  }
+  .ui-strip .ui-mark{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:clamp(2rem,7vw,3.2rem);
+    color:var(--gold);
+    letter-spacing:-.01em;
+  }
+  .ui-strip h3{
+    margin-top:18px;
+    font-size:clamp(1.3rem,3.6vw,1.9rem);
+    color:#fff;
+    max-width:26ch;
+    margin-left:auto;margin-right:auto;
+  }
+  .ui-strip .ui-motto{
+    margin-top:16px;
+    font-size:1.05rem;
+    color:rgba(255,255,255,.78);
+    max-width:44ch;
+    margin-left:auto;margin-right:auto;
+  }
+  .ui-strip .ui-byline{
+    margin-top:22px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.6);
+  }
+
+  /* ============ FOOTER ============ */
+  .footer{
+    background:var(--dark);
+    color:var(--muted-on-dark);
+  }
+  .footer-top{
+    display:grid;
+    gap:36px;
+    padding-bottom:40px;
+    border-bottom:1px solid rgba(var(--paper-rgb),.14);
+  }
+  @media(min-width:900px){
+    .footer-top{grid-template-columns:1.4fr 1fr 1fr 1fr;}
+  }
+  .footer-brand .brand-mark{color:var(--clay);}
+  .footer-brand p{
+    margin-top:14px;
+    font-size:.92rem;
+    max-width:34ch;
+    color:var(--muted-on-dark);
+  }
+  .footer-col h5{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--paper-on-dark);
+    margin-bottom:14px;
+  }
+  .footer-col ul li{margin-bottom:10px;font-size:.9rem;}
+  .footer-col ul li a:hover{color:var(--gold);}
+  .footer-cta{
+    margin-top:16px;
+  }
+  .footer-bottom{
+    padding-top:28px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .footer-tagline{
+    font-size:.92rem;
+    color:var(--paper-on-dark);
+    max-width:40ch;
+    font-style:normal;
+  }
+  .socials{
+    display:flex;
+    gap:10px;
+  }
+  .social-btn{
+    width:40px;height:40px;
+    border-radius:11px;
+    background:rgba(var(--paper-rgb),.08);
+    border:1px solid rgba(var(--paper-rgb),.16);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.05rem;
+    transition:background .15s;
+  }
+  .social-btn:hover{background:rgba(var(--clay-rgb),.3);}
+  .footer-legal{
+    margin-top:22px;
+    font-size:.78rem;
+    color:var(--muted-on-dark);
+    opacity:.7;
+  }
+
+  /* status chips reused pattern (used within ecosystem legend context) */
+  .status-chip{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.62rem;
+    letter-spacing:.07em;
+    text-transform:uppercase;
+    padding:3px 9px;
+    border-radius:7px;
+    font-weight:600;
+  }
+  .status-chip.operating{background:rgba(var(--green-rgb),.15);color:var(--green);border:1px solid rgba(var(--green-rgb),.35);}
+
+  ::selection{background:var(--clay);color:#fff;}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a href="#top" class="brand" aria-label="Ubuntu Town OS home">
+      <svg viewBox="0 0 120 100" width="32" height="27" aria-hidden="true"><circle cx="30" cy="22" r="12" fill="none" stroke="var(--gold)" stroke-width="7"/><path d="M11 96 V56 a19 19 0 0 1 38 0 V96" fill="none" stroke="var(--clay)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><circle cx="30" cy="62" r="6.5" fill="none" stroke="var(--clay)" stroke-width="4.5"/><circle cx="82" cy="15" r="12" fill="none" stroke="var(--clay)" stroke-width="7"/><path d="M63 96 V49 a19 19 0 0 1 38 0 V96" fill="none" stroke="var(--clay)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><circle cx="82" cy="55" r="6.5" fill="none" stroke="var(--gold)" stroke-width="4.5"/></svg>
+      <span class="brand-mark">U &gt;&lt; I</span>
+      <span class="brand-sub mono">Ubuntu Town OS</span>
+    </a>
+    <div class="nav-links">
+      <a href="#os">The OS</a>
+      <a href="#ecosystem">Ecosystem</a>
+      <a href="#towns">Towns</a>
+      <a href="#reboot-kasi">Reboot Kasi</a>
+      <a href="#coordinators">Coordinators</a>
+      <a href="#partners">Partners</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="theme-toggle" id="themeBtn" type="button" aria-label="Toggle light and dark theme">☾ Dark</button>
+      <a class="btn btn-clay btn-sm nav-cta" href="#ecosystem">Get started</a>
+      <button class="nav-burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#os">The OS</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#towns">Towns</a>
+    <a href="#reboot-kasi">Reboot Kasi</a>
+    <a href="#coordinators">Coordinators</a>
+    <a href="#partners">Partners</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="section" style="padding-top:56px;padding-bottom:56px;">
+    <div class="wrap hero-inner">
+      <div class="hero-top">
+        <span class="eyebrow on-dark">🇿🇦 A civic operating system</span>
+        <span class="eyebrow on-dark green">● 50 towns operating</span>
+      </div>
+      <p class="parent-byline" style="margin-top:2px;">An initiative of <b>Abantu Bobuntu</b></p>
+      <p class="os-frame-line mono">The Township Opportunity Operating System</p>
+      <h1>When a town speaks,<br>the <span class="accent">OS</span> <span class="accent2">listens.</span></h1>
+      <p class="hero-lede">Ubuntu Town OS turns signals into <b>opportunities</b>, opportunities into <b>workpacks</b>, and workpacks into <b>proof</b> — governed by humans, accelerated by Kopano.</p>
+      <p class="tagline-hand" style="margin-top:16px;color:var(--gold);">"I am because we are."</p>
+      <div class="hero-ctas">
+        <a class="btn btn-clay" href="#ecosystem">Get started</a>
+        <a class="btn btn-outline-dark" href="#ecosystem">Explore the ecosystem →</a>
+      </div>
+      <p class="hero-note">No app to download. No data to burn. Just message us.</p>
+      <div class="people-strip"><span class="ps-num">1 Million People.</span><span class="ps-txt">1 Million Opportunities.</span></div>
+
+      <!-- OS LOOP -->
+      <div class="os-loop" id="os">
+        <div class="os-node"><div class="num">01 / SIGNAL</div><div class="label">Someone reports a need</div></div>
+        <div class="os-chevron">›</div>
+        <div class="os-node"><div class="num">02 / OPPORTUNITY</div><div class="label">Kopano scopes it</div></div>
+        <div class="os-chevron">›</div>
+        <div class="os-node"><div class="num">03 / WORKPACK</div><div class="label">A coordinator assigns it</div></div>
+        <div class="os-chevron">›</div>
+        <div class="os-node"><div class="num">04 / PROOF</div><div class="label">Work gets verified</div></div>
+        <div class="os-chevron">›</div>
+        <div class="os-node"><div class="num">05 / MEMORY</div><div class="label">The town remembers</div></div>
+      </div>
+
+      <!-- COUNTERS -->
+      <div class="counters">
+        <div class="counter-item"><div class="num">50</div><div class="lbl">Towns</div></div>
+        <div class="counter-item"><div class="num">9</div><div class="lbl">Provinces</div></div>
+        <div class="counter-item"><div class="num">500+</div><div class="lbl">Coordinators</div></div>
+        <div class="counter-item"><div class="num">5,000+</div><div class="lbl">Workpacks</div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ OPPORTUNITY LITANY BAND ============ -->
+<section class="section litany-band">
+  <div class="wrap">
+    <div class="litany-head">
+      <span class="lh-tag mono">The core truth</span>
+      <h2>WE DON'T LET <span class="accent">OPPORTUNITIES</span> DIE.</h2>
+    </div>
+    <div class="litany-list">
+      <div class="litany-item"><span class="li-q">Vacant shop?</span><span class="li-a"><span class="arrow">→</span> Convert it.</span></div>
+      <div class="litany-item"><span class="li-q">Unemployed youth?</span><span class="li-a"><span class="arrow">→</span> Train them.</span></div>
+      <div class="litany-item"><span class="li-q">No local commerce?</span><span class="li-a"><span class="arrow">→</span> Build it.</span></div>
+      <div class="litany-item"><span class="li-q">No digital jobs?</span><span class="li-a"><span class="arrow">→</span> Create them.</span></div>
+      <div class="litany-item"><span class="li-q">No access?</span><span class="li-a"><span class="arrow">→</span> Connect it.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REBOOT KASI BAND ============ -->
+<section class="section kasi-band" id="reboot-kasi">
+  <div class="wrap kasi-grid">
+    <div>
+      <span class="kasi-eyebrow mono">🔥 The Great Township Opportunity Reset</span>
+      <h2>Reboot Kasi:<br>the OS goes national.</h2>
+      <p class="kasi-copy">Reboot Kasi is the <b style="color:#fff;">first national deployment</b> of Ubuntu Town OS — nested under the umbrella campaign, The Great Township Opportunity Reset. Vacant and contested spaza shops sit empty across every township in South Africa. Reboot Kasi turns them into opportunity nodes — Opportunity Points, AI Café corners, Job Fixer kiosks, health screenings. Each conversion is a full Signal → Workpack → Proof → Memory cycle, run by a Township Opportunity Architect.</p>
+
+      <div class="kasi-tiers">
+        <div class="kasi-tier"><span class="tier-tag">TIER 1 · CONNECT</span><span>~300 shops become Opportunity Points + airtime/bill agents + KasiBuy pickup points. Fast, minimal capex.</span></div>
+        <div class="kasi-tier"><span class="tier-tag">TIER 2 · UPGRADE</span><span>~40 shops add an AI Café corner, Job Fixer kiosk, FixEasy desk, or Ubuntu Health screening.</span></div>
+        <div class="kasi-tier"><span class="tier-tag">TIER 3 · TRANSFORM</span><span>~12 full anchor nodes: 3 AI Café, 3 KasiBuy, 2 HubWorks, 2 EcoCycle, 2 Ubuntu Finance.</span></div>
+      </div>
+
+      <div class="kasi-actions">
+        <a class="btn btn-white" href="#ecosystem">See the command plan →</a>
+        <a class="btn btn-ghost-white" href="#ecosystem">Nominate a spaza</a>
+      </div>
+    </div>
+
+    <div class="kasi-counter-card">
+      <div class="kcc-label mono">Reboot Kasi · Conversion Counter</div>
+      <div class="kcc-num">156<span style="font-size:1.6rem;color:var(--paper-on-dark);font-weight:700;">&nbsp;/&nbsp;300+</span></div>
+      <div class="kcc-sub">conversions confirmed · 7 flagship transforms underway</div>
+      <div class="kcc-bar-track"><div class="kcc-bar-fill"></div></div>
+      <div class="kcc-bar-meta"><span>COMMITTED FLOOR: 150 + 6</span><span>52% TO TARGET</span></div>
+      <div class="kcc-deadline">
+        <span class="kcc-flag">DEADLINE</span>
+        <span>300+ conversions + 12 flagship transformations by <b style="color:#fff;">31 July 2026</b></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW THE OS WORKS ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow mono">How it runs</span>
+      <h2>Five steps. One loop. No signal gets lost.</h2>
+      <p>Every part of Ubuntu Town — every pathway, every Reboot Kasi node — runs through the same runtime. It's the operating system underneath the town, not a new app on top of it.</p>
+    </div>
+
+    <div class="loop-steps">
+      <div class="loop-step">
+        <div class="step-num mono">01 · Signal</div>
+        <h4>Someone speaks up</h4>
+        <p>A resident, business, or coordinator reaches out to Ubuntu Town — a need, an idea, a problem, a shop standing empty.</p>
+      </div>
+      <div class="loop-step">
+        <div class="step-num mono">02 · Opportunity</div>
+        <h4>Kopano scopes it</h4>
+        <p>Kopano reads the signal, classifies it, and drafts what the opportunity could look like — recommendation only, never final say.</p>
+      </div>
+      <div class="loop-step">
+        <div class="step-num mono">03 · Workpack</div>
+        <h4>A human assigns it</h4>
+        <p>A coordinator approves the scope and packages it into a workpack — the unit of real, paid, trackable work.</p>
+      </div>
+      <div class="loop-step">
+        <div class="step-num mono">04 · Proof</div>
+        <h4>Work gets verified</h4>
+        <p>Photos, sign-off, delivery confirmation — proof is captured at source, reviewed by a human before it counts.</p>
+      </div>
+      <div class="loop-step">
+        <div class="step-num mono">05 · Memory</div>
+        <h4>The town remembers</h4>
+        <p>Every proof becomes permanent town memory — reputation, history, and the evidence base for the next opportunity.</p>
+      </div>
+    </div>
+
+    <div class="kopano-note">
+      <div class="kn-icon">🤝</div>
+      <div class="kn-body">
+        <h4>Kopano is governed AI — always.</h4>
+        <p>Kopano can explain, draft, classify, and recommend at every step of the loop. It never publishes, approves, or governs alone. Humans keep the pen — coordinators, town partners, and sponsors review and sign off on everything that becomes memory.</p>
+        <div class="kopano-controls">
+          <span class="kn-chip suggest">🤖 KOPANO SUGGESTS</span>
+          <span class="kn-chip approve">✅ HUMAN APPROVES</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ECOSYSTEM ============ -->
+<section class="section" id="ecosystem" style="background:var(--sand);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow mono">The full ecosystem</span>
+      <h2>Every pathway. Nothing removed.</h2>
+      <p>Ten pathways built the town. Reboot Kasi is adding physical nodes to carry them into every spaza shop. All of it maps into the same loop — Signal to Memory.</p>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot original"></span> Original pathway</div>
+      <div class="legend-item"><span class="legend-dot kasi"></span> Reboot Kasi node</div>
+      <div class="legend-item"><span class="legend-dot node"></span> Opportunity node</div>
+    </div>
+
+    <!-- WORK & ENTERPRISE -->
+    <div class="cluster">
+      <div class="cluster-head">
+        <h3>💼 Work &amp; Enterprise</h3>
+        <span class="cluster-count mono">4 pathways</span>
+      </div>
+      <div class="pathway-grid">
+        <div class="pathway-card is-kasi is-anchor brand-master">
+          <div class="pw-glyph">🏭</div>
+          <div class="pw-body">
+            <div class="pw-name">HubWorks</div>
+            <div class="pw-line">Shared workspace and light manufacturing nodes anchoring Tier 3 conversions — the OS's scale engine for employment.</div>
+            <span class="pw-tag mono">Reboot Kasi node</span>
+            <span class="anchor-tag">⚙️ Anchor · Scale engine</span>
+          </div>
+          <div class="anchor-seats mono">10 <span class="as-arrow">→</span> 50 <span class="as-arrow">→</span> 200 seats</div>
+        </div>
+        <div class="pathway-card is-original brand-jobfixer">
+          <div class="pw-glyph">🛠️</div>
+          <div class="pw-body">
+            <div class="pw-name">Job Fixer</div>
+            <div class="pw-line">Matches skilled hands to real jobs — no CV gatekeeping, just proof of work.</div>
+            <span class="pw-tag mono">Original pathway</span>
+          </div>
+        </div>
+        <div class="pathway-card is-original brand-kasibuy">
+          <div class="pw-glyph">🛒</div>
+          <div class="pw-body">
+            <div class="pw-name">KasiBuy</div>
+            <div class="pw-line">Township commerce and delivery network — buy local, pick up local.</div>
+            <span class="pw-tag mono">Original pathway</span>
+          </div>
+        </div>
+        <div class="pathway-card is-kasi brand-master">
+          <div class="pw-glyph">💰</div>
+          <div class="pw-body">
+            <div class="pw-name">Ubuntu Finance</div>
+            <div class="pw-line">Financial literacy, tax, and bookkeeping support for node operators and hustlers.</div>
+            <span class="pw-tag mono">Reboot Kasi node</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEARN & CREATE -->
+    <div class="cluster">
+      <div class="cluster-head">
+        <h3>🎓 Learn &amp; Create</h3>
+        <span class="cluster-count mono">5 pathways</span>
+      </div>
+      <div class="pathway-grid">
+        <div class="pathway-card is-original brand-academy">
+          <div class="pw-glyph">📚</div>
+          <div class="pw-body">
+            <div class="pw-name">Ubuntu Academy</div>
+            <div class="pw-line">Skills that turn into workpacks — training built for the loop, not the classroom.</div>
+            <span class="pw-tag mono">Original pathway</span>
+          </div>
+        </div>
+        <div class="pathway-card is-kasi brand-master">
+          <div class="pw-glyph">🔌</div>
+          <div class="pw-body">
+            <div class="pw-name">The Plug</div>
+            <div class="pw-line">Device and connectivity access — the on-ramp for first-time smartphone owners.</div>
+            <span class="pw-tag mono">Reboot Kasi node</span>
+          </div>
+        </div>
+        <div class="pathway-card is-original brand-framesouth">
+          <div class="pw-glyph">🎬</div>
+          <div class="pw-body">
+            <div class="pw-name">FrameSouth</div>
+            <div class="pw-line">Visual storytelling and content production for local brands and creators.</div>
+            <span class="pw-tag mono">Original pathway</span>
+          </div>
+        </div>
+        <div class="pathway-card is-original brand-orbit">
+          <div class="pw-glyph">🎧</div>
+          <div class="pw-body">
+            <div class="pw-name">Orbit Music</div>
+            <div class="pw-line">Distribution and production pathway for township music talent.</div>
+            <span class="pw-tag mono">Original pathway</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI CAFÉ — FLAGSHIP NODE -->
+      <div class="flagship-card brand-aicafe">
+        <div class="flagship-top">
+          <div class="flagship-head">
+            <div class="fh-glyph">☕</div>
+            <div>
+              <h3>AI Café</h3>
+              <p>Community access points to learn and use AI tools — anchors 3 Tier 3 nodes and the single busiest doorway into the whole OS.</p>
+            </div>
+          </div>
+          <span class="flagship-badge mono">⭐ Flagship node</span>
+        </div>
+        <div class="flagship-offers">
+          <div class="flagship-offer">🤖 AI jobs</div>
+          <div class="flagship-offer">🎓 AI tutoring</div>
+          <div class="flagship-offer">💼 AI freelancing</div>
+          <div class="flagship-offer">🧑‍💻 AI agents</div>
+          <div class="flagship-offer">🏢 AI business services</div>
+          <div class="flagship-offer">📖 AI education</div>
+          <div class="flagship-offer">🛟 AI support</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE & CARE -->
+    <div class="cluster">
+      <div class="cluster-head">
+        <h3>🏡 Live &amp; Care</h3>
+        <span class="cluster-count mono">3 pathways</span>
+      </div>
+      <div class="pathway-grid">
+        <div class="pathway-card is-kasi brand-master">
+          <div class="pw-glyph">🩺</div>
+          <div class="pw-body">
+            <div class="pw-name">Ubuntu Health</div>
+            <div class="pw-line">Screening and basic care access embedded into Tier 2 and Tier 3 nodes.</div>
+            <span class="pw-tag mono">Reboot Kasi node</span>
+          </div>
+        </div>
+        <div class="pathway-card is-original brand-familyhouse">
+          <div class="pw-glyph">🏠</div>
+          <div class="pw-body">
+            <div class="pw-name">Family House</div>
+            <div class="pw-line">Household support and family services routed through the loop.</div>
+            <span class="pw-tag mono">Original pathway</span>
+          </div>
+        </div>
+        <div class="pathway-card is-original">
+          <div class="pw-glyph">🧭</div>
+          <div class="pw-body">
+            <div class="pw-name">Inside Town</div>
+            <div class="pw-line">Local news, updates, and town memory — what's actually happening, block by block.</div>
+            <span class="pw-tag mono">Original pathway</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAKE & REGENERATE -->
+    <div class="cluster">
+      <div class="cluster-head">
+        <h3>♻️ Make &amp; Regenerate</h3>
+        <span class="cluster-count mono">3 pathways</span>
+      </div>
+      <div class="pathway-grid">
+        <div class="pathway-card is-kasi">
+          <div class="pw-glyph">🔧</div>
+          <div class="pw-body">
+            <div class="pw-name">The Workshop</div>
+            <div class="pw-line">Maker and repair space anchoring hands-on Tier 3 transformation nodes.</div>
+            <span class="pw-tag mono">Reboot Kasi node</span>
+          </div>
+        </div>
+        <div class="pathway-card is-original">
+          <div class="pw-glyph">🌱</div>
+          <div class="pw-body">
+            <div class="pw-name">EcoCycle / EcoChar</div>
+            <div class="pw-line">Waste-to-value and clean energy pathway — 2 flagship EcoCycle nodes by target.</div>
+            <span class="pw-tag mono">Original + Reboot Kasi node</span>
+          </div>
+        </div>
+        <div class="pathway-card is-original brand-fixeasy">
+          <div class="pw-glyph">🔩</div>
+          <div class="pw-body">
+            <div class="pw-name">FixEasy / FixEasy24</div>
+            <div class="pw-line">On-demand repair pathway, now with 24-hour desks inside Tier 2 nodes.</div>
+            <span class="pw-tag mono">Original + Reboot Kasi node</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 Opportunity Nodes feature -->
+    <div class="node-feature">
+      <div>
+        <span class="eyebrow on-dark gold mono">One operating system</span>
+        <h3>10 Opportunity Nodes. 1 Operating System. Unlimited Possibilities.</h3>
+        <p>Ubuntu Town deploys opportunity infrastructure — ten nodes, one operating system. The money layer stays invisible. Every domain below runs through the same Signal → Workpack → Proof → Memory loop.</p>
+        <a class="btn btn-clay btn-sm" style="margin-top:18px;" href="#ecosystem">See all ten nodes →</a>
+      </div>
+      <div class="node-rail-list">
+        <div class="node-rail"><div class="wr-glyph">🤖</div>AI</div>
+        <div class="node-rail"><div class="wr-glyph">🛒</div>Commerce</div>
+        <div class="node-rail"><div class="wr-glyph">📚</div>Skills</div>
+        <div class="node-rail"><div class="wr-glyph">🩺</div>Health</div>
+        <div class="node-rail"><div class="wr-glyph">💼</div>Work</div>
+        <div class="node-rail"><div class="wr-glyph">💰</div>Finance</div>
+        <div class="node-rail"><div class="wr-glyph">🔧</div>Services</div>
+        <div class="node-rail"><div class="wr-glyph">🏭</div>Production</div>
+        <div class="node-rail"><div class="wr-glyph">♻️</div>Circular Economy</div>
+        <div class="node-rail"><div class="wr-glyph">🤝</div>Community</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROLES ============ -->
+<section class="section" id="towns">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow mono">Five ways in</span>
+      <h2>Whoever you are, there's a seat in the OS.</h2>
+      <p>Ubuntu Town OS is built around five role surfaces — each one plugs into the same Signal → Memory loop.</p>
+    </div>
+
+    <div class="roles-grid">
+      <div class="role-card">
+        <div class="role-glyph">🙋🏾</div>
+        <h4>Individuals</h4>
+        <p>Send a signal, take a workpack, build proof of work — no CV required to start.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-glyph">🏪</div>
+        <h4>Businesses</h4>
+        <p>Post real work, hire proven hands, and get discovered through KasiBuy and Job Fixer.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-glyph">🧑🏾‍💼</div>
+        <h4 id="coordinators">Coordinators</h4>
+        <p>Township Opportunity Architects who scope, assign, and approve every workpack in their zone.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-glyph">🤝🏾</div>
+        <h4 id="partners">Sponsors</h4>
+        <p>Fund a node, a tier, or a town — and see the proof and memory it generates in real time.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-glyph">🏛️</div>
+        <h4>Town Partners</h4>
+        <p>Municipalities and anchor institutions that govern rollout and co-sign what becomes memory.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 OPPORTUNITY NODES ============ -->
+<section class="section node-section node-simple" id="nodes">
+  <div class="wrap">
+    <span class="eyebrow mono ws-eyebrow">One operating system</span>
+    <h2>10 Opportunity Nodes.<br>1 Operating System.<br><span class="ws-not">Unlimited Possibilities.</span></h2>
+    <div class="big-words" style="grid-template-columns:repeat(2,1fr);">
+      <div class="big-word" style="font-size:clamp(1.05rem,2.4vw,1.3rem);">AI</div>
+      <div class="big-word" style="font-size:clamp(1.05rem,2.4vw,1.3rem);">Commerce</div>
+      <div class="big-word" style="font-size:clamp(1.05rem,2.4vw,1.3rem);">Skills</div>
+      <div class="big-word" style="font-size:clamp(1.05rem,2.4vw,1.3rem);">Health</div>
+      <div class="big-word" style="font-size:clamp(1.05rem,2.4vw,1.3rem);">Work</div>
+      <div class="big-word" style="font-size:clamp(1.05rem,2.4vw,1.3rem);">Finance</div>
+      <div class="big-word" style="font-size:clamp(1.05rem,2.4vw,1.3rem);">Services</div>
+      <div class="big-word" style="font-size:clamp(1.05rem,2.4vw,1.3rem);">Production</div>
+      <div class="big-word" style="font-size:clamp(1.05rem,2.4vw,1.3rem);">Circular Economy</div>
+      <div class="big-word" style="font-size:clamp(1.05rem,2.4vw,1.3rem);">Community</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IMPACT DASHBOARD ============ -->
+<section class="section dash-section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow on-dark mono">2026 activation targets</span>
+      <h2 style="color:#fff;">The numbers we're building toward.</h2>
+      <p style="color:var(--muted-on-dark);">Real targets, tracked in the open — the same dashboard coordinators and sponsors watch.</p>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-card"><div class="dc-num">50</div><div class="dc-lbl">Towns</div></div>
+      <div class="dash-card"><div class="dc-num">9</div><div class="dc-lbl">Provinces</div></div>
+      <div class="dash-card"><div class="dc-num">10,000+</div><div class="dc-lbl">Signals</div></div>
+      <div class="dash-card"><div class="dc-num">50,000+</div><div class="dc-lbl">Opportunities</div></div>
+      <div class="dash-card"><div class="dc-num">500+</div><div class="dc-lbl">Coordinators</div></div>
+      <div class="dash-card is-green"><div class="dc-num">5,000+</div><div class="dc-lbl">● Workpacks operating</div></div>
+    </div>
+
+    <div class="dash-highlight">
+      <div class="dh-text">
+        <span class="dh-tag mono">REBOOT KASI · END-JULY TARGET</span>
+        <h4>300+ conversions. 12 flagship transforms.</h4>
+      </div>
+      <div class="dh-num">31 Jul<span>DEADLINE 2026</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ UBUNTU INTELLIGENCE STRIP ============ -->
+<section class="section ui-strip">
+  <div class="wrap">
+    <div class="ui-mark">U &gt;&lt; I</div>
+    <h3>Bridging Human and Artificial Minds.</h3>
+    <p class="ui-motto">U &gt;&lt; I — the intelligence that flows between us. Not AI replacing judgment. AI and human judgment, in motion together.</p>
+    <div class="ui-byline">— Ubuntu Intelligence, Keke Lebaka</div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="section footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="brand-mark">U &gt;&lt; I</span>
+        <p class="parent-byline" style="margin-top:8px;">An initiative of <b>Abantu Bobuntu</b></p>
+        <p>Ubuntu Town OS is a civic operating system running across 50 South African towns — turning signals into opportunities, workpacks, proof, and memory.</p>
+        <div class="footer-cta">
+          <a class="btn btn-clay btn-sm" href="#ecosystem">Get started</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Towns &amp; Provinces</h5>
+        <ul>
+          <li><a href="#towns">50 towns live</a></li>
+          <li><a href="#towns">9 provinces</a></li>
+          <li><a href="#reboot-kasi">10 pilot Reboot Kasi towns</a></li>
+          <li><a href="#ecosystem">View the ecosystem</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Partners</h5>
+        <ul>
+          <li><a href="#partners">Town Partners</a></li>
+          <li><a href="#partners">Sponsors</a></li>
+          <li><a href="#coordinators">Coordinators</a></li>
+          <li><a href="#nodes">10 opportunity nodes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Invest</h5>
+        <ul>
+          <li><a href="#partners">Fund a node</a></li>
+          <li><a href="#partners">Fund a town</a></li>
+          <li><a href="#partners">Partner with us</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-tagline">"Signals become workpacks. Workpacks become proof. Proof becomes memory."</p>
+      <div class="socials">
+        <a class="social-btn" href="https://x.com/ubuntutown" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter">𝕏</a>
+        <a class="social-btn" href="https://instagram.com/ubuntutown" target="_blank" rel="noopener noreferrer" aria-label="Instagram">📷</a>
+        <a class="social-btn" href="https://www.linkedin.com/company/ubuntutown" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>
+      </div>
+    </div>
+    <p class="footer-legal">© 2026 Ubuntu Town OS · ubuntutown.co.za · Governed by humans. Accelerated by Kopano.</p>
+  </div>
+</footer>
+
+<script>
+  var burgerBtn = document.getElementById('burgerBtn');
+  var mobileMenu = document.getElementById('mobileMenu');
+  if (burgerBtn && mobileMenu) {
+    burgerBtn.addEventListener('click', function () {
+      var isOpen = mobileMenu.classList.toggle('open');
+      burgerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    mobileMenu.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        mobileMenu.classList.remove('open');
+        burgerBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+</script>
+
+<script>(function(){var K='ut-theme',r=document.documentElement;if(localStorage.getItem(K)==='dark')r.setAttribute('data-theme','dark');function L(){var b=document.getElementById('themeBtn');if(b)b.textContent=r.getAttribute('data-theme')==='dark'?'☀ Light':'☾ Dark';}function T(){if(r.getAttribute('data-theme')==='dark'){r.removeAttribute('data-theme');localStorage.setItem(K,'light');}else{r.setAttribute('data-theme','dark');localStorage.setItem(K,'dark');}L();}document.addEventListener('DOMContentLoaded',function(){var b=document.getElementById('themeBtn');if(b)b.addEventListener('click',T);L();});})();</script>
+
+</body>
+</html>

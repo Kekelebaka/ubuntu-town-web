@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ubuntu Town OS — Source-of-Truth Migration Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--canvas:#FBF7F2;--raised:#FFFFFF;--sand:#F1E9DD;--sand-2:#EBE0D0;--line:#E7DFD2;--ink:#1F1329;--muted:#6E6560;
+    --purple:#6B1F66;--purple-deep:#521350;--orange:#F79412;--amber:#FFB02E;--green:#4F9E1E;--pink:#F3B7D7;--red:#C0392B;
+    --dark:#231A2E;--dark-panel:#2E2340;--paper:#F4EFEA;--muted-dk:#B8AFC4;--shadow:0 8px 26px rgba(31,19,41,.09);}
+  [data-theme="dark"]{--canvas:#150F1F;--raised:#211830;--sand:#241B33;--sand-2:#2C2140;--line:#352A46;--ink:#F4EFEA;--muted:#B8AFC4;
+    --purple:#B266A8;--purple-deep:#8A4682;--orange:#FA9E23;--amber:#FFBB2B;--green:#7FD400;--pink:#F3C1DA;
+    --dark:#0E0916;--dark-panel:#1A1327;--paper:#F4EFEA;--muted-dk:#B8AFC4;--shadow:0 8px 26px rgba(0,0,0,.4);}
+  *{box-sizing:border-box;} html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--canvas);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 6vw;} @media(min-width:900px){.wrap{padding:0 44px;}}
+  h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;margin:0;letter-spacing:-.02em;line-height:1.04;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);display:inline-flex;gap:10px;align-items:center;}
+  .eyebrow::before{content:"";width:24px;height:2px;background:currentColor;}
+  .top{position:sticky;top:0;z-index:50;background:var(--dark);color:var(--paper);}
+  .top .in{max-width:1060px;margin:0 auto;padding:11px 6vw;display:flex;align-items:center;gap:10px;} @media(min-width:900px){.top .in{padding:11px 44px;}}
+  .top img{height:30px;} .top .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:.92rem;} .top .nm span{color:var(--orange);} .top .sp{flex:1;}
+  #themeBtn{font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(255,255,255,.1);color:var(--paper);border:1px solid rgba(255,255,255,.16);padding:7px 13px;border-radius:999px;cursor:pointer;}
+  .hero{background:var(--dark);color:var(--paper);padding:52px 0 44px;position:relative;overflow:hidden;}
+  .hero::after{content:"";position:absolute;right:-8%;top:-30%;width:55%;height:160%;background:radial-gradient(circle at center,rgba(247,148,18,.18),transparent 62%);}
+  .hero .wrap{position:relative;z-index:2;} .hero h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:800;color:#fff;max-width:22ch;}
+  .hero .sub{font-size:clamp(1.02rem,2.1vw,1.28rem);color:var(--muted-dk);max-width:60ch;margin-top:14px;}
+  .hero .meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px 18px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted-dk);}
+  .hero .meta span::before{content:"▹ ";color:var(--orange);}
+  section{padding:46px 0;border-top:1px solid var(--line);}
+  h2{font-size:clamp(1.5rem,3.6vw,2.3rem);font-weight:800;margin-bottom:8px;} h2 .o{color:var(--orange);} h2 .p{color:var(--purple);}
+  .lead{font-size:1.08rem;color:var(--muted);max-width:68ch;} h3{font-size:1.15rem;font-weight:700;color:var(--purple);margin:24px 0 8px;}
+  p{margin:0 0 13px;} strong{font-weight:700;} .em-o{color:var(--orange);font-weight:700;} .em-p{color:var(--purple-deep);font-weight:700;}
+  .flag{background:linear-gradient(120deg,rgba(192,57,43,.1),transparent);border:1px solid rgba(192,57,43,.3);border-left:4px solid var(--red);border-radius:12px;padding:16px 20px;margin:16px 0;}
+  .flag .t{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:6px;font-weight:600;}
+  .flag p{margin:0;font-size:14.5px;}
+  .two{display:grid;grid-template-columns:1fr;gap:14px;margin:14px 0;} @media(min-width:820px){.two{grid-template-columns:1fr 1fr;}}
+  .db{background:var(--raised);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);}
+  .db.d1{border-top:4px solid var(--orange);} .db.sb{border-top:4px solid var(--green);}
+  .db h4{font-size:1.1rem;} .db .tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);margin:3px 0 10px;}
+  .db ul{margin:0;padding-left:17px;} .db li{font-size:13.4px;color:var(--muted);margin-bottom:5px;} .db li b{color:var(--ink);}
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;margin:14px 0;background:var(--raised);}
+  table{border-collapse:collapse;width:100%;min-width:600px;font-size:13.2px;}
+  th,td{padding:10px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;}
+  thead th{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--purple-deep);background:var(--sand);}
+  tbody tr:last-child td{border-bottom:none;} td .mono{font-size:12px;color:var(--ink);}
+  .pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:6px;}
+  .pill.mig{background:rgba(247,148,18,.15);color:var(--orange);} .pill.new{background:rgba(107,31,102,.14);color:var(--purple);} .pill.keep{background:rgba(79,158,30,.16);color:var(--green);}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);}
+  .phase:last-child{border-bottom:none;} .phase .n{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.5rem;color:var(--orange);flex:none;width:46px;}
+  .phase .c h4{font-size:1.08rem;margin-bottom:4px;} .phase .c p{font-size:14px;color:var(--muted);margin:0 0 6px;} .phase .c .when{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--purple);text-transform:uppercase;letter-spacing:.05em;}
+  .chk{list-style:none;padding:0;margin:10px 0;} .chk li{background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:11px 15px 11px 40px;margin-bottom:8px;font-size:14px;position:relative;}
+  .chk li::before{content:"✓";position:absolute;left:14px;top:11px;color:var(--green);font-weight:700;}
+  .guard{list-style:none;padding:0;margin:10px 0;} .guard li{background:var(--sand);border:1px solid var(--line);border-radius:10px;padding:12px 15px;margin-bottom:8px;font-size:14px;} .guard li b{color:var(--red);}
+  footer{background:var(--dark);color:var(--muted-dk);padding:34px 0 58px;} footer .disc{font-size:11.5px;font-style:italic;margin-top:10px;max-width:80ch;}
+  a.inline{color:var(--purple);font-weight:600;} [data-theme="dark"] a.inline{color:var(--pink);}
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <img src="https://pub.hyperagent.com/api/published/pbf01KWMKRYMS_E8B4DSAYBX4AYTXB/2d51851a-429c-4abb-af4f-4f00b80b4942.png" alt="Ubuntu Town">
+    <div class="nm">Ubuntu Town <span>OS</span></div><div class="sp"></div>
+    <button id="themeBtn">☾ Dark</button>
+  </div></div>
+
+  <header class="hero"><div class="wrap">
+    <p class="eyebrow">Source-of-Truth Migration Plan · from GitHub audit</p>
+    <h1>One truth: consolidate onto <span style="color:var(--orange)">Supabase</span>.</h1>
+    <p class="sub">The audit found the real blocker: Ubuntu Town runs on <strong style="color:#fff">two disconnected databases</strong>. The plan is to make the Supabase Postgres project the single source of truth — for the web, the coordinator portal, and the field PWA.</p>
+    <div class="meta"><span>Repos: ubuntu-town-web · ubuntu-town-field-os</span><span>Owner: Kekelebaka</span><span>5 July 2026</span></div>
+  </div></header>
+
+  <div class="wrap">
+
+    <section id="finding">
+      <p class="eyebrow">01 — The finding</p>
+      <h2>Two databases, not one</h2>
+      <p class="lead">"Make Supabase the source of truth 100%" turned out to be bigger than a config tweak. The two repos run on <strong>two separate databases that don't talk to each other</strong>, and the operational heart of the system is currently on the <em>wrong</em> one for the goal.</p>
+      <div class="two">
+        <div class="db d1">
+          <h4>Cloudflare D1 &nbsp;<span class="pill mig">field OS</span></h4>
+          <div class="tag">ubuntu-town-field-os · db "ubuntu-town-db"</div>
+          <ul>
+            <li><b>Holds the richest data.</b> Full coordinator lifecycle (applications → reviews → coordinators → assignments → onboarding → mission events → reliability → escalations), <b>coordinator_proofs</b> (R2-backed), <b>town_heartbeat_scores</b>, <b>mobile_town_signals</b>, <b>mobile_opportunity_interests</b>, cases.</li>
+            <li>Sub-products in the same DB: <b>Family House</b> (fh_*), <b>KasiBuy</b> (kb_*); a separate Jeff bot DB (POPIA data-rights tables).</li>
+            <li>SQLite — no RLS, no enums, one FK. App-enforced integrity.</li>
+          </ul>
+        </div>
+        <div class="db sb">
+          <h4>Supabase Postgres &nbsp;<span class="pill keep">web</span></h4>
+          <div class="tag">ubuntu-town-web · @supabase/ssr · 14 tables</div>
+          <ul>
+            <li>provinces, towns, users, profiles, <b>coordinators</b> (earnings = a raw JSON blob, no ledger), town_signals, town_metrics, opportunities, businesses, services, access_points, events, stories, partner_offers, cv_profiles.</li>
+            <li>The public site is Supabase-native (SSR clients + typed schema) — but the authenticated <b>(app-pages)</b> shell is still starter boilerplate.</li>
+            <li>The proper place for the single source of truth — <em>once the field-OS data lands here.</em></li>
+          </ul>
+        </div>
+      </div>
+      <div class="flag">
+        <div class="t">Blocker · must clear first</div>
+        <p>The Supabase project <span class="mono">ubuntu-town-os (afiokbhuxfdacbsipoqk)</span> is <strong>PAUSED (INACTIVE)</strong> — it timed out on connect. A paused database cannot be a source of truth. Also: the project ref is <strong>not committed anywhere in the repos</strong> (referenced only via the <span class="mono">SUPABASE_PROJECT_REF</span> build env var) — confirm this is the right project before migrating.</p>
+      </div>
+      <div class="flag" style="border-left-color:var(--orange);background:linear-gradient(120deg,rgba(247,148,18,.1),transparent);border-color:rgba(247,148,18,.3);">
+        <div class="t" style="color:var(--orange)">Security · surfaced by the audit</div>
+        <p>A legacy Worker <span class="mono">ubuntuacademy.chiefops26.workers.dev</span> still exposes a broad <strong>unauthenticated</strong> <span class="mono">/api/*</span> surface (signals, proof, coordinators, towns, governance/roles…). It must be secured or retired as part of this migration.</p>
+      </div>
+    </section>
+
+    <section id="target">
+      <p class="eyebrow">02 — Target architecture</p>
+      <h2>Supabase as the single spine</h2>
+      <p class="lead">One Postgres source of truth. Three clients read/write it; D1 is retired (or demoted to an edge cache), and the unauthenticated Worker is decommissioned.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Layer</th><th>What it is</th><th>Talks to</th></tr></thead>
+        <tbody>
+          <tr><td><b>ubuntutown.co.za</b></td><td>Public front door — storytelling, recruitment, partners, town pages</td><td class="mono">Supabase (SSR)</td></tr>
+          <tr><td><b>enter.ubuntutown.co.za</b></td><td>Coordinator portal — pipeline, proof review, town score, CRM</td><td class="mono">Supabase (RLS)</td></tr>
+          <tr><td><b>Field PWA</b></td><td>Installable field app — signal → proof capture (offline queue)</td><td class="mono">Supabase + queue</td></tr>
+          <tr><td><b>Kopano / automation</b></td><td>Governed-AI assist + workers</td><td class="mono">Supabase (service role)</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:14px;color:var(--muted)">Channel note: coordinator coordination moves to the <strong>WhatsApp Ops group</strong> (Telegram parked). That's a messaging change, not a data change — all state still lands in Supabase.</p>
+    </section>
+
+    <section id="schema">
+      <p class="eyebrow">03 — Schema reconciliation</p>
+      <h2>What moves, merges, and gets built</h2>
+      <p class="lead">Map the D1 operational tables into Supabase, reconcile the overlaps, and add the tables that don't exist anywhere yet.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Domain</th><th>Today</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Coordinator lifecycle</td><td>D1 (11 tables) — rich</td><td><span class="pill mig">migrate</span> into Supabase; supersede the thin <span class="mono">coordinators</span> row</td></tr>
+          <tr><td>Applicants</td><td>D1 coordinator_applications + Mailchimp pack</td><td><span class="pill mig">migrate + import</span> the 46 applicants / 34 towns</td></tr>
+          <tr><td>Signals</td><td>D1 mobile_town_signals + Supabase town_signals</td><td><span class="pill mig">reconcile</span> to one <span class="mono">signals</span> table</td></tr>
+          <tr><td>Proof</td><td>D1 coordinator_proofs (R2)</td><td><span class="pill mig">migrate</span>; keep R2/Storage for media</td></tr>
+          <tr><td>Opportunity Points</td><td>D1 mobile_opportunity_interests</td><td><span class="pill new">new</span> <span class="mono">opportunity_points</span> (the converted-spaza entity)</td></tr>
+          <tr><td>Workpacks</td><td>Templates only (Worker)</td><td><span class="pill new">new</span> <span class="mono">workpack_instances</span> (signal→workpack→proof link)</td></tr>
+          <tr><td>Town score</td><td>3 forms (D1 heartbeat, frontend heatmap, town_metrics)</td><td><span class="pill new">unify</span> one <span class="mono">town_opportunity_score</span></td></tr>
+          <tr><td>Revenue-share</td><td>Nowhere (JSON blob)</td><td><span class="pill new">new</span> <span class="mono">payout_runs</span> + <span class="mono">payout_lines</span> ledger</td></tr>
+          <tr><td>Roles / governance</td><td>Stub (users.role, Worker)</td><td><span class="pill new">new</span> <span class="mono">roles</span> + <span class="mono">role_assignments</span> + RLS</td></tr>
+          <tr><td>Family House / KasiBuy</td><td>D1 fh_* / kb_*</td><td><span class="pill keep">phase 2</span> — migrate after the core</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="plan">
+      <p class="eyebrow">04 — The phased plan</p>
+      <h2>Seven phases — start the moment Supabase is resumed</h2>
+      <div class="phase"><div class="n">0</div><div class="c"><div class="when">Unblock · day 1</div><h4>Resume &amp; confirm the project</h4><p>Resume <span class="mono">ubuntu-town-os</span>, disable auto-pause (paid tier / keep-warm), confirm the ref matches <span class="mono">SUPABASE_PROJECT_REF</span>, set env vars. Then I inspect the live schema + RLS.</p></div></div>
+      <div class="phase"><div class="n">1</div><div class="c"><div class="when">Inventory · freeze</div><h4>Export &amp; snapshot D1</h4><p>Dump all D1 tables (field-os) + the Mailchimp pack. Freeze writes to the legacy Worker. Produce the definitive field-inventory.</p></div></div>
+      <div class="phase"><div class="n">2</div><div class="c"><div class="when">Model</div><h4>Extend the Supabase schema</h4><p>Migrations for the coordinator lifecycle, proofs, <span class="mono">opportunity_points</span>, <span class="mono">workpack_instances</span>, unified <span class="mono">town_opportunity_score</span>, the <span class="mono">payout_runs/lines</span> ledger, and <span class="mono">roles</span> + RLS on every table.</p></div></div>
+      <div class="phase"><div class="n">3</div><div class="c"><div class="when">ETL</div><h4>Migrate D1 → Supabase + import applicants</h4><p>Scripted, idempotent ETL (D1 SQLite → Postgres), media to Supabase Storage/R2. Import the 46 applicants + 34 towns into the coordinator + town tables. Reconcile duplicates.</p></div></div>
+      <div class="phase"><div class="n">4</div><div class="c"><div class="when">Repoint</div><h4>Wire the three clients to Supabase</h4><p>Web already Supabase-native — build out the <span class="mono">(app-pages)</span> coordinator portal. Wire the field PWA's offline queue to real Supabase writes (replace the "mark synced" stub). Kopano/workers use the service role.</p></div></div>
+      <div class="phase"><div class="n">5</div><div class="c"><div class="when">Retire</div><h4>Decommission D1 + the open Worker</h4><p>Secure or shut the unauthenticated Worker API; demote D1 to edge cache or retire it. One write path: Supabase.</p></div></div>
+      <div class="phase"><div class="n">6</div><div class="c"><div class="when">Verify</div><h4>Cutover &amp; parity checks</h4><p>Row-count + spot-check parity, RLS tests, the mock-fallback disabled in prod, Lighthouse/PWA green. Sign-off = the definition of done below.</p></div></div>
+    </section>
+
+    <section id="parity">
+      <p class="eyebrow">05 — "Integrate everything from the old one"</p>
+      <h2>Feature-parity checklist</h2>
+      <ul class="chk">
+        <li>Coordinator applications, reviews, onboarding, reliability, escalations — migrated &amp; visible in the portal</li>
+        <li>Signals feed (mobile + web) — one reconciled table, powering the field PWA capture</li>
+        <li>Proof capture with media (R2/Storage) + human review (Kopano recommends, human approves)</li>
+        <li>Town Opportunity Score — one unified, persisted model (replaces the three competing ones)</li>
+        <li>Opportunity Points (converted spazas) + workpack instances linked signal→workpack→proof→memory</li>
+        <li>Revenue-share payouts — a real ledger, feeding the coordinator economics model</li>
+        <li>Roles &amp; governance — real table + RLS gating the coordinator portal</li>
+        <li>Family House &amp; KasiBuy — migrated in phase 2 (kept, not lost)</li>
+      </ul>
+    </section>
+
+    <section id="guard">
+      <p class="eyebrow">06 — Guardrails</p>
+      <h2>Do not skip these</h2>
+      <ul class="guard">
+        <li><b>RLS on every table</b> before any real coordinator data lands — the generated types show no policies; assume none exist yet.</li>
+        <li><b>Kill the unauthenticated Worker API</b> — it currently exposes coordinators, proof, governance/roles publicly.</li>
+        <li><b>POPIA</b> — the Jeff data-rights tables show the intent; carry consent + data-rights into the unified schema.</li>
+        <li><b>Disable the mock-data fallback</b> in production (web silently serves mock data when creds are missing).</li>
+        <li><b>Turn off <span class="mono">typescript.ignoreBuildErrors</span></b> on the web build before cutover.</li>
+        <li><b>Secrets stay in Cloudflare/Supabase</b> — never commit the project ref or service-role key (per the repo's own AGENTS.md).</li>
+        <li><b>No deploy without owner approval</b> — AGENTS.md rule; this plan is executed on your go, not autonomously.</li>
+      </ul>
+    </section>
+
+    <section id="dod">
+      <p class="eyebrow">07 — Definition of done</p>
+      <h2>What "Supabase 100%" means</h2>
+      <ul class="chk">
+        <li>Every client (web, portal, PWA, workers) reads/writes <strong>only</strong> Supabase</li>
+        <li>D1 holds no unique source data; the legacy Worker is secured or gone</li>
+        <li>RLS enforced; no public data leaks; mock fallback off in prod</li>
+        <li>The 46 applicants + 34 towns + all field-OS ops data live in Supabase</li>
+        <li>Payout ledger + unified town score + workpack instances exist and are populated</li>
+        <li>Parity verified (row counts + spot checks); rollback snapshot retained</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer><div class="wrap">
+    <p style="font-family:'Caveat',cursive;color:var(--orange);font-size:1.4rem;margin:0;">Signals become workpacks. Workpacks become proof. Proof becomes memory — in one place.</p>
+    <p class="disc">Based on a read-only audit of the ubuntu-town-web and ubuntu-town-field-os GitHub repos (5 July 2026). Schema details from committed migrations and generated types; the live Supabase schema/RLS must be confirmed once the project is resumed. Execution is gated on owner approval and the project being active. No code was changed and nothing was deployed.</p>
+  </div></footer>
+<script>
+(function(){var K='ut-theme',r=document.documentElement;if(localStorage.getItem(K)==='dark')r.setAttribute('data-theme','dark');
+function L(){var b=document.getElementById('themeBtn');if(b)b.textContent=r.getAttribute('data-theme')==='dark'?'☀ Light':'☾ Dark';}
+document.getElementById('themeBtn').onclick=function(){if(r.getAttribute('data-theme')==='dark'){r.removeAttribute('data-theme');localStorage.setItem(K,'light');}else{r.setAttribute('data-theme','dark');localStorage.setItem(K,'dark');}L();};L();})();
+</script>
+</body>
+</html>
