@@ -12,7 +12,7 @@
     "build": "next build && next-sitemap --config next-sitemap.config.cjs",
     "lint": "npx oxlint src/",
     "typecheck": "tsc --noEmit",
-    "generate:types": "export $(cat .env.local | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts"
+    "generate:types": "export $(cat .env.local | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public,uto > src/lib/database.types.ts"
   },
   "dependencies": {
     "@effect/platform": "^0.96.1",
