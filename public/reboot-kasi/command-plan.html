@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reboot Kasi × Ubuntu Town OS — Cross-Platform Rollout & Conversion Command Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#FBF7F2;--canvas-raised:#FFFFFF;--ink:#1F1329;--sand:#F1E9DD;--sand-2:#EBE0D0;--line:#E7DFD2;
+    --clay:#6B1F66;--clay-deep:#521350;--gold:#F79412;--green:#4F9E1E;--indigo:#3B2E8C;
+    --dark:#231A2E;--dark-panel:#2E2340;--paper:#F4EFEA;--muted:#6E6560;--muted-dk:#B8AFC4;
+    --pink:#F3B7D7;--amber:#FFB02E;
+    --maxw:1120px;
+  }
+  [data-theme="dark"]{
+    --canvas:#150F1F;--canvas-raised:#211830;--sand:#241B33;--sand-2:#2C2140;--line:#352A46;
+    --ink:#F4EFEA;--muted:#B8AFC4;
+    --clay:#B266A8;--clay-deep:#8A4682;--gold:#FA9E23;--green:#7FD400;--pink:#F3C1DA;
+    --dark:#0E0916;--dark-panel:#1A1327;--paper:#F4EFEA;--muted-dk:#B8AFC4;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--canvas);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;transition:background-color .25s ease,color .25s ease;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 6vw;}
+  @media(min-width:900px){.wrap{padding:0 46px;}}
+  h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-0.02em;line-height:1.02;margin:0;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:var(--clay);display:inline-flex;align-items:center;gap:10px;}
+  .eyebrow.green{color:var(--green);}
+  .eyebrow::before{content:"";width:26px;height:2px;background:currentColor;display:inline-block;}
+
+  /* top bar */
+  .top{position:sticky;top:0;z-index:60;background:rgba(14,9,22,0.94);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08);}
+  .top .in{max-width:var(--maxw);margin:0 auto;padding:12px 6vw;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+  @media(min-width:900px){.top .in{padding:12px 46px;}}
+  .brand{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--paper);display:flex;align-items:center;gap:9px;}
+  .brand b{color:var(--gold);}
+  .brand .uxi{color:var(--clay);font-weight:600;}
+  .brand .mark{display:inline-flex;flex-shrink:0;}
+  .top-right{display:flex;align-items:center;gap:18px;}
+  .top nav{display:none;gap:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;}
+  .top nav a{color:var(--muted-dk);text-decoration:none;}
+  .top nav a:hover{color:var(--gold);}
+  @media(min-width:1050px){.top nav{display:flex;}}
+  #themeBtn{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;background:var(--dark-panel);color:var(--paper);border:1px solid rgba(255,255,255,.14);padding:7px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:background-color .2s ease,border-color .2s ease;}
+  #themeBtn:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* hero (dark) */
+  .hero{background:var(--dark);color:var(--paper);padding:70px 0 60px;position:relative;overflow:hidden;}
+  .hero::after{content:"";position:absolute;right:-10%;top:-30%;width:60%;height:150%;background:radial-gradient(circle at center,rgba(247,148,18,0.22),transparent 62%);}
+  .hero .wrap{position:relative;z-index:2;}
+  .hero h1{font-size:clamp(2.6rem,7.5vw,5.2rem);font-weight:800;color:#fff;}
+  .hero h1 .clay{color:var(--clay);}
+  .hero .sub{font-size:clamp(1.1rem,2.4vw,1.5rem);color:var(--muted-dk);max-width:46ch;margin-top:18px;font-weight:500;}
+  .hero .meta{margin-top:26px;display:flex;flex-wrap:wrap;gap:8px 20px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted-dk);}
+  .hero .meta span::before{content:"▹ ";color:var(--clay);}
+
+  /* OS loop */
+  .loop{display:flex;flex-wrap:wrap;gap:8px;margin-top:34px;}
+  .loop .node{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;background:var(--dark-panel);border:1px solid rgba(255,255,255,.1);color:var(--paper);padding:9px 14px;border-radius:9px;display:flex;align-items:center;gap:8px;}
+  .loop .node b{color:var(--gold);}
+  .loop .node.hot{border-color:var(--gold);color:#fff;background:rgba(247,148,18,.16);}
+  .loop .arrow{color:var(--clay);align-self:center;font-weight:700;}
+
+  /* litany band */
+  .litany{display:grid;grid-template-columns:1fr;gap:10px;margin-top:34px;}
+  @media(min-width:700px){.litany{grid-template-columns:repeat(2,1fr);}}
+  @media(min-width:1050px){.litany{grid-template-columns:repeat(5,1fr);}}
+  .litem{background:var(--dark-panel);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px 18px;position:relative;overflow:hidden;}
+  .litem::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--clay);}
+  .litem .q{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-dk);display:block;}
+  .litem .a{display:block;margin-top:6px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.15rem;color:#fff;line-height:1.15;}
+
+  /* target strip */
+  .targets{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:34px;}
+  @media(min-width:820px){.targets{grid-template-columns:repeat(4,1fr);}}
+  .tcard{background:var(--dark-panel);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px;}
+  .tcard .n{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:2.3rem;color:var(--gold);line-height:1;}
+  .tcard .n.clay{color:var(--clay);}
+  .tcard .n.green{color:#5FD39B;}
+  .tcard .l{margin-top:8px;font-size:12.5px;color:var(--muted-dk);line-height:1.35;}
+
+  /* sections */
+  section{padding:60px 0;border-top:1px solid var(--line);}
+  h2{font-size:clamp(1.9rem,4.6vw,3rem);font-weight:800;margin-bottom:8px;}
+  .lead{font-size:1.15rem;color:var(--muted);max-width:66ch;margin-top:12px;}
+  h3{font-size:1.35rem;font-weight:700;margin:30px 0 10px;color:var(--clay-deep);}
+  p{margin:0 0 15px;}
+  strong{font-weight:700;}
+  .em-clay{color:var(--clay-deep);font-weight:700;}
+  .em-green{color:var(--green);font-weight:700;}
+
+  .callout{background:var(--sand);border:1px solid var(--line);border-left:4px solid var(--clay);border-radius:14px;padding:22px 26px;margin:22px 0;}
+  .callout .t{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--clay);margin-bottom:8px;}
+  .callout p{margin:0;}
+
+  /* tier cards */
+  .tiers{display:grid;grid-template-columns:1fr;gap:16px;margin-top:12px;}
+  @media(min-width:820px){.tiers{grid-template-columns:repeat(3,1fr);}}
+  .tier{background:var(--canvas-raised);border:1px solid var(--line);border-radius:16px;padding:24px;position:relative;overflow:hidden;}
+  .tier::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;}
+  .tier.t1::before{background:var(--green);}
+  .tier.t2::before{background:var(--gold);}
+  .tier.t3::before{background:var(--clay);}
+  .tier .tg{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+  .tier h4{font-size:1.3rem;font-weight:800;margin:6px 0 4px;}
+  .tier .big{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:2.6rem;line-height:1;margin:10px 0;}
+  .tier.t1 .big{color:var(--green);}
+  .tier.t2 .big{color:var(--gold);}
+  .tier.t3 .big{color:var(--clay);}
+  .tier p{font-size:14px;color:var(--muted);margin:0;}
+  .tier .goal{margin-top:12px;font-size:12.5px;font-family:'IBM Plex Mono',monospace;color:var(--ink);}
+
+  /* workpack steps */
+  .steps{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px;counter-reset:s;}
+  @media(min-width:760px){.steps{grid-template-columns:1fr 1fr;}}
+  .step{background:var(--sand);border:1px solid var(--line);border-radius:12px;padding:18px 20px 18px 54px;position:relative;}
+  .step::before{counter-increment:s;content:counter(s,decimal-leading-zero);position:absolute;left:16px;top:16px;font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--clay);font-size:13px;}
+  .step h4{font-size:1.05rem;font-weight:700;margin-bottom:5px;}
+  .step p{font-size:13.7px;color:var(--muted);margin:0;}
+  .step .os{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);display:block;margin-top:7px;}
+
+  /* platform grid */
+  .plats{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px;}
+  @media(min-width:760px){.plats{grid-template-columns:1fr 1fr;}}
+  .plat{background:var(--canvas-raised);border:1px solid var(--line);border-radius:14px;padding:20px 22px;}
+  .plat .h{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .plat .ico{width:34px;height:34px;border-radius:9px;background:var(--sand-2);display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .plat h4{font-size:1.12rem;font-weight:700;}
+  .plat .role{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--clay);}
+  .plat p{font-size:14px;color:var(--muted);margin:6px 0 0;}
+
+  /* ecosystem clusters */
+  .clusters{display:grid;grid-template-columns:1fr;gap:16px;margin-top:12px;}
+  @media(min-width:820px){.clusters{grid-template-columns:1fr 1fr;}}
+  .cluster{background:var(--sand);border:1px solid var(--line);border-radius:16px;padding:22px;}
+  .cluster .ct{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--indigo);font-weight:600;margin-bottom:12px;}
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .pill{background:var(--canvas-raised);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;}
+  .pill .d{width:7px;height:7px;border-radius:50%;background:var(--dot,var(--clay));}
+  .pill.new .d{background:var(--dot,var(--green));}
+  .legend{margin-top:14px;font-size:12.5px;color:var(--muted);}
+  .legend b{color:var(--green);}
+
+  /* timeline */
+  .weeks{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px;}
+  @media(min-width:900px){.weeks{grid-template-columns:repeat(5,1fr);}}
+  .week{background:var(--canvas-raised);border:1px solid var(--line);border-radius:14px;padding:18px;}
+  .week .wk{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--clay);font-weight:600;}
+  .week h4{font-size:1.05rem;font-weight:700;margin:6px 0 8px;}
+  .week ul{margin:0;padding-left:16px;}
+  .week li{font-size:12.7px;color:var(--muted);margin-bottom:6px;}
+
+  /* table */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin:20px 0;background:var(--canvas-raised);}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:13.8px;}
+  th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top;}
+  thead th{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--clay-deep);background:var(--sand);}
+  tbody tr:last-child td{border-bottom:none;}
+  td .b{font-weight:700;}
+  .chip{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:6px;background:var(--sand-2);color:var(--muted);}
+  .chip.op{background:rgba(79,158,30,.16);color:var(--green);}
+
+  /* blueprint cards */
+  .bp{display:grid;grid-template-columns:1fr;gap:16px;margin-top:12px;}
+  @media(min-width:820px){.bp{grid-template-columns:1fr 1fr;}}
+  .bpcard{border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--canvas-raised);}
+  .bpcard.dark{background:var(--dark);color:var(--paper);border-color:var(--dark-panel);}
+  .bpcard .u{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--clay);letter-spacing:.05em;}
+  .bpcard.dark .u{color:var(--gold);}
+  .bpcard h4{font-size:1.3rem;font-weight:800;margin:6px 0 10px;}
+  .bpcard ul{margin:8px 0 0;padding-left:18px;}
+  .bpcard li{font-size:13.7px;margin-bottom:7px;color:var(--muted);}
+  .bpcard.dark li{color:var(--muted-dk);}
+
+  .metrics{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px;}
+  @media(min-width:760px){.metrics{grid-template-columns:1fr 1fr;}}
+  .metric{background:var(--sand);border:1px solid var(--line);border-radius:14px;padding:18px 20px;}
+  .metric h4{font-size:1.05rem;font-weight:700;margin-bottom:5px;color:var(--indigo);}
+  .metric p{font-size:13.7px;color:var(--muted);margin:0;}
+
+  /* number band */
+  .numberband{background:var(--clay);color:#fff;border-radius:20px;padding:40px 32px;text-align:center;margin-top:8px;}
+  .numberband .t{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.85;margin-bottom:14px;}
+  .numberband .big{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;}
+  .numberband .sm{margin-top:12px;font-size:15px;opacity:.92;max-width:52ch;margin-left:auto;margin-right:auto;}
+
+  footer{background:var(--dark);color:var(--muted-dk);padding:42px 0 66px;}
+  footer .disc{font-size:12px;font-style:italic;max-width:76ch;margin-top:14px;color:var(--muted-dk);}
+  footer b{color:var(--paper);}
+  footer .initiative{font-size:12.5px;color:var(--muted-dk);margin:10px 0 0;}
+  footer .initiative b{color:var(--gold);}
+  .caveat{font-family:'Caveat',cursive;font-size:1.4rem;font-weight:700;color:var(--gold);}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="in">
+  <div class="brand"><span class="mark"><img src="https://pub.hyperagent.com/api/published/pbf01KWMKRYMS_E8B4DSAYBX4AYTXB/2d51851a-429c-4abb-af4f-4f00b80b4942.png" alt="Ubuntu Town crest" width="30" height="26" style="display:block;object-fit:contain;"></span> UBUNTU&nbsp;TOWN&nbsp;OS <b>·</b> REBOOT&nbsp;KASI</div>
+  <div class="top-right">
+    <nav>
+      <a href="#insight">Insight</a><a href="#target">Target</a><a href="#workpack">Workpack</a>
+      <a href="#platforms">Platforms</a><a href="#ecosystem">Ecosystem</a><a href="#timeline">90-Day</a><a href="#sites">Sites</a>
+    </nav>
+    <button id="themeBtn" type="button" aria-label="Toggle light/dark theme">☾ Dark</button>
+  </div>
+</div></div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow" style="color:var(--gold)">Part of The Great Township Opportunity Reset · Cross-Platform Rollout &amp; Conversion Command Plan · to 31 July 2026</p>
+    <h1>We don't let <span class="clay">opportunities</span> die.</h1>
+    <p class="sub">Reboot Kasi is the first national deployment of the Township Opportunity Operating System. We don't convert spazas — we convert lost opportunity. On the OS, every rescue is a signal that becomes a workpack, a proof, and town memory.</p>
+    <p class="caveat">You in. We rise.</p>
+    <div class="loop">
+      <span class="node"><b>01</b> Signal</span><span class="arrow">›</span>
+      <span class="node"><b>02</b> Opportunity</span><span class="arrow">›</span>
+      <span class="node hot"><b>03</b> Workpack</span><span class="arrow">›</span>
+      <span class="node"><b>04</b> Proof</span><span class="arrow">›</span>
+      <span class="node"><b>05</b> Memory</span>
+    </div>
+    <div class="targets">
+      <div class="tcard"><div class="n clay">300+</div><div class="l">Tier-1 spaza conversions by 31 July (Connect + KasiBuy)</div></div>
+      <div class="tcard"><div class="n">40</div><div class="l">Tier-2 upgrades (AI Café / Job Fixer / FixEasy corners)</div></div>
+      <div class="tcard"><div class="n green">12</div><div class="l">Tier-3 flagship node transformations</div></div>
+      <div class="tcard"><div class="n">10</div><div class="l">High-readiness pilot towns · 42 coordinators activated</div></div>
+    </div>
+    <div class="meta"><span>Ubuntu Town OS · WhatsApp-first</span><span>Assistant: Kopano (governed AI)</span><span>03 July 2026</span></div>
+    <div class="litany">
+      <div class="litem"><span class="q">Vacant shop?</span><span class="a">Convert it.</span></div>
+      <div class="litem"><span class="q">Unemployed youth?</span><span class="a">Train them.</span></div>
+      <div class="litem"><span class="q">No local commerce?</span><span class="a">Build it.</span></div>
+      <div class="litem"><span class="q">No digital jobs?</span><span class="a">Create them.</span></div>
+      <div class="litem"><span class="q">No access?</span><span class="a">Connect it.</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section id="insight">
+    <p class="eyebrow">01 — The Operating Insight</p>
+    <h2>The spaza doesn't close. It converts — through the runtime we already run.</h2>
+    <p class="lead"><strong>The Great Township Opportunity Reset</strong> is the umbrella; <strong>Reboot Kasi is its first national deployment</strong> — the proving ground for Ubuntu Town OS, the Township Opportunity Operating System, at national scale. Everyone else is fighting over who owns the shop. We do something the OS was built for: turn a real township signal into coordinated, proof-backed work. Reboot Kasi is not a new system — it is the biggest workpack campaign Ubuntu Town has ever run.</p>
+    <div class="callout">
+      <div class="t">How a conversion maps to the runtime</div>
+      <p><strong>Signal:</strong> a vacant or struggling spaza + a coordinator on the ground. → <strong>Opportunity:</strong> "convert this shop into an opportunity node." → <strong>Workpack:</strong> the Convert-a-Spaza steps, rules &amp; proof requirements. → <strong>Proof:</strong> owner onboarded, Opportunity Point live, first KasiBuy parcel collected. → <strong>Review:</strong> coordinator + Kopano check evidence, a human approves. → <strong>Memory:</strong> the town learns which conversions stick, and the next one gets easier.</p>
+    </div>
+    <p>Because it rides the existing runtime, every conversion strengthens <span class="em-clay">town memory</span>, coordinator trust, and the national activation numbers already on ubuntutown.co.za (50 towns, 500+ coordinators, 5,000+ workpacks for 2026).</p>
+  </section>
+
+  <section id="target">
+    <p class="eyebrow green">02 — The End-July Target</p>
+    <h2>Tiered conversion, concentrated firepower</h2>
+    <p class="lead">Four weeks (3–31 July) is tight, so we stop trying to boil the ocean: three conversion tiers, concentrated in ~10 high-readiness pilot towns, with the two anchors (AI Café + KasiBuy) leading. "Converted" is defined precisely, so the number is honest.</p>
+    <div class="tiers">
+      <div class="tier t1">
+        <div class="tg">Tier 1 · Connect</div>
+        <h4>The fast lane</h4>
+        <div class="big">300</div>
+        <p>Spaza becomes an <strong>OPPORTUNITY POINT</strong> — a <strong>KasiBuy pickup/drop-off + community-services point + gateway to the nodes.</strong> Owner keeps their shop; we add new income streams. Minimal capex, same-day onboarding.</p>
+        <div class="goal">≈ 30 active coordinators × ~2–3/wk × 3 field weeks</div>
+      </div>
+      <div class="tier t2">
+        <div class="tg">Tier 2 · Upgrade</div>
+        <h4>The corner add-on</h4>
+        <div class="big">40</div>
+        <p>A Connected spaza adds one paid corner — an <strong>AI Café station, a Job Fixer kiosk, a FixEasy desk, or an Ubuntu Health screening day.</strong> Partial node; new foot traffic.</p>
+        <div class="goal">~4 per pilot town, owner-selected by demand</div>
+      </div>
+      <div class="tier t3">
+        <div class="tg">Tier 3 · Transform</div>
+        <h4>The flagship</h4>
+        <div class="big">12</div>
+        <p>Full anchor node conversion: <strong>3 AI Café · 3 KasiBuy hubs · 2 HubWorks · 2 EcoCycle · 2 Ubuntu Finance</strong> — the hardened Reboot Kasi pilot, one flagship per lead town.</p>
+        <div class="goal">Ties to the ~R5m–R7m pilot envelope</div>
+      </div>
+    </div>
+    <div class="callout" style="border-left-color:var(--gold);">
+      <div class="t" style="color:var(--gold);">Honest gating — this is a stretch target</div>
+      <p><strong>Committed floor: ~150 Connect + 6 Transform.</strong> The 300 headline is achievable <em>only if</em> two rails are live by week 1: (1) Opportunity Point onboarding for owners, and (2) KasiBuy courier/pickup partnerships in the pilot towns. If either slips, we hold at the floor and protect quality over count — a dead node is worse than a slow one.</p>
+    </div>
+  </section>
+
+  <section id="workpack">
+    <p class="eyebrow">03 — The Coordinator Workpack</p>
+    <h2>"Convert-a-Spaza" — the playbook every coordinator runs</h2>
+    <p class="lead">One repeatable workpack, run on WhatsApp, tracked in the enter portal, assisted by Kopano, approved by a human. The offer to the owner is the whole game: <span class="em-clay">you keep your shop and your customers — we add new income streams, tools and a gateway to the nodes.</span></p>
+    <div class="steps">
+      <div class="step"><h4>Identify</h4><p>Coordinator logs a candidate spaza (vacant, struggling, or willing) as a Signal with a photo + GPS.<span class="os">→ Signal captured</span></p></div>
+      <div class="step"><h4>Assess</h4><p>Kopano scores readiness (footfall, space, power, owner intent); coordinator confirms tier fit.<span class="os">→ Opportunity, human-confirmed</span></p></div>
+      <div class="step"><h4>Pitch the offer</h4><p>Keep your shop + add: KasiBuy parcels, community-services commissions, optional paid corner, free training, gateway to the nodes.<span class="os">→ Workpack opened</span></p></div>
+      <div class="step"><h4>Onboard</h4><p>Light KYC via the PWA; owner becomes an Opportunity Point; signage + starter kit issued.<span class="os">→ Assignment active</span></p></div>
+      <div class="step"><h4>Activate</h4><p>First parcel collected, first community service booked, corner (if Tier 2/3) switched on.<span class="os">→ Proof submitted</span></p></div>
+      <div class="step"><h4>Prove &amp; remember</h4><p>Coordinator + Kopano review evidence; a human approves; the win feeds town memory + the counter.<span class="os">→ Review › Memory</span></p></div>
+    </div>
+    <div class="callout">
+      <div class="t">Why an owner says yes</div>
+      <p>No displacement, no takeover. The owner keeps the shop and gains <strong>3–6 new income streams</strong> (parcel fees, community-services commissions, corner revenue, referral fees into the nodes) plus buying power through KasiBuy group orders — the exact edge foreign-owned bulk-buying networks have and independents lack.</p>
+    </div>
+  </section>
+
+  <section id="platforms">
+    <p class="eyebrow green">04 — Cross-Platform Rollout</p>
+    <h2>Every platform, one operating layer</h2>
+    <p class="lead">Ubuntu Town meets coordinators on WhatsApp. We meet people where they are, keep data light, and route everything back into the same runtime and town memory.</p>
+    <div class="plats">
+      <div class="plat"><div class="h"><div class="ico">📨</div><div><h4>WhatsApp</h4><span class="role">Primary · owners + coordinators</span></div></div><p>Coordinators run the Convert-a-Spaza workpack and coordinate in the <a href="https://chat.whatsapp.com/LNU0fjNqnJ94URWRTIdyV0" target="_blank" rel="noopener noreferrer">Ubuntu Town Ops WhatsApp Group</a>.</p></div>
+      <div class="plat"><div class="h"><div class="ico">🌍</div><div><h4>ubuntutown.co.za</h4><span class="role">Public front door</span></div></div><p>Reboot Kasi campaign hub, the full ecosystem, role sign-ups, live activation + conversion counters, Ubuntu Intelligence. (Redesign §07.)</p></div>
+      <div class="plat"><div class="h"><div class="ico">🛰️</div><div><h4>enter.ubuntutown.co.za</h4><span class="role">Coordinator cockpit</span></div></div><p>Conversion pipeline, opportunity map, proof-review queue, CRM, Kopano assist. The town operating system. (Redesign §07.)</p></div>
+      <div class="plat"><div class="h"><div class="ico">💬</div><div><h4>WhatsApp</h4><span class="role">Owner comms + broadcast</span></div></div><p>For owners not on WhatsApp: onboarding links, reminders, and a broadcast channel per pilot town.</p></div>
+      <div class="plat"><div class="h"><div class="ico">📲</div><div><h4>Low-data PWA</h4><span class="role">Installable, offline-capable</span></div></div><p><strong>enter.ubuntutown.co.za IS the installable coordinator PWA</strong> — add to home screen, offline mode, camera + GPS for proof, push, background sync. No native Android/iOS build. Works on cheap Android, low data — critical while SA data stays costly (31st of 45 in Africa).</p></div>
+      <div class="plat"><div class="h"><div class="ico">🎬</div><div><h4>Social + creators</h4><span class="role">TikTok · IG · FB · X</span></div></div><p>Youth-resonant campaign led by The Plug / Orbit Music / FrameSouth creators — every flagship conversion becomes content.</p></div>
+    </div>
+    <p style="font-size:13.5px;color:var(--muted);margin-top:14px;">Telegram is parked for now and can be reactivated once WhatsApp scales.</p>
+    <h3>Platform build actions (the sites are mid-migration — fix while we ship)</h3>
+    <p>Our own audits show the apex runs a Vite SPA while a separate Next.js app serves town/province pages, with routes 404-ing on Cloudflare. The rollout doubles as the consolidation:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Action</th><th>Why</th><th>By</th></tr></thead>
+      <tbody>
+        <tr><td class="b">Consolidate SPA + Next.js town/province routing; kill the 404s</td><td>Town pages are the campaign's landing surface — they must resolve + rank</td><td><span class="chip">Week 0–1</span></td></tr>
+        <tr><td class="b">Ship Reboot Kasi campaign pages + conversion counter</td><td>Public proof + owner/coordinator sign-up funnel</td><td><span class="chip">Week 1</span></td></tr>
+        <tr><td class="b">Opportunity Point onboarding flow (WhatsApp + PWA)</td><td>Gates the entire Tier-1 target</td><td><span class="chip">Week 1</span></td></tr>
+        <tr><td class="b">Coordinator conversion module in enter portal</td><td>Pipeline, proof, Kopano assist, leaderboard</td><td><span class="chip">Week 1–2</span></td></tr>
+        <tr><td class="b">Package enter.ubuntutown.co.za as the installable coordinator PWA (no native app)</td><td>Field usability on cheap devices</td><td><span class="chip op">Week 2</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="ecosystem">
+    <p class="eyebrow">05 — Ecosystem Integration</p>
+    <h2>Nothing removed. Everything becomes a pathway into a converted spaza.</h2>
+    <p class="lead">Every brand already on Ubuntu Town stays — and each becomes something a converted spaza can host or plug into. Reboot Kasi's node brands slot in beside the originals, clustered so the whole ecosystem reads as one engine.</p>
+    <div class="clusters">
+      <div class="cluster"><div class="ct">Work &amp; Enterprise</div><div class="pill-row">
+        <span class="pill" style="--dot:#F0A61F"><span class="d"></span>Job Fixer</span><span class="pill new" style="--dot:#6B1F66"><span class="d"></span>HubWorks</span><span class="pill" style="--dot:#FE5E06"><span class="d"></span>KasiBuy</span><span class="pill new" style="--dot:#6B1F66"><span class="d"></span>Ubuntu Finance</span>
+      </div></div>
+      <div class="cluster"><div class="ct">Learn &amp; Create</div><div class="pill-row">
+        <span class="pill" style="--dot:#6B1F66"><span class="d"></span>Ubuntu Academy</span><span class="pill" style="--dot:#FE7602"><span class="d"></span>AI Café</span><span class="pill new" style="--dot:#6B1F66"><span class="d"></span>The Plug</span><span class="pill" style="--dot:#83837E"><span class="d"></span>FrameSouth</span><span class="pill" style="--dot:#992DD2"><span class="d"></span>Orbit Music</span>
+      </div></div>
+      <div class="cluster"><div class="ct">Live &amp; Care</div><div class="pill-row">
+        <span class="pill new" style="--dot:#6B1F66"><span class="d"></span>Ubuntu Health</span><span class="pill" style="--dot:#B49A82"><span class="d"></span>Family House</span><span class="pill" style="--dot:#6B1F66"><span class="d"></span>Inside Town</span>
+      </div></div>
+      <div class="cluster"><div class="ct">Make &amp; Regenerate</div><div class="pill-row">
+        <span class="pill new" style="--dot:#6B1F66"><span class="d"></span>The Workshop</span><span class="pill" style="--dot:#4F9E1E"><span class="d"></span>EcoCycle / EcoChar</span><span class="pill" style="--dot:#063C6A"><span class="d"></span>FixEasy / FixEasy24</span>
+      </div></div>
+    </div>
+    <p class="legend"><span class="pill" style="padding:3px 10px;"><span class="d"></span>original pathway</span> &nbsp; <span class="pill new" style="padding:3px 10px;"><span class="d"></span><b>Reboot Kasi node</b></span> &nbsp; — <strong>bound by one operating system — Signal → Workpack → Proof → Memory.</strong></p>
+    <div class="callout" style="border-left-color:var(--green);">
+      <div class="t" style="color:var(--green);">The compounding move</div>
+      <p>A Tier-1 spaza is a doorway: once it's an Opportunity Point + KasiBuy point, adding an AI Café corner, a Job Fixer kiosk, an Ubuntu Health screening day or an Academy class is a small next step — each an opportunity mapped into a new workpack. One converted shop can, over time, touch every cluster.</p>
+    </div>
+    <div class="callout" style="border-left-color:var(--indigo);">
+      <div class="t" style="color:var(--indigo);">Day 05 — The money layer stays invisible</div>
+      <p>Ubuntu Town is not a bank or a fintech product. Payments and settlement are back-end infrastructure — plumbing the nodes run on, never a public-facing brand. The <strong>only money-facing node the public ever sees is Ubuntu Finance</strong> — financial literacy, tax, bookkeeping and savings education. Everything else about how money moves stays invisible, on purpose.</p>
+    </div>
+    <div class="callout" style="border-left-color:var(--indigo);">
+      <div class="t" style="color:var(--indigo);">HubWorks — the ecosystem's scale engine</div>
+      <p><strong>HubWorks is the biggest job multiplier in the ecosystem</strong> — a single site scales <strong>10 → 50 → 200 seats</strong> of employment as demand proves out. It's contract-gated, so it isn't the fast lane; <strong>AI Café + KasiBuy stay the fast-deployment anchors</strong> for the 31 July target while HubWorks builds the flagship employment capacity behind them.</p>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <p class="eyebrow green">06 — The 4-Week Sprint to 31 July</p>
+    <h2>Reframe → activate → convert → prove</h2>
+    <div class="weeks">
+      <div class="week"><div class="wk">Week 0 · 3–6 Jul</div><h4>Reframe</h4><ul><li>Publish Reboot Kasi positioning + neutrality charter</li><li>Lock 10 pilot towns (readiness scored)</li><li>Brief 42 coordinators</li></ul></div>
+      <div class="week"><div class="wk">Week 1 · 7–13 Jul</div><h4>Arm</h4><ul><li>Opportunity Point + KasiBuy rails live</li><li>Campaign pages + counter ship</li><li>Coordinator conversion module + training</li></ul></div>
+      <div class="week"><div class="wk">Week 2 · 14–20 Jul</div><h4>Convert</h4><ul><li>Field push: Tier-1 Connect at scale</li><li>First Tier-3 flagships broken ground</li><li>Creator content begins</li></ul></div>
+      <div class="week"><div class="wk">Week 3 · 21–27 Jul</div><h4>Compound</h4><ul><li>Tier-2 corners added to Connected shops</li><li>Proof-review cadence daily</li><li>Course-correct by town leaderboard</li></ul></div>
+      <div class="week"><div class="wk">Week 4 · 28–31 Jul</div><h4>Prove</h4><ul><li>Hit 300+ / 40 / 12 (or defend floor)</li><li>Publish outcomes + town memory</li><li>Investor/partner readout</li></ul></div>
+    </div>
+  </section>
+
+  <section id="sites">
+    <p class="eyebrow">07 — Site Redesign Blueprint</p>
+    <h2>Two properties, redesigned as one system</h2>
+    <p class="lead">Delivered as companion prototypes alongside this plan. Same design language, the whole ecosystem integrated, nothing removed — and the coordinator portal rebuilt around the conversion drive.</p>
+    <div class="bp">
+      <div class="bpcard">
+        <div class="u">ubuntutown.co.za</div>
+        <h4>The National Front Door</h4>
+        <ul>
+          <li>Hero: "1M CVs. 1M Opportunities." + the OS loop + Get Started</li>
+          <li>Reboot Kasi campaign band + live conversion counter</li>
+          <li>The ecosystem — all four clusters, nothing removed</li>
+          <li>How the OS works + Kopano (governed AI)</li>
+          <li>Roles: Individuals · Businesses · Coordinators · Sponsors · Town Partners</li>
+          <li>10 Opportunity Nodes feature · Impact dashboard · Ubuntu Intelligence (Keke Lebaka)</li>
+        </ul>
+      </div>
+      <div class="bpcard dark">
+        <div class="u">enter.ubuntutown.co.za</div>
+        <h4>The Coordinator Command Portal</h4>
+        <ul>
+          <li>Town cockpit: profile, vacant sites, entrepreneurs, live counters</li>
+          <li>Reboot Kasi module: spaza pipeline by tier + "Convert a spaza" action</li>
+          <li>Workpack pipeline: Identified → Assessed → Partnered → Funded → Implemented → Operating</li>
+          <li>Opportunity map + CRM (partners, municipalities, investors)</li>
+          <li>Town Opportunity Score + live Opportunity Map (colored node pins)</li>
+          <li>Before/After transformation memory — township proof</li>
+          <li>Proof-review queue with Kopano assist + human approve</li>
+          <li>Leaderboard across the 42 coordinators</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow green">08 — Metrics &amp; Governance</p>
+    <h2>Count what's real; protect the mission</h2>
+    <div class="metrics">
+      <div class="metric"><h4>Conversion &amp; quality</h4><p>Live counter by tier &amp; town; % of Tier-1 shops still transacting after 14 days (stickiness, not just sign-ups).</p></div>
+      <div class="metric"><h4>Jobs &amp; income</h4><p>New income streams per owner; youth (under-35) hired per flagship node; community-services volume per town.</p></div>
+      <div class="metric"><h4>Proof integrity</h4><p>Every conversion carries evidence, human-reviewed. Kopano recommends; a person approves. No proof, no count.</p></div>
+      <div class="metric"><h4>Mission integrity</h4><p>Zero displacement (vacant/willing shops only); political neutrality upheld; zero cash-request/patronage incidents logged.</p></div>
+    </div>
+  </section>
+
+  <section style="border-top:none;padding-top:20px;">
+    <div class="numberband">
+      <div class="t">The number we're carrying to 31 July</div>
+      <div class="big">300+ spazas Connected · 40 Upgraded · 12 Transformed</div>
+      <div class="sm">Across 10 pilot towns, run by 42 coordinators, on the platform we already have — every one a signal that became a workpack, a proof, and town memory.</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="brand" style="margin-bottom:6px;"><span class="mark"><img src="https://pub.hyperagent.com/api/published/pbf01KWMKRYMS_E8B4DSAYBX4AYTXB/2d51851a-429c-4abb-af4f-4f00b80b4942.png" alt="Ubuntu Town crest" width="30" height="26" style="display:block;object-fit:contain;"></span> UBUNTU TOWN OS · REBOOT KASI</div>
+    <p style="color:var(--muted-dk);font-size:13.5px;margin:0;">Signals become workpacks. Workpacks become proof. Proof becomes memory.</p>
+    <p class="initiative">An initiative of <b>Abantu Bobuntu</b> — Ubuntu: I am because we are.</p>
+    <p class="disc">Fictional Ubuntu Town strategy exercise, grounded in the live ubuntutown.co.za (Ubuntu Town OS) and prior Ubuntu Town platform work. SA statistics are real and cited in the companion Reboot Kasi dossier; conversion targets and the pilot envelope are directional planning estimates for internal execution, not guaranteed outcomes. Prepared 3 July 2026.</p>
+  </div>
+</footer>
+
+<script>(function(){var K='ut-theme',r=document.documentElement;if(localStorage.getItem(K)==='dark')r.setAttribute('data-theme','dark');function L(){var b=document.getElementById('themeBtn');if(b)b.textContent=r.getAttribute('data-theme')==='dark'?'☀ Light':'☾ Dark';}function T(){if(r.getAttribute('data-theme')==='dark'){r.removeAttribute('data-theme');localStorage.setItem(K,'light');}else{r.setAttribute('data-theme','dark');localStorage.setItem(K,'dark');}L();}document.addEventListener('DOMContentLoaded',function(){var b=document.getElementById('themeBtn');if(b)b.addEventListener('click',T);L();});})();</script>
+</body>
+</html>

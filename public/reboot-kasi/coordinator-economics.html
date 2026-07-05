@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ubuntu Town — Coordinator Economics, Roles & 30-Day Activation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#FBF7F2;--raised:#FFFFFF;--sand:#F1E9DD;--sand-2:#EBE0D0;--line:#E7DFD2;--ink:#1F1329;--muted:#6E6560;
+    --purple:#6B1F66;--purple-deep:#521350;--orange:#F79412;--amber:#FFB02E;--green:#4F9E1E;--pink:#F3B7D7;
+    --dark:#231A2E;--dark-panel:#2E2340;--paper:#F4EFEA;--muted-dk:#B8AFC4;--shadow:0 8px 26px rgba(31,19,41,.09);
+  }
+  [data-theme="dark"]{
+    --canvas:#150F1F;--raised:#211830;--sand:#241B33;--sand-2:#2C2140;--line:#352A46;--ink:#F4EFEA;--muted:#B8AFC4;
+    --purple:#B266A8;--purple-deep:#8A4682;--orange:#FA9E23;--amber:#FFBB2B;--green:#7FD400;--pink:#F3C1DA;
+    --dark:#0E0916;--dark-panel:#1A1327;--paper:#F4EFEA;--muted-dk:#B8AFC4;--shadow:0 8px 26px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--canvas);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 6vw;}
+  @media(min-width:900px){.wrap{padding:0 44px;}}
+  h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;margin:0;letter-spacing:-.02em;line-height:1.03;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);display:inline-flex;gap:10px;align-items:center;}
+  .eyebrow::before{content:"";width:24px;height:2px;background:currentColor;}
+
+  .top{position:sticky;top:0;z-index:50;background:var(--dark);color:var(--paper);}
+  .top .in{max-width:1080px;margin:0 auto;padding:11px 6vw;display:flex;align-items:center;gap:10px;}
+  @media(min-width:900px){.top .in{padding:11px 44px;}}
+  .top img{height:32px;}
+  .top .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:.95rem;}
+  .top .nm span{color:var(--orange);}
+  .top .sp{flex:1;}
+  #themeBtn{font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(255,255,255,.1);color:var(--paper);border:1px solid rgba(255,255,255,.16);padding:7px 13px;border-radius:999px;cursor:pointer;}
+
+  .hero{background:var(--dark);color:var(--paper);padding:56px 0 46px;position:relative;overflow:hidden;}
+  .hero::after{content:"";position:absolute;right:-8%;top:-30%;width:55%;height:160%;background:radial-gradient(circle at center,rgba(247,148,18,.20),transparent 62%);}
+  .hero .wrap{position:relative;z-index:2;}
+  .hero h1{font-size:clamp(2.2rem,5.6vw,3.9rem);font-weight:800;color:#fff;max-width:20ch;}
+  .hero h1 .o{color:var(--orange);}
+  .hero .sub{font-size:clamp(1.05rem,2.2vw,1.32rem);color:var(--muted-dk);max-width:56ch;margin-top:16px;}
+  .hero .cav{font-family:'Caveat',cursive;color:var(--orange);font-size:1.7rem;margin-top:10px;}
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:30px;}
+  @media(min-width:760px){.stats{grid-template-columns:repeat(4,1fr);}}
+  .stat{background:var(--dark-panel);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px;}
+  .stat .n{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.9rem;color:var(--orange);line-height:1;}
+  .stat .n.pink{color:var(--pink);} .stat .n.green{color:#8FE39B;}
+  .stat .l{margin-top:7px;font-size:12px;color:var(--muted-dk);line-height:1.35;}
+
+  section{padding:50px 0;border-top:1px solid var(--line);}
+  h2{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;margin-bottom:8px;}
+  h2 .o{color:var(--orange);} h2 .p{color:var(--purple);}
+  .lead{font-size:1.1rem;color:var(--muted);max-width:66ch;}
+  h3{font-size:1.25rem;font-weight:700;color:var(--purple);margin:26px 0 10px;}
+  p{margin:0 0 14px;} strong{font-weight:700;}
+  .em-o{color:var(--orange);font-weight:700;} .em-p{color:var(--purple-deep);font-weight:700;} .em-g{color:var(--green);font-weight:700;}
+
+  .flywheel{display:grid;grid-template-columns:1fr;gap:10px;margin:16px 0;}
+  @media(min-width:820px){.flywheel{grid-template-columns:repeat(5,1fr);align-items:stretch;}}
+  .fw{background:var(--raised);border:1px solid var(--line);border-radius:13px;padding:15px;box-shadow:var(--shadow);position:relative;}
+  .fw .s{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:.08em;}
+  .fw h4{font-size:1rem;margin:5px 0 4px;} .fw p{font-size:12.5px;color:var(--muted);margin:0;}
+
+  .split{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0;}
+  .sp-card{border-radius:14px;padding:20px;color:#fff;}
+  .sp-card .pct{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:2.4rem;line-height:1;}
+  .sp-card .lb{font-size:13px;margin-top:6px;opacity:.95;}
+  .sp-team{background:var(--purple);} .sp-re{background:var(--orange);color:#231204;} .sp-ce{background:var(--dark);}
+
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin:16px 0;background:var(--raised);}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:13.5px;}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);}
+  thead th{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--purple-deep);background:var(--sand);}
+  tbody tr:last-child td{border-bottom:none;}
+  td.num,th.num{text-align:right;font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
+  tr.hi td{background:rgba(247,148,18,.08);font-weight:600;}
+  td .r{font-weight:700;color:var(--ink);}
+  .green-n{color:var(--green);font-weight:700;}
+
+  .callout{background:var(--sand);border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:13px;padding:18px 22px;margin:18px 0;}
+  .callout .t{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--orange);margin-bottom:7px;}
+  .callout p{margin:0;}
+
+  .roles{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px;}
+  @media(min-width:760px){.roles{grid-template-columns:1fr 1fr;}}
+  .role{background:var(--raised);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);border-top:4px solid var(--purple);}
+  .role h4{font-size:1.15rem;} .role .w{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--orange);margin:4px 0 8px;}
+  .role p{font-size:14px;color:var(--muted);margin:0 0 6px;} .role .who{font-size:12.5px;color:var(--purple-deep);font-weight:600;}
+
+  .tiers{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px;}
+  @media(min-width:760px){.tiers{grid-template-columns:1fr 1fr;}}
+  .tcard{background:var(--raised);border:1px solid var(--line);border-radius:13px;padding:16px 18px;}
+  .tcard .h{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .tcard .badge{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em;}
+  .b-launch{background:rgba(79,158,30,.16);color:var(--green);} .b-pilot{background:rgba(247,148,18,.16);color:var(--orange);}
+  .b-support{background:rgba(107,31,102,.14);color:var(--purple);} .b-recruit{background:var(--sand-2);color:var(--muted);}
+  .tcard .towns{font-size:13px;color:var(--muted);line-height:1.5;}
+  .tcard h4{font-size:1.05rem;}
+
+  .timeline{border-left:2px solid var(--line);margin:16px 0 0 6px;padding-left:22px;}
+  .tl{position:relative;padding:0 0 22px;}
+  .tl::before{content:"";position:absolute;left:-29px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--orange);border:3px solid var(--canvas);}
+  .tl.key::before{background:var(--purple);}
+  .tl .d{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--orange);letter-spacing:.05em;text-transform:uppercase;}
+  .tl.key .d{color:var(--purple);}
+  .tl h4{font-size:1.08rem;margin:3px 0 4px;} .tl p{font-size:13.5px;color:var(--muted);margin:0;}
+
+  .terms{list-style:none;padding:0;margin:12px 0;}
+  .terms li{background:var(--raised);border:1px solid var(--line);border-radius:11px;padding:13px 16px;margin-bottom:9px;font-size:14px;}
+  .terms li b{color:var(--purple-deep);}
+
+  footer{background:var(--dark);color:var(--muted-dk);padding:36px 0 60px;}
+  footer .cav{font-family:'Caveat',cursive;color:var(--orange);font-size:1.5rem;}
+  footer .disc{font-size:11.5px;font-style:italic;margin-top:12px;max-width:80ch;}
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <img src="https://pub.hyperagent.com/api/published/pbf01KWMKRYMS_E8B4DSAYBX4AYTXB/2d51851a-429c-4abb-af4f-4f00b80b4942.png" alt="Ubuntu Town">
+    <div class="nm">Ubuntu Town <span>OS</span></div><div class="sp"></div>
+    <button id="themeBtn">☾ Dark</button>
+  </div></div>
+
+  <header class="hero"><div class="wrap">
+    <p class="eyebrow">Coordinator Economics · Roles · 30-Day Activation</p>
+    <h1>You don't get a salary. You get a <span class="o">share</span> of the town you build.</h1>
+    <p class="sub">Ubuntu Town coordinators earn a share of the real revenue their town's Opportunity Points and nodes generate. Self-funding. Uncapped. Yours — the more your town does, the more you earn.</p>
+    <div class="cav">You in. We rise.</div>
+    <div class="stats">
+      <div class="stat"><div class="n">R15.8k<span style="font-size:1rem">/mo</span></div><div class="l">Launch-town coordinator, month-6 run-rate (~R190k/yr)</div></div>
+      <div class="stat"><div class="n pink">R4.0k<span style="font-size:1rem">/mo</span></div><div class="l">Youth Ambassador, month-6 run-rate (~R49k/yr)</div></div>
+      <div class="stat"><div class="n green">45%</div><div class="l">of town revenue flows to the local team</div></div>
+      <div class="stat"><div class="n">34 / 46</div><div class="l">towns mapped · applicants scored &amp; banded</div></div>
+    </div>
+  </div></header>
+
+  <div class="wrap">
+
+    <!-- MODEL -->
+    <section id="model">
+      <p class="eyebrow">01 — The model</p>
+      <h2>Self-funding by design: <span class="p">income is a share, not a salary</span></h2>
+      <p class="lead">There is no donor payroll to run out. Coordinators convert spazas into Opportunity Points and stand up nodes; those earn real revenue; a fixed share of that revenue pays the people who built it, and another slice is reinvested to fund the next wave. The flywheel funds itself.</p>
+      <div class="flywheel">
+        <div class="fw"><div class="s">01</div><h4>Convert</h4><p>Coordinators activate Opportunity Points &amp; nodes.</p></div>
+        <div class="fw"><div class="s">02</div><h4>Earn</h4><p>Points &amp; nodes generate real monthly revenue.</p></div>
+        <div class="fw"><div class="s">03</div><h4>Share</h4><p>45% to the town team · 30% reinvest · 25% platform.</p></div>
+        <div class="fw"><div class="s">04</div><h4>Paid</h4><p>You're paid from what your town actually produces.</p></div>
+        <div class="fw"><div class="s">05</div><h4>Reinvest</h4><p>30% funds the next conversions — it compounds.</p></div>
+      </div>
+      <div class="split">
+        <div class="sp-card sp-team"><div class="pct">45%</div><div class="lb">Town Team Pool — coordinators &amp; ambassadors</div></div>
+        <div class="sp-card sp-re"><div class="pct">30%</div><div class="lb">Town Reinvestment — funds the next Opportunity Points</div></div>
+        <div class="sp-card sp-ce"><div class="pct">25%</div><div class="lb">Ubuntu Town OS — platform, tech, support</div></div>
+      </div>
+      <div class="callout">
+        <div class="t">The ramp bridge</div>
+        <p>Month 1 has little revenue, so an <strong>activation stipend</strong> (paid per verified Opportunity Point, per node stood up, and per approved workpack) bridges months 1–3 from a small launch fund. It is <strong>activity-based and self-limiting</strong> — as your town's revenue-share grows, the stipend phases out. You are never on a fixed wage; you're always earning from what you build.</p>
+      </div>
+    </section>
+
+    <!-- EARNINGS -->
+    <section id="earnings">
+      <p class="eyebrow">02 — What you'll earn</p>
+      <h2>The numbers, calculated</h2>
+      <p class="lead">Planning model in rand, per role, as a town ramps over six months. A <strong>Launch town</strong> team = 1 Founding Coordinator + 1 Deputy + 3 Youth Ambassadors. Figures blend revenue-share + the months 1–3 activation stipend.</p>
+      <h3>Launch town — monthly earning per person (ZAR)</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Month</th><th class="num">Town revenue</th><th class="num">Coordinator (A)</th><th class="num">Deputy (B)</th><th class="num">Ambassador (C)</th></tr></thead>
+        <tbody>
+          <tr><td>Jul · M1</td><td class="num">R7,200</td><td class="num">R1,423</td><td class="num">R722</td><td class="num">R1,032</td></tr>
+          <tr><td>M2</td><td class="num">R23,200</td><td class="num">R5,305</td><td class="num">R2,808</td><td class="num">R2,009</td></tr>
+          <tr><td>M3</td><td class="num">R36,500</td><td class="num">R7,514</td><td class="num">R3,962</td><td class="num">R2,850</td></tr>
+          <tr><td>M4</td><td class="num">R52,500</td><td class="num">R10,376</td><td class="num">R5,268</td><td class="num">R2,660</td></tr>
+          <tr><td>M5</td><td class="num">R64,000</td><td class="num">R12,649</td><td class="num">R6,422</td><td class="num">R3,243</td></tr>
+          <tr class="hi"><td>M6</td><td class="num">R80,000</td><td class="num green-n">R15,811</td><td class="num green-n">R8,027</td><td class="num green-n">R4,054</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Pilot town — monthly earning per person (ZAR)</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Month</th><th class="num">Town revenue</th><th class="num">Coordinator (B)</th><th class="num">Ambassador (C)</th></tr></thead>
+        <tbody>
+          <tr><td>Jul · M1</td><td class="num">R3,600</td><td class="num">R1,009</td><td class="num">R806</td></tr>
+          <tr><td>M3</td><td class="num">R20,500</td><td class="num">R6,464</td><td class="num">R2,491</td></tr>
+          <tr class="hi"><td>M6</td><td class="num">R47,100</td><td class="num green-n">R13,197</td><td class="num green-n">R3,999</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout"><div class="t">Month-6 run-rate, annualised</div>
+        <p>Launch-town <strong>Founding Coordinator ≈ R190,000/yr</strong> · <strong>Deputy ≈ R96,000/yr</strong> · <strong>Youth Ambassador ≈ R49,000/yr</strong> — and <span class="em-o">uncapped</span>: a bigger town with more Opportunity Points and nodes lifts the whole team's share.</p>
+      </div>
+    </section>
+
+    <!-- ROLES -->
+    <section id="roles">
+      <p class="eyebrow">03 — Roles per town</p>
+      <h2>Four roles, one town team</h2>
+      <p class="lead">Every town runs a small team. Your assessed role track and band decide where you start — and you can rise as your proof stacks up.</p>
+      <div class="roles">
+        <div class="role"><h4>Founding Town Coordinator</h4><div class="w">Pool weight ×3.0 · leads the town</div><p>Owns the town: maps opportunities, runs the team, approves workpacks &amp; proof, holds the municipal &amp; partner relationships. The Township Opportunity Architect.</p><div class="who">For Band A / A- candidates · 1 per town</div></div>
+        <div class="role"><h4>Deputy / Admin Lead</h4><div class="w">Pool weight ×1.8 · runs operations</div><p>Second-in-command: coordinates ambassadors, keeps the CRM &amp; proof queue clean in Ubuntu Town OS, handles reporting and logistics.</p><div class="who">For Band B / C+ candidates · Launch towns</div></div>
+        <div class="role"><h4>Youth Opportunity Ambassador</h4><div class="w">Pool weight ×1.0 · the field engine</div><p>On the ground: finds signals, pitches owners, activates Opportunity Points, captures photo + GPS proof via the PWA. Earns per activation from day one.</p><div class="who">For Band C / D candidates · several per town</div></div>
+        <div class="role"><h4>Inside Town Media Support</h4><div class="w">Pool weight ×1.0 · the storyteller</div><p>Documents transformations, runs the town's Inside Town channel &amp; socials, turns every conversion into proof and reach.</p><div class="who">For creator-leaning candidates</div></div>
+      </div>
+    </section>
+
+    <!-- REMUNERATION -->
+    <section id="pay">
+      <p class="eyebrow">04 — How pay is set</p>
+      <h2>Remuneration = <span class="p">role</span> × <span class="o">competence</span> × effort</h2>
+      <p class="lead">Your monthly earning is transparent and formula-driven — everyone can see how it's calculated in Ubuntu Town OS.</p>
+      <div class="callout" style="border-left-color:var(--purple);">
+        <div class="t" style="color:var(--purple);">The formula</div>
+        <p><strong>Your share</strong> = (your role weight × your band multiplier) ÷ town team total × <strong>Team Pool (45% of town revenue)</strong> &nbsp;+&nbsp; <strong>activation stipend</strong> for the points, nodes &amp; workpacks you personally delivered.</p>
+      </div>
+      <h3>Competence multiplier (from your assessment band)</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Band</th><th class="num">Multiplier</th><th>What it reflects</th></tr></thead>
+        <tbody>
+          <tr><td class="r">A</td><td class="num">×1.30</td><td>Top competence — leads a Launch town</td></tr>
+          <tr><td class="r">A-</td><td class="num">×1.20</td><td>Strong — leads or deputises in a Launch town</td></tr>
+          <tr><td class="r">B / B+</td><td class="num">×1.10–1.15</td><td>Solid — deputy or lead in a Pilot town</td></tr>
+          <tr><td class="r">C / C+</td><td class="num">×1.00–1.05</td><td>Capable — ambassador, path to deputy</td></tr>
+          <tr><td class="r">D</td><td class="num">×0.90</td><td>Developing — ambassador with mentoring</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:14px;color:var(--muted);">Effort is the third lever: the activation stipend rewards <strong>work actually done</strong> (points activated, nodes stood up, workpacks approved), so a hungry Band-C ambassador can out-earn a passive higher band. Bands are not a ceiling — re-assessment every quarter moves you up as your proof grows.</p>
+    </section>
+
+    <!-- TOWNS -->
+    <section id="towns">
+      <p class="eyebrow">05 — Your town's status</p>
+      <h2>34 towns, four tiers</h2>
+      <p class="lead">From the applicant assessment, every town sits in one of four readiness tiers. This decides what happens in the next 30 days.</p>
+      <div class="tiers">
+        <div class="tcard"><div class="h"><span class="badge b-launch">Launch · interview first</span><h4>11 towns</h4></div><div class="towns">Bloemfontein, Botshabelo, Ficksburg, Ladybrand, Senekal (Free State) · Carletonville, Johannesburg (Gauteng) · Dundee, Newcastle (KZN) · Bushbuckridge (Mpumalanga). <b>Interviews this week; activate first.</b></div></div>
+        <div class="tcard"><div class="h"><span class="badge b-pilot">Pilot · practical test</span><h4>7 towns</h4></div><div class="towns">Bethlehem, Harrismith (Free State) · Kempton Park (Gauteng) · Greytown, Kokstad (KZN) · Burgersfort (Limpopo) · Sabie (Mpumalanga). <b>Short practical task, then launch.</b></div></div>
+        <div class="tcard"><div class="h"><span class="badge b-support">Support pool</span><h4>9 towns</h4></div><div class="towns">Phuthaditjhaba, Durban, Harding, Nquthu, Burgersford, Mokopane, Bushbuckridge, Brits… <b>Join a nearby launch, build proof, graduate.</b></div></div>
+        <div class="tcard"><div class="h"><span class="badge b-recruit">Recruit more / hold</span><h4>8 towns</h4></div><div class="towns">KwaMaqoma, Matatiele, Brixton, Vanderbijlpark, Acornhoek, Emalahleni, Hazyview… <b>We recruit a stronger local team before launching.</b></div></div>
+      </div>
+    </section>
+
+    <!-- 30 DAY PLAN -->
+    <section id="plan">
+      <p class="eyebrow">06 — The 30-day activation plan</p>
+      <h2>July: reframe → interview → activate</h2>
+      <div class="timeline">
+        <div class="tl"><div class="d">Sat 5 Jul</div><h4>Way-forward email to all 46 applicants</h4><p>The delay explained, the new Ubuntu Town OS model, and the invitation to Monday's Town Hall.</p></div>
+        <div class="tl key"><div class="d">Mon 6 Jul · 18:00</div><h4>Town Hall #1 — Intro to Ubuntu Town OS (online)</h4><p>All applicants. The reset, the ten nodes, the Opportunity Point, and how the share model pays you. Recording shared after.</p></div>
+        <div class="tl"><div class="d">Tue 7 – Fri 10 Jul</div><h4>Launch-town interviews (Calendly)</h4><p>The 11 Launch towns: confirm Founding Coordinators &amp; teams, sign the revenue-share agreement, install the PWA.</p></div>
+        <div class="tl key"><div class="d">Thu 9 Jul · 08:00</div><h4>Weekly Ops Meeting #1</h4><p>Standing 8am Thursday cadence begins. Opportunity Point playbook + the Convert-a-Spaza workpack.</p></div>
+        <div class="tl"><div class="d">Mon 13 – Fri 17 Jul</div><h4>First Opportunity Points go live</h4><p>Launch towns activate their first points; ambassadors start earning activation stipends; Pilot towns run their practical task.</p></div>
+        <div class="tl key"><div class="d">Thu 16 Jul · 08:00</div><h4>Ops #2 — Proof, GPS &amp; the PWA</h4><p>Field capture, photo + GPS proof, and reading your live earnings in Ubuntu Town OS.</p></div>
+        <div class="tl key"><div class="d">Thu 23 Jul · 08:00</div><h4>Ops #3 — First earnings &amp; town memory</h4><p>Review live conversions and first revenue-share statements; Pilot towns graduate to Launch.</p></div>
+        <div class="tl key"><div class="d">Thu 30 Jul · 08:00</div><h4>Ops #4 — Month-1 review</h4><p>Town leaderboard, what worked, and the August expansion into the Support-pool towns.</p></div>
+      </div>
+      <div class="callout" style="border-left-color:var(--green);"><div class="t" style="color:var(--green);">Standing cadence</div><p><strong>Every Thursday, 08:00, online</strong> — the Ubuntu Town OS weekly ops meeting. That's the heartbeat: signals, proof, earnings, and what's next.</p></div>
+    </section>
+
+    <!-- SHARE AGREEMENT -->
+    <section id="agreement">
+      <p class="eyebrow">07 — The revenue-share agreement</p>
+      <h2>Your share, in writing</h2>
+      <p class="lead">A participation agreement — not employment — so it stays self-funding and fair. Headline terms:</p>
+      <ul class="terms">
+        <li><b>Participation, not employment.</b> You earn a share of town revenue you help generate, plus activity stipends — not a fixed salary.</li>
+        <li><b>The split.</b> 45% Town Team Pool · 30% Town Reinvestment · 25% Ubuntu Town OS. Fixed and transparent.</li>
+        <li><b>Your slice.</b> Role weight × band multiplier ÷ town team total, paid monthly with a full statement in Ubuntu Town OS.</li>
+        <li><b>Live-and-earn.</b> Your share tracks the Opportunity Points &amp; nodes that stay <em>active</em> — keep them alive, keep earning.</li>
+        <li><b>Rise by proof.</b> Quarterly re-assessment; move up a band and a role as your delivery grows. No equity, no dilution.</li>
+        <li><b>The code.</b> No displacement (vacant/willing shops only), political neutrality, honest proof. Break it, forfeit the share.</li>
+        <li><b>Source of truth.</b> Every signal, workpack, proof and payout is recorded in Ubuntu Town OS (Supabase) — one transparent ledger.</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer><div class="wrap">
+    <div class="cav">I am because we are.</div>
+    <p style="margin-top:6px;color:var(--muted-dk);font-size:13.5px;">Ubuntu Town — Coordinator Economics, Roles &amp; 30-Day Activation · an initiative of Abantu Bobuntu.</p>
+    <p class="disc">All rand figures are planning estimates for a self-funding revenue-share model, not guaranteed income or an offer of employment. Unit economics (revenue per Opportunity Point / node), the 45/30/25 split, role weights, band multipliers and ramp assumptions are parameters to be confirmed against live Ubuntu Town OS data before rollout. Prepared 5 July 2026.</p>
+  </div></footer>
+
+<script>
+(function(){var K='ut-theme',r=document.documentElement;if(localStorage.getItem(K)==='dark')r.setAttribute('data-theme','dark');
+function L(){var b=document.getElementById('themeBtn');if(b)b.textContent=r.getAttribute('data-theme')==='dark'?'☀ Light':'☾ Dark';}
+document.getElementById('themeBtn').onclick=function(){if(r.getAttribute('data-theme')==='dark'){r.removeAttribute('data-theme');localStorage.setItem(K,'light');}else{r.setAttribute('data-theme','dark');localStorage.setItem(K,'dark');}L();};L();})();
+</script>
+</body>
+</html>

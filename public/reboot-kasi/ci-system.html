@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ubuntu Town — CI & Design System (Light / Dark)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#FBF7F2; --canvas-raised:#FFFFFF; --sand:#F1E9DD; --sand-2:#EBE0D0; --line:#E7DFD2;
+    --ink:#1F1329; --muted:#6E6560;
+    --purple:#6B1F66; --purple-deep:#521350;
+    --orange:#F79412; --amber:#FFB02E; --pink:#F3B7D7; --green:#4F9E1E; --burnt:#C77A22; --indigo:#3B2E8C;
+    --dark:#231A2E; --paper:#F4EFEA;
+    --shadow:0 10px 30px rgba(31,19,41,.08);
+  }
+  [data-theme="dark"]{
+    --canvas:#150F1F; --canvas-raised:#211830; --sand:#241B33; --sand-2:#2C2140; --line:#352A46;
+    --ink:#F4EFEA; --muted:#B8AFC4;
+    --purple:#B266A8; --purple-deep:#8A4682;
+    --orange:#FA9E23; --amber:#FFBB2B; --pink:#F3C1DA; --green:#7FD400; --burnt:#D98A2B;
+    --dark:#0E0916; --paper:#F4EFEA;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--canvas);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .35s ease,color .35s ease;}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 6vw;}
+  @media(min-width:900px){.wrap{padding:0 48px;}}
+  h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-0.02em;line-height:1.03;margin:0;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .script{font-family:'Caveat',cursive;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);display:inline-flex;gap:10px;align-items:center;}
+  .eyebrow::before{content:"";width:26px;height:2px;background:currentColor;}
+
+  /* top bar */
+  .top{position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--canvas) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .top .in{max-width:1100px;margin:0 auto;padding:12px 6vw;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+  @media(min-width:900px){.top .in{padding:12px 48px;}}
+  .lockup{display:flex;align-items:center;gap:12px;}
+  .lockup .wm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.01em;color:var(--ink);line-height:1;}
+  .lockup .wm b{color:var(--purple);}
+  .lockup .wm .os{color:var(--orange);}
+  .lockup .sm{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+  .tbtn{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;background:var(--sand);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:8px 15px;cursor:pointer;transition:.2s;}
+  .tbtn:hover{border-color:var(--purple);color:var(--purple);}
+
+  /* family mark */
+  .mark{width:46px;height:40px;flex:none;}
+
+  /* hero */
+  .hero{padding:64px 0 40px;position:relative;overflow:hidden;}
+  .hero::after{content:"";position:absolute;right:-8%;top:-40%;width:55%;height:170%;background:radial-gradient(circle at center,color-mix(in srgb,var(--purple) 22%,transparent),transparent 62%);pointer-events:none;}
+  .hero .wrap{position:relative;z-index:2;}
+  .hero h1{font-size:clamp(2.5rem,6.5vw,4.4rem);font-weight:800;margin:16px 0 0;}
+  .hero h1 .p{color:var(--purple);} .hero h1 .o{color:var(--orange);}
+  .hero .tag{font-family:'Caveat',cursive;font-size:clamp(1.6rem,3.5vw,2.3rem);color:var(--orange);margin-top:6px;font-weight:700;}
+  .hero .sub{font-size:1.12rem;color:var(--muted);max-width:60ch;margin-top:14px;}
+  .initiative{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:20px;}
+  .initiative b{color:var(--purple);}
+
+  section{padding:52px 0;border-top:1px solid var(--line);}
+  h2{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:800;margin-bottom:10px;}
+  h2 .o{color:var(--orange);} h2 .p{color:var(--purple);}
+  .lead{font-size:1.1rem;color:var(--muted);max-width:64ch;}
+  h3{font-size:1.2rem;font-weight:700;margin:26px 0 10px;color:var(--purple);}
+  p{margin:0 0 14px;}
+  strong{font-weight:700;color:var(--ink);}
+
+  /* strategy */
+  .strat{display:grid;grid-template-columns:1fr;gap:16px;margin-top:14px;}
+  @media(min-width:820px){.strat{grid-template-columns:repeat(3,1fr);}}
+  .scard{background:var(--canvas-raised);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+  .scard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;}
+  .scard.keep::before{background:var(--green);}
+  .scard.change::before{background:var(--orange);}
+  .scard.update::before{background:var(--purple);}
+  .scard .lab{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;}
+  .scard.keep .lab{color:var(--green);} .scard.change .lab{color:var(--orange);} .scard.update .lab{color:var(--purple);}
+  .scard h4{font-size:1.15rem;font-weight:800;margin:6px 0 10px;}
+  .scard ul{margin:0;padding-left:18px;} .scard li{font-size:14px;color:var(--muted);margin-bottom:7px;} .scard li b{color:var(--ink);}
+
+  /* palette */
+  .themegrid{display:grid;grid-template-columns:1fr;gap:22px;margin-top:16px;}
+  @media(min-width:860px){.themegrid{grid-template-columns:1fr 1fr;}}
+  .themecol{background:var(--canvas-raised);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);}
+  .themecol .th{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .themecol .th .dot{width:12px;height:12px;border-radius:50%;border:1px solid var(--line);}
+  .sw{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .sw .chip{width:44px;height:44px;border-radius:10px;flex:none;border:1px solid rgba(0,0,0,.08);}
+  .sw .meta{font-size:13px;line-height:1.3;}
+  .sw .meta .nm{font-weight:600;color:var(--ink);}
+  .sw .meta .hx{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);}
+
+  /* motif / logo usage */
+  .markshow{display:grid;grid-template-columns:1fr;gap:16px;margin-top:14px;align-items:stretch;}
+  @media(min-width:760px){.markshow{grid-template-columns:1.1fr 1fr;}}
+  .markbox{background:var(--dark);border-radius:18px;padding:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;}
+  .markbox .biglock{display:flex;align-items:center;gap:16px;}
+  .markbox .biglock .wm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.9rem;color:var(--paper);line-height:.95;text-align:left;}
+  .markbox .biglock .wm b{color:#C98FC2;} .markbox .biglock .wm .o{color:var(--orange);}
+  .markbox .cav{font-family:'Caveat',cursive;font-size:1.6rem;color:var(--orange);}
+  .dodont{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .dd{border:1px solid var(--line);border-radius:12px;padding:14px;font-size:13px;}
+  .dd .h{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;}
+  .dd.do .h{color:var(--green);} .dd.dont .h{color:#C0392B;}
+  .dd ul{margin:0;padding-left:15px;} .dd li{color:var(--muted);margin-bottom:5px;}
+
+  /* type */
+  .typerow{background:var(--canvas-raised);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:12px;box-shadow:var(--shadow);}
+  .typerow .role{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .t-display{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:2rem;color:var(--ink);}
+  .t-body{font-family:'Inter',sans-serif;font-size:1.05rem;color:var(--ink);}
+  .t-mono{font-family:'IBM Plex Mono',monospace;font-size:1rem;color:var(--ink);letter-spacing:.02em;}
+  .t-script{font-family:'Caveat',cursive;font-size:2rem;color:var(--orange);}
+
+  /* ecosystem chips */
+  .eco{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:14px;}
+  .ec{background:var(--canvas-raised);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);}
+  .ec .sws{display:flex;gap:6px;margin-bottom:10px;}
+  .ec .s{width:26px;height:26px;border-radius:7px;border:1px solid rgba(0,0,0,.08);}
+  .ec .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.05rem;}
+  .ec .cl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+  .ec .hx{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:8px;}
+
+  /* components */
+  .comp{background:var(--canvas-raised);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:var(--shadow);margin-top:14px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;border-radius:999px;padding:11px 20px;border:1px solid transparent;cursor:pointer;text-decoration:none;}
+  .btn.primary{background:var(--purple);color:#fff;}
+  .btn.accent{background:var(--orange);color:#231204;}
+  .btn.ghost{background:transparent;border-color:var(--line);color:var(--ink);}
+  .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .pill{background:var(--sand);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;}
+  .pill .d{width:8px;height:8px;border-radius:50%;background:var(--purple);}
+  .chipst{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:6px;background:var(--sand-2);color:var(--muted);}
+  .chipst.op{background:color-mix(in srgb,var(--green) 20%,transparent);color:var(--green);}
+  .loop{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .loop .node{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;background:var(--sand);border:1px solid var(--line);padding:9px 13px;border-radius:9px;display:flex;gap:7px;align-items:center;}
+  .loop .node b{color:var(--orange);}
+  .loop .arrow{color:var(--purple);align-self:center;font-weight:700;}
+
+  footer{border-top:1px solid var(--line);padding:36px 0 64px;color:var(--muted);font-size:13px;}
+  footer .script{color:var(--orange);font-size:1.5rem;}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="in">
+  <div class="lockup">
+    <img class="mark" src="https://pub.hyperagent.com/api/published/pbf01KWMKRYMS_E8B4DSAYBX4AYTXB/2d51851a-429c-4abb-af4f-4f00b80b4942.png" alt="Ubuntu Town" style="height:44px;width:auto;" />
+    <div>
+      <div class="wm"><b>UBUNTU</b> TOWN <span class="os">OS</span></div>
+      <div class="sm">CI &amp; Design System</div>
+    </div>
+  </div>
+  <button id="themeBtn" class="tbtn">☾ Dark</button>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <img src="https://pub.hyperagent.com/api/published/pbf01KWMKRYMS_E8B4DSAYBX4AYTXB/2d51851a-429c-4abb-af4f-4f00b80b4942.png" alt="Ubuntu Town official logo" style="height:128px;width:auto;margin-bottom:20px;filter:drop-shadow(0 10px 26px rgba(107,31,102,.20));" />
+  <p class="eyebrow">Corporate Identity · Light / Dark · Default Light</p>
+  <h1>One <span class="p">purple</span>, one <span class="o">orange</span>,<br>one township OS.</h1>
+  <div class="tag">I am because we are.</div>
+  <p class="sub">The real Ubuntu Town identity, rebuilt from your actual logo assets — a warm, communal, entrepreneurial system that scales across every ecosystem brand, in light and dark.</p>
+  <p class="initiative">An initiative of <b>Abantu Bobuntu</b> · You in. We rise.</p>
+</div></header>
+
+<div class="wrap">
+
+  <!-- STRATEGY -->
+  <section id="strategy">
+    <p class="eyebrow">01 — The Strategy</p>
+    <h2>We don't change everything. We <span class="p">correct the skin</span> and keep the substance.</h2>
+    <p class="lead">You asked: do we change all, keep what matters, or update all? The honest answer — the strategy and structure are right; the colours I first improvised were not your brand. So we keep the thinking, fix the identity, and re-skin every surface onto the real CI.</p>
+    <div class="strat">
+      <div class="scard keep">
+        <div class="lab">Keep — it's working</div>
+        <h4>The substance</h4>
+        <ul>
+          <li><b>The OS model</b> — Signal → Workpack → Proof → Memory</li>
+          <li><b>All content &amp; IA</b> across both sites</li>
+          <li><b>Kopano</b> governed-AI + the coordinator model</li>
+          <li><b>The ecosystem</b> — nothing removed</li>
+          <li><b>The family motif</b> + each sub-brand's own logo</li>
+        </ul>
+      </div>
+      <div class="scard change">
+        <div class="lab">Change — I got it wrong</div>
+        <h4>The identity</h4>
+        <ul>
+          <li>Improvised <b>clay-red</b> primary → real <b>Ubuntu purple #6B1F66</b></li>
+          <li>Flat white → <b>warm cream</b> canvas</li>
+          <li>Add proper <b>light + dark</b> (default light)</li>
+          <li>Align every accent to the <b>real sub-brand hexes</b></li>
+          <li>Surface <b>“an initiative of Abantu Bobuntu”</b></li>
+        </ul>
+      </div>
+      <div class="scard update">
+        <div class="lab">Update — apply everywhere</div>
+        <h4>All surfaces</h4>
+        <ul>
+          <li>Re-skin the <b>public front door</b></li>
+          <li>Re-skin the <b>coordinator portal</b></li>
+          <li>Re-skin the <b>command plan</b></li>
+          <li>Add the <b>light/dark toggle</b> to each</li>
+          <li>Swap ecosystem chips to <b>real brand colours</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PALETTE -->
+  <section id="palette">
+    <p class="eyebrow">02 — The Palette</p>
+    <h2>Two anchors, both themes</h2>
+    <p class="lead">Purple and orange are sampled straight from the logo pixels. The canvas is never pure white and the ink is never flat black — warm cream and violet-black, exactly as your assets do it. Hit the toggle up top to feel it live.</p>
+    <div class="themegrid">
+      <div class="themecol">
+        <div class="th"><span class="dot" style="background:#FBF7F2"></span>Light theme · default</div>
+        <div class="sw"><span class="chip" style="background:#6B1F66"></span><span class="meta"><span class="nm">Ubuntu Purple — primary</span><br><span class="hx">#6B1F66</span></span></div>
+        <div class="sw"><span class="chip" style="background:#F79412"></span><span class="meta"><span class="nm">Ubuntu Orange — accent</span><br><span class="hx">#F79412</span></span></div>
+        <div class="sw"><span class="chip" style="background:#F3B7D7"></span><span class="meta"><span class="nm">Blush Pink — tertiary</span><br><span class="hx">#F3B7D7</span></span></div>
+        <div class="sw"><span class="chip" style="background:#FBF7F2"></span><span class="meta"><span class="nm">Warm Cream — canvas</span><br><span class="hx">#FBF7F2</span></span></div>
+        <div class="sw"><span class="chip" style="background:#1F1329"></span><span class="meta"><span class="nm">Violet-Black — ink</span><br><span class="hx">#1F1329</span></span></div>
+        <div class="sw"><span class="chip" style="background:#4F9E1E"></span><span class="meta"><span class="nm">Green — success / operating</span><br><span class="hx">#4F9E1E</span></span></div>
+      </div>
+      <div class="themecol" style="background:#150F1F;border-color:#352A46;">
+        <div class="th" style="color:#B8AFC4;"><span class="dot" style="background:#150F1F;border-color:#352A46;"></span>Dark theme</div>
+        <div class="sw"><span class="chip" style="background:#B266A8"></span><span class="meta"><span class="nm" style="color:#F4EFEA">Ubuntu Purple — lifted</span><br><span class="hx" style="color:#B8AFC4">#B266A8</span></span></div>
+        <div class="sw"><span class="chip" style="background:#FA9E23"></span><span class="meta"><span class="nm" style="color:#F4EFEA">Ubuntu Orange</span><br><span class="hx" style="color:#B8AFC4">#FA9E23</span></span></div>
+        <div class="sw"><span class="chip" style="background:#F3C1DA"></span><span class="meta"><span class="nm" style="color:#F4EFEA">Blush Pink</span><br><span class="hx" style="color:#B8AFC4">#F3C1DA</span></span></div>
+        <div class="sw"><span class="chip" style="background:#150F1F;border-color:#352A46"></span><span class="meta"><span class="nm" style="color:#F4EFEA">Violet-Black — canvas</span><br><span class="hx" style="color:#B8AFC4">#150F1F</span></span></div>
+        <div class="sw"><span class="chip" style="background:#F4EFEA"></span><span class="meta"><span class="nm" style="color:#F4EFEA">Warm Off-White — ink</span><br><span class="hx" style="color:#B8AFC4">#F4EFEA</span></span></div>
+        <div class="sw"><span class="chip" style="background:#7FD400"></span><span class="meta"><span class="nm" style="color:#F4EFEA">Green — lifted</span><br><span class="hx" style="color:#B8AFC4">#7FD400</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARK -->
+  <section id="mark">
+    <p class="eyebrow">03 — The Mark</p>
+    <h2>The family, in an arch</h2>
+    <p class="lead">The primary logo is the <strong>Ubuntu Town crest</strong> — a township beneath a church spire, a family on roads that fan out like opportunity, banner-locked in purple and orange. Its heart is the <strong>family motif</strong>: figures big and small, together — <em>I am because we are.</em> For tight spaces, a simplified family-mark serves as the app icon.</p>
+    <div class="markshow">
+      <div class="markbox">
+        <img src="https://pub.hyperagent.com/api/published/pbf01KWMKRYMS_E8B4DSAYBX4AYTXB/2d51851a-429c-4abb-af4f-4f00b80b4942.png" alt="Ubuntu Town official crest logo" style="height:220px;width:auto;" />
+        <div class="cav">You in. We rise.</div>
+      </div>
+      <div class="dodont">
+        <div class="dd do">
+          <div class="h">✓ Do</div>
+          <ul><li>Purple + orange lockup</li><li>Warm cream or violet-black grounds</li><li>Arch + circle-head motif</li><li>Script only for taglines</li></ul>
+        </div>
+        <div class="dd dont">
+          <div class="h">✗ Don't</div>
+          <ul><li>Clay-red or flat primaries</li><li>Pure #FFF / #000 grounds</li><li>Stretch or recolour sub-brand logos</li><li>Script for body copy</li></ul>
+        </div>
+        <div class="dd do" style="grid-column:1/-1;">
+          <div class="h">Relationship</div>
+          <ul style="columns:2;"><li><b>Abantu Bobuntu</b> — the movement</li><li><b>Ubuntu Town OS</b> — the platform</li><li>Ubuntu Academy, KasiBuy… — pathways</li><li>Each keeps its own logo + accent</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section id="type">
+    <p class="eyebrow">04 — Typography</p>
+    <h2>Chunky, warm, legible</h2>
+    <div class="typerow"><div class="role">Display / wordmarks — Bricolage Grotesque 800</div><div class="t-display">When a town speaks, the OS listens.</div></div>
+    <div class="typerow"><div class="role">Body / UI — Inter</div><div class="t-body">Signals become workpacks. Workpacks become proof. Proof becomes memory — and the town gets smarter every time.</div></div>
+    <div class="typerow"><div class="role">Labels / OS terms — IBM Plex Mono</div><div class="t-mono">SIGNAL · WORKPACK · PROOF · MEMORY · WP-0417</div></div>
+    <div class="typerow"><div class="role">Human tagline — Caveat (sparingly)</div><div class="t-script">I am because we are.</div></div>
+  </section>
+
+  <!-- ECOSYSTEM -->
+  <section id="ecosystem">
+    <p class="eyebrow">05 — Ecosystem Colours</p>
+    <h2>One family, many <span class="o">accents</span></h2>
+    <p class="lead">Every sub-brand keeps its own real colour — the through-line is a warm orange/amber against a dark or neutral ground. These are sampled from your actual logos.</p>
+    <div class="eco">
+      <div class="ec"><div class="sws"><span class="s" style="background:#6B1F66"></span><span class="s" style="background:#F79412"></span></div><div class="nm">Ubuntu Academy</div><div class="cl">Learn &amp; Create</div><div class="hx">#6B1F66 · #F79412</div></div>
+      <div class="ec"><div class="sws"><span class="s" style="background:#FE7602"></span><span class="s" style="background:#111"></span></div><div class="nm">AI Café</div><div class="cl">Flagship node</div><div class="hx">#FE7602 · #000000</div></div>
+      <div class="ec"><div class="sws"><span class="s" style="background:#FE5E06"></span><span class="s" style="background:#68BE00"></span></div><div class="nm">KasiBuy</div><div class="cl">Work &amp; Enterprise</div><div class="hx">#FE5E06 · #68BE00</div></div>
+      <div class="ec"><div class="sws"><span class="s" style="background:#063C6A"></span><span class="s" style="background:#F7AF0B"></span></div><div class="nm">FixEasy24</div><div class="cl">Make &amp; Regenerate</div><div class="hx">#063C6A · #F7AF0B</div></div>
+      <div class="ec"><div class="sws"><span class="s" style="background:#F0A61F"></span><span class="s" style="background:#1F1F24"></span></div><div class="nm">Job Fixer</div><div class="cl">Work &amp; Enterprise</div><div class="hx">#F0A61F · #1F1F24</div></div>
+      <div class="ec"><div class="sws"><span class="s" style="background:#992DD2"></span><span class="s" style="background:#151517"></span></div><div class="nm">Orbit Music</div><div class="cl">Learn &amp; Create</div><div class="hx">#992DD2 · #151517</div></div>
+      <div class="ec"><div class="sws"><span class="s" style="background:#111"></span><span class="s" style="background:#B49A82"></span></div><div class="nm">FamilyHouse</div><div class="cl">Live &amp; Care · serif</div><div class="hx">#101213 · #B49A82</div></div>
+      <div class="ec"><div class="sws"><span class="s" style="background:#83837E"></span><span class="s" style="background:#111"></span></div><div class="nm">FrameSouth</div><div class="cl">Learn &amp; Create · mono</div><div class="hx">#000000 · #83837E</div></div>
+      <div class="ec"><div class="sws"><span class="s" style="background:#FFBB2B"></span><span class="s" style="background:#101213"></span></div><div class="nm">Memorial View</div><div class="cl">Live &amp; Care</div><div class="hx">#FFBB2B · #101213</div></div>
+      <div class="ec"><div class="sws"><span class="s" style="background:#6B1F66"></span><span class="s" style="background:#F79412"></span></div><div class="nm">HubWorks</div><div class="cl">Scale engine · to design</div><div class="hx">master purple/orange</div></div>
+    </div>
+  </section>
+
+  <!-- COMPONENTS -->
+  <section id="components">
+    <p class="eyebrow">06 — Components</p>
+    <h2>The kit</h2>
+    <div class="comp">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+        <a class="btn primary">Get started</a>
+        <a class="btn accent">Convert a spaza</a>
+        <a class="btn ghost">See the plan</a>
+      </div>
+      <div class="pillrow">
+        <span class="pill"><span class="d"></span>AI Café</span>
+        <span class="pill"><span class="d" style="background:var(--orange)"></span>KasiBuy</span>
+        <span class="pill"><span class="d" style="background:var(--green)"></span>FixEasy24</span>
+        <span class="pill"><span class="d" style="background:var(--pink)"></span>The Plug</span>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="chipst">Identified</span><span class="chipst">Assessed</span><span class="chipst">Partnered</span><span class="chipst">Funded</span><span class="chipst op">Operating</span>
+      </div>
+      <div class="loop">
+        <span class="node"><b>01</b> Signal</span><span class="arrow">›</span>
+        <span class="node"><b>02</b> Opportunity</span><span class="arrow">›</span>
+        <span class="node"><b>03</b> Workpack</span><span class="arrow">›</span>
+        <span class="node"><b>04</b> Proof</span><span class="arrow">›</span>
+        <span class="node"><b>05</b> Memory</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer><div class="wrap">
+  <div class="script">I am because we are.</div>
+  <p style="margin-top:8px;">Ubuntu Town — CI &amp; Design System · an initiative of Abantu Bobuntu · light default, dark on toggle. Palette and sub-brand colours sampled from supplied logo assets. Prepared 3 July 2026.</p>
+</div></footer>
+
+<script>
+(function(){
+  var KEY='ut-theme', root=document.documentElement;
+  if(localStorage.getItem(KEY)==='dark') root.setAttribute('data-theme','dark');
+  function label(){var b=document.getElementById('themeBtn'); if(b) b.textContent = root.getAttribute('data-theme')==='dark' ? '☀ Light' : '☾ Dark';}
+  function toggle(){
+    if(root.getAttribute('data-theme')==='dark'){root.removeAttribute('data-theme');localStorage.setItem(KEY,'light');}
+    else{root.setAttribute('data-theme','dark');localStorage.setItem(KEY,'dark');}
+    label();
+  }
+  document.addEventListener('DOMContentLoaded',function(){var b=document.getElementById('themeBtn'); if(b){b.addEventListener('click',toggle);} label();});
+})();
+</script>
+</body>
+</html>

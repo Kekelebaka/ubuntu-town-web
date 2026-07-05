@@ -1,0 +1,15 @@
+# Ubuntu Town OS — Phase 3 D1 -> Supabase migration toolkit
+# Pin loosely (minor versions) so the toolkit keeps working as Python/OpenSSL patch.
+# Tested against Python 3.9+.
+
+psycopg2-binary>=2.9.9      # Supabase/Postgres direct connection (loader, rollback, verify)
+pandas>=2.0.0                # xlsx parsing + dataframe transforms in import_applicants.py
+openpyxl>=3.1.0              # xlsx engine used by pandas.read_excel
+requests>=2.31.0             # Cloudflare D1 HTTP API client (d1_client.py)
+python-dotenv>=1.0.0         # .env loading in config.py
+
+# Optional: only needed if you choose the Supabase Python SDK instead of raw
+# psycopg2 for load_supabase.py / verify.py. The toolkit as shipped uses
+# psycopg2 exclusively against SUPABASE_DB_URL, so this is not a hard
+# dependency — uncomment if you extend the loader to use supabase-py.
+# supabase>=2.4.0
