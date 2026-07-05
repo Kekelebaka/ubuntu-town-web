@@ -12,25 +12,29 @@ function CustomerToaster() {
 }
 
 /**
- * This is a wrapper for the app that provides the supabase client, the router event wrapper
- * the react-query client, supabase listener, and the navigation progress bar.
+ * App-wide providers: theme, react-query, supabase listener, progress bar.
  *
- * The listener is used to listen for changes to the user's session and update the UI accordingly.
+ * Ubuntu Town OS CI is light-default: enableSystem is disabled so first paint
+ * is the cream/light theme regardless of OS preference; users opt into dark
+ * via the ThemeToggle (persisted by next-themes).
  */
 export function DynamicLayoutProviders({
-  // Layouts must accept a children prop.
-  // This will be populated with nested layouts or pages
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <ThemeProvider enableSystem themes={['light', 'dark']} defaultTheme="light">
+    <ThemeProvider
+      attribute="class"
+      enableSystem={false}
+      themes={['light', 'dark']}
+      defaultTheme="light"
+    >
       {children}
       <Suspense>
         <ProgressBar
           height="4px"
-          color="#0047ab"
+          color="#6B1F66"
           options={{ showSpinner: false }}
           shallowRouting
         />

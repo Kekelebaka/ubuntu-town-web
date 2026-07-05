@@ -1,5 +1,6 @@
 import '@/styles/globals.css';
 import localFont from 'next/font/local';
+import { Bricolage_Grotesque, IBM_Plex_Mono, Caveat } from 'next/font/google';
 import { DynamicLayoutProviders } from './DynamicLayoutProviders';
 import { ClientLayout } from './ClientLayout';
 
@@ -22,6 +23,11 @@ const robotoMono = localFont({
   variable: '--font-roboto-mono',
   display: 'swap',
 });
+
+// Ubuntu Town OS brand fonts (display / mono / handwritten accent)
+const bricolage = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-bricolage', display: 'swap' });
+const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['500', '600'], variable: '--font-plex-mono', display: 'swap' });
+const caveat = Caveat({ subsets: ['latin'], variable: '--font-caveat', display: 'swap' });
 
 export const metadata = {
   title: {
@@ -181,7 +187,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   };
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${robotoMono.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${robotoMono.variable} ${bricolage.variable} ${plexMono.variable} ${caveat.variable}`}
+    >
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <script
@@ -189,8 +199,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           data-domain={typeof window !== 'undefined' ? window.location.hostname : 'ubuntutown.co.za'}
           src="https://plausible.io/js/script.js"
         ></script>
-        <meta name="theme-color" content="#1a7f37" />
-        <meta name="msapplication-TileColor" content="#1a7f37" />
+        <meta name="theme-color" content="#6B1F66" />
+        <meta name="msapplication-TileColor" content="#6B1F66" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
