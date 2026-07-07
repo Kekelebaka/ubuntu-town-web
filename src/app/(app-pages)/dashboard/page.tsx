@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { Suspense } from 'react';
 import { DashboardHeading } from './dashboard-heading';
 import { DashboardListSkeleton } from './dashboard-list-skeleton';

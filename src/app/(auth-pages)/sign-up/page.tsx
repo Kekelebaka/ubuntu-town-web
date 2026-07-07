@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { Suspense } from 'react';
 import { z } from 'zod';
 import { SignUp } from './Signup';

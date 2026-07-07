@@ -108,7 +108,7 @@ export function NewLoginPage() {
   );
 }
 
-function ChromeIcon(props) {
+function ChromeIcon(props: any) {
   return (
     <svg
       {...props}
@@ -131,7 +131,7 @@ function ChromeIcon(props) {
   );
 }
 
-function GithubIcon(props) {
+function GithubIcon(props: any) {
   return (
     <svg
       {...props}
@@ -151,7 +151,7 @@ function GithubIcon(props) {
   );
 }
 
-function TwitterIcon(props) {
+function TwitterIcon(props: any) {
   return (
     <svg
       {...props}

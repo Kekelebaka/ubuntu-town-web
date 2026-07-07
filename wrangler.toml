@@ -1,13 +1,5 @@
+# Ubuntu Town OS — Cloudflare Pages
 name = "ubuntu-town-web"
-compatibility_date = "2026-03-23"
+compatibility_date = "2026-06-19"
+compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
-
-# Environment variables should be set via Cloudflare Dashboard
-# Use: wrangler pages env put NEXT_PUBLIC_SUPABASE_URL
-# Use: wrangler pages env put NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-# Use: wrangler pages env put NEXT_PUBLIC_APP_URL
-
-# For local development, create a .env.local file with:
-# NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-# NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_anon_key
-# NEXT_PUBLIC_APP_URL=http://localhost:3000

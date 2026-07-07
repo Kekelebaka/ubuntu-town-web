@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { getPrivateItem } from '@/data/anon/privateItems';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';

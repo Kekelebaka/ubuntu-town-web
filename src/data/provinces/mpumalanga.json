@@ -1,0 +1,640 @@
+{
+  "slug": "mpumalanga",
+  "name": "Mpumalanga",
+  "default_lens": "visitor",
+  "network": {
+    "towns": 50,
+    "provinces": 9,
+    "coordinators": 53
+  },
+  "aggregates": {
+    "towns": 18,
+    "live": 0,
+    "building": 5,
+    "unclaimed": 13,
+    "opportunity_index_avg": 9.2
+  },
+  "data_vintage": "2026-06",
+  "towns": [
+    {
+      "slug": "barberton",
+      "name": "Barberton",
+      "region": "Mbombela · heritage & wellness",
+      "district": "Mbombela",
+      "status": "building",
+      "render_pct": 30,
+      "opportunity_potential": 52,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/barberton",
+      "illustrative": true,
+      "lat": -25.7833,
+      "lng": 31.05,
+      "description": "A historic gold rush town surrounded by some of the oldest rocks on earth — the Barberton Greenstone Belt contains fossils dating back 3.5 billion years. The heritage buildings and mountain setting are spectacular.",
+      "population_estimate": 12000,
+      "archetype": "heritage_town"
+    },
+    {
+      "slug": "bushbuckridge",
+      "name": "Bushbuckridge",
+      "region": "Bushbuckridge · rural protocol",
+      "district": "Bushbuckridge",
+      "status": "building",
+      "render_pct": 25,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/bushbuckridge",
+      "illustrative": true,
+      "coordinator_name": "Sharmane Fortunate Sekatane",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -24.8333,
+      "lng": 31,
+      "description": "Gateway to the Kruger Park's southern gates, surrounded by subtropical fruit farms and the Drakensberg escarpment.",
+      "opportunities": [
+        {
+          "id": "opp-ecoc-bushbuckridge",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-bushbuckridge",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        },
+        {
+          "id": "opp-bunt-bushbuckridge-2",
+          "title": "BuntuBar — Mobile Bar Event Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-bushbuckridge",
+          "metadata": {
+            "ecosystem": "buntubar"
+          }
+        },
+        {
+          "id": "opp-aica-bushbuckridge-3",
+          "title": "AI Café — Digital Access Point / CV Service Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-bushbuckridge",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        }
+      ],
+      "cv_count": 2
+    },
+    {
+      "slug": "mbombela",
+      "name": "Mbombela",
+      "region": "Nelspruit · gateway to Kruger",
+      "district": "Mbombela",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 55,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/mbombela",
+      "illustrative": true,
+      "lat": -25.4667,
+      "lng": 30.9833,
+      "description": "Provincial capital and gateway to the Panorama Route, Kruger Park, and God's Window."
+    },
+    {
+      "slug": "witbank",
+      "name": "Witbank",
+      "region": "Emalahleni · coal belt",
+      "district": "Emalahleni",
+      "status": "ghost",
+      "render_pct": 24,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/witbank",
+      "illustrative": true,
+      "coordinator_name": "Mpumi Vilakazi",
+      "youth_mapped": 88,
+      "active_signals": 0,
+      "open_opportunities": 1,
+      "lat": -25.8667,
+      "lng": 29.2333,
+      "description": "The old name for Emalahleni, Witbank remains in common usage — a coal mining powerhouse where South Africa's energy is forged.",
+      "population_estimate": 120000,
+      "archetype": "mining_town",
+      "opportunities": [
+        {
+          "id": "opp-aica-witb",
+          "title": "AI Café — Digital Access Point / CV Service Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-witb",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        },
+        {
+          "id": "opp-ubun-witb-2",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-witb",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        },
+        {
+          "id": "opp-orbi-witb-3",
+          "title": "Orbit Music — Youth AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-witb",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "middelburg",
+      "name": "Middelburg",
+      "region": "Steve Tshwete · mining",
+      "district": "Steve Tshwete",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 40,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/middelburg",
+      "illustrative": true,
+      "lat": -25.7833,
+      "lng": 29.4667,
+      "description": "A farming and mining town in the Mpumalanga Highveld, Middelburg serves the surrounding agricultural and industrial communities. The annual Middelburg Show celebrates rural life.",
+      "population_estimate": 25000,
+      "archetype": "mining_town"
+    },
+    {
+      "slug": "secunda",
+      "name": "Secunda",
+      "region": "Mkhondo · energy hub",
+      "district": "Mkhondo",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 42,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/secunda",
+      "illustrative": true,
+      "lat": -26.5167,
+      "lng": 29.1667,
+      "description": "Home to Sasol's massive coal-to-liquids facility, Secunda is where South Africa's energy independence was forged — literally turning coal into fuel.",
+      "population_estimate": 35000,
+      "archetype": "industrial"
+    },
+    {
+      "slug": "sabie",
+      "name": "Sabie",
+      "region": "Mbombela · forestry & tourism",
+      "district": "Mbombela",
+      "status": "ghost",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/sabie",
+      "illustrative": true,
+      "coordinator_name": "Ntando Zwane",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -25.0917,
+      "lng": 30.775,
+      "description": "In the heart of Mpumalanga's forestry country, Sabie is surrounded by waterfalls, indigenous forest, and the stunning Panorama Route. This is where South Africa's timber industry meets eco-tourism.",
+      "population_estimate": 5000,
+      "archetype": "forestry_town",
+      "opportunities": [
+        {
+          "id": "opp-ecoc-sabie",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-sabie",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        },
+        {
+          "id": "opp-bunt-sabie-2",
+          "title": "BuntuBar — Mobile Bar Event Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-sabie",
+          "metadata": {
+            "ecosystem": "buntubar"
+          }
+        },
+        {
+          "id": "opp-aica-sabie-3",
+          "title": "AI Café — Digital Access Point / CV Service Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-sabie",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "ermelo",
+      "name": "Ermelo",
+      "region": "Mkhondo · coal & agriculture",
+      "district": "Mkhondo",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 35,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/ermelo",
+      "illustrative": true,
+      "lat": -26.5333,
+      "lng": 29.9833,
+      "description": "Coal mining town in the highveld grasslands, centre of the Mpumalanga coal belt."
+    },
+    {
+      "slug": "standerton",
+      "name": "Standerton",
+      "region": "Lekwa · maize & dairy",
+      "district": "Lekwa",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/standerton",
+      "illustrative": true,
+      "lat": -26.9333,
+      "lng": 29.2333,
+      "description": "A farming town on the banks of the Vaal River, Standerton serves the surrounding agricultural district and offers river activities for visitors.",
+      "population_estimate": 25000,
+      "archetype": "farming_town"
+    },
+    {
+      "slug": "piet-retief",
+      "name": "Piet Retief",
+      "region": "Mkhondo · forestry & border",
+      "district": "Mkhondo",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 32,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/piet-retief",
+      "illustrative": true,
+      "lat": -27,
+      "lng": 30.8167,
+      "description": "Timber and mining town near the Swaziland border, gateway to the Mpumalanga escarpment."
+    },
+    {
+      "slug": "nelspruit",
+      "name": "Nelspruit",
+      "region": "",
+      "status": "building",
+      "render_pct": 32,
+      "opportunity_potential": 45,
+      "coordinator_status": "assigned",
+      "route": "/town/nelspruit",
+      "illustrative": false,
+      "coordinator_name": "Given Nkosi",
+      "youth_mapped": 72,
+      "active_signals": 0,
+      "open_opportunities": 2,
+      "lat": -25.4756,
+      "lng": 30.9694,
+      "description": "The gateway to the Kruger National Park, Nelspruit (Mbombela) is surrounded by subtropical fruit farms, the Lowveld Botanical Garden, and Big Five game reserves. It's where the Highveld drops to the Lowveld and wildlife begins.",
+      "population_estimate": 58000,
+      "archetype": "gateway_town",
+      "opportunities": [
+        {
+          "id": "opp-fami-nelsp",
+          "title": "FamilyHouse — Home Hospitality Host Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-nelsp",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        },
+        {
+          "id": "opp-ecoc-nelsp-2",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-nelsp",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        },
+        {
+          "id": "opp-bunt-nelsp-3",
+          "title": "BuntuBar — Mobile Bar Event Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-nelsp",
+          "metadata": {
+            "ecosystem": "buntubar"
+          }
+        }
+      ],
+      "stories": [
+        {
+          "slug": "nelspruit",
+          "title": "Kruger Gateway Tourism Boost",
+          "content": "Tourists passing through to Kruger now stop in Nelspruit. Our tourism guides created walking tours of the town.",
+          "author_name": "Mandla T.",
+          "id": "seed-nelspruit-story",
+          "town_id": null
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-nelsp-1",
+          "name": "Nelspruit Tourism Office",
+          "category": "education",
+          "is_verified": true,
+          "town_id": "town-nelsp"
+        }
+      ],
+      "events": [
+        {
+          "slug": "nelspruit",
+          "title": "Lowveld Agrifood Expo",
+          "description": "Agricultural and food expo showcasing Mpumalanga produce",
+          "event_date": "2026-08-20",
+          "id": "seed-nelspruit-evt",
+          "town_id": null
+        }
+      ],
+      "services": [
+        {
+          "title": "Mbombela TVET College",
+          "description": "Hospitality, engineering, and business programmes.",
+          "price_range": "R4,000 - R10,000/year",
+          "category": "education"
+        },
+        {
+          "title": "Kruger Mpumalanga International Airport",
+          "description": "Gateway to Kruger Park. Daily flights to Joburg and Cape Town.",
+          "price_range": "R800 - R3,000",
+          "category": "transport"
+        }
+      ]
+    },
+    {
+      "slug": "emalahleni",
+      "name": "Emalahleni",
+      "region": "",
+      "status": "building",
+      "render_pct": 25,
+      "opportunity_potential": 30,
+      "coordinator_status": "assigned",
+      "route": "/town/emalahleni",
+      "illustrative": false,
+      "coordinator_name": "Johannes Steyn",
+      "youth_mapped": 95,
+      "active_signals": 0,
+      "open_opportunities": 2,
+      "lat": -25.8667,
+      "lng": 29.2333,
+      "description": "South Africa's coal capital, Emalahleni means 'place of coal' in isiZulu and is the energy powerhouse of the nation. The mines power the country while the community builds a future beyond coal.",
+      "population_estimate": 120000,
+      "archetype": "mining_town",
+      "opportunities": [
+        {
+          "id": "opp-eskom-emal",
+          "title": "Eskom Graduate-in-Training Programme 2027",
+          "type": "internship",
+          "source": "private",
+          "deadline_date": "2026-09-15",
+          "town_id": "town-emal",
+          "metadata": {
+            "provider": "Eskom"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "acornhoek",
+      "name": "Acornhoek",
+      "region": "",
+      "status": "building",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "coordinator_status": "assigned",
+      "route": "/town/acornhoek",
+      "illustrative": false,
+      "coordinator_name": "Thabiso Mokoena",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -24.5833,
+      "lng": 31.1667,
+      "description": "Gateway town to the Kruger Park, surrounded by wildlife reserves and bushveld.",
+      "opportunities": [
+        {
+          "id": "opp-insi-acornhoek",
+          "title": "Inside.Town — Community Podcast Producer",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-acornhoek",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        },
+        {
+          "id": "opp-fram-acornhoek-2",
+          "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-acornhoek",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        },
+        {
+          "id": "opp-fixe-acornhoek-3",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-acornhoek",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "graskop",
+      "name": "Graskop",
+      "region": "panorama route",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -24.9583,
+      "lng": 30.825,
+      "description": "The viewing platform at God's Window offers one of South Africa's most famous panoramas — the whole Lowveld stretching to Mozambique below. The Panorama Route through here includes Bourke's Luck Potholes and the Three Rondavels.",
+      "population_estimate": 3000,
+      "archetype": "panorama_route",
+      "coordinator_status": "recruiting",
+      "route": "/town/graskop",
+      "illustrative": true
+    },
+    {
+      "slug": "pilgrims-rest",
+      "name": "Pilgrim's Rest",
+      "region": "heritage town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -24.9667,
+      "lng": 30.75,
+      "description": "A perfectly preserved 19th-century gold mining village where the main street looks exactly as it did when prospectors struck it rich. The heritage buildings, Royal Hotel, and mining museum tell the story of the gold rush.",
+      "population_estimate": 800,
+      "archetype": "heritage_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/pilgrims-rest",
+      "illustrative": true
+    },
+    {
+      "slug": "eelands",
+      "name": "Eelands",
+      "region": "conservation",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -25.4,
+      "lng": 30.6,
+      "description": "Surrounded by nature reserves in Mpumalanga's bushveld, Eelands represents the province's commitment to conservation alongside development.",
+      "population_estimate": 2000,
+      "archetype": "conservation",
+      "coordinator_status": "recruiting",
+      "route": "/town/eelands",
+      "illustrative": true
+    },
+    {
+      "slug": "badplaas",
+      "name": "Badplaas",
+      "region": "mineral springs",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -25.8167,
+      "lng": 30.8833,
+      "description": "A historic mineral springs resort town in Mpumalanga's lowveld, Badplaas has been attracting visitors seeking healing waters for generations.",
+      "population_estimate": 3000,
+      "archetype": "mineral_springs",
+      "coordinator_status": "recruiting",
+      "route": "/town/badplaas",
+      "illustrative": true
+    },
+    {
+      "slug": "lydenburg",
+      "name": "Lydenburg",
+      "region": "heritage town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -25.1,
+      "lng": 30.45,
+      "description": "A farming town at the foot of the Long Tom Pass, Lydenburg is known for the famous Lydenburg Heads — 1,500-year-old terracotta sculptures that are among the oldest ceramics found in southern Africa.",
+      "population_estimate": 8000,
+      "archetype": "heritage_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/lydenburg",
+      "illustrative": true
+    }
+  ],
+  "hero_image": "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80",
+  "description": "The Panorama Route, Kruger Park gateway, and 13 towns in South Africa's most dramatic landscape. From God's Window to the Lowveld, Mpumalanga is where nature writes its masterpiece.",
+  "coordinators": [
+    {
+      "name": "Johannes Steyn",
+      "status": "active",
+      "town": "emalahleni"
+    },
+    {
+      "name": "Sharmane Fortunate Sekatane",
+      "status": "active",
+      "town": "bushbuckridge"
+    },
+    {
+      "name": "Thabiso Mokoena",
+      "status": "active",
+      "town": "acornhoek"
+    },
+    {
+      "name": "Ntando Zwane",
+      "status": "active",
+      "town": "sabie"
+    },
+    {
+      "name": "Mpumi Vilakazi",
+      "status": "active",
+      "town": "witbank"
+    },
+    {
+      "name": "Given Nkosi",
+      "status": "active",
+      "town": "nelspruit"
+    }
+  ],
+  "top_opportunities": [
+    {
+      "title": "Eskom Graduate-in-Training Programme 2027",
+      "type": "internship",
+      "source": "private",
+      "town": "emalahleni"
+    },
+    {
+      "title": "Inside.Town — Community Podcast Producer",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "acornhoek"
+    },
+    {
+      "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "acornhoek"
+    },
+    {
+      "title": "FixEasy24 — Verified Service Provider Registration",
+      "type": "opportunity",
+      "source": "ngo",
+      "town": "acornhoek"
+    },
+    {
+      "title": "EcoChar — 5-Day Charcoal Production Training",
+      "type": "training",
+      "source": "ngo",
+      "town": "bushbuckridge"
+    }
+  ]
+}

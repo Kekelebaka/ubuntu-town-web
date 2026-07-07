@@ -1,0 +1,501 @@
+{
+  "slug": "north-west",
+  "name": "North West",
+  "default_lens": "investor",
+  "network": {
+    "towns": 50,
+    "provinces": 9,
+    "coordinators": 53
+  },
+  "aggregates": {
+    "towns": 11,
+    "live": 0,
+    "building": 2,
+    "unclaimed": 9,
+    "opportunity_index_avg": 9.3
+  },
+  "data_vintage": "2026-06",
+  "towns": [
+    {
+      "slug": "brits",
+      "name": "Brits",
+      "region": "Madibeng · youth & sport",
+      "district": "Madibeng",
+      "status": "building",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/brits",
+      "illustrative": true,
+      "coordinator_name": "Nomvula Dlamini",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -25.6333,
+      "lng": 27.7833,
+      "description": "Agricultural and mining hub in the Pilanesberg region, gateway to Sun City and game reserves.",
+      "opportunities": [
+        {
+          "id": "opp-orbi-brits",
+          "title": "Orbit Music — Youth AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-brits",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        },
+        {
+          "id": "opp-insi-brits-2",
+          "title": "Inside.Town — Community Podcast Producer",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-brits",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        },
+        {
+          "id": "opp-fram-brits-3",
+          "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-brits",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "brits",
+          "name": "Pilanesberg Game Reserve",
+          "category": "tourism",
+          "is_verified": false,
+          "id": "seed-brits-biz",
+          "town_id": null
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "rustenburg",
+      "name": "Rustenburg",
+      "region": "Rustenburg · platinum belt",
+      "district": "Rustenburg",
+      "status": "building",
+      "render_pct": 33,
+      "opportunity_potential": 55,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/rustenburg",
+      "illustrative": false,
+      "coordinator_name": "Kagiso Mothibi",
+      "youth_mapped": 134,
+      "active_signals": 1,
+      "open_opportunities": 3,
+      "lat": -25.6672,
+      "lng": 27.2427,
+      "description": "The Platinum Capital of the World, Rustenburg sits between the Pilanesberg Game Reserve and the Magaliesberg Mountains. The city's platinum mines power the global economy while Sun City and the Bushveld offer world-class entertainment.",
+      "population_estimate": 125000,
+      "archetype": "mining_city",
+      "opportunities": [
+        {
+          "id": "opp-plat-rstnb",
+          "title": "Rustenburg Platinum Belt Skills Programme",
+          "type": "training",
+          "source": "private",
+          "deadline_date": null,
+          "town_id": "town-rstnb",
+          "metadata": {
+            "ongoing": true,
+            "provider": "Anglo American Platinum"
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "sig-rstnb-1",
+          "title": "Water leak fixed — Bojanala Road",
+          "category": "infrastructure",
+          "status": "resolved",
+          "town_id": "town-rstnb"
+        }
+      ],
+      "stories": [
+        {
+          "slug": "rustenburg",
+          "title": "Mining Town Diversifies",
+          "content": "Rustenburg is more than platinum. The tourism sector is growing with Sun City and Pilanesberg nearby.",
+          "author_name": "Pieter V.",
+          "id": "seed-rustenburg-story",
+          "town_id": null
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-rstnb-1",
+          "name": "Rustenburg Mining Supplies",
+          "category": "retail",
+          "is_verified": true,
+          "town_id": "town-rstnb"
+        }
+      ],
+      "events": [
+        {
+          "slug": "rustenburg",
+          "title": "Bafokeng Cultural Festival",
+          "description": "Traditional Setswana cultural celebration",
+          "event_date": "2026-12-16",
+          "id": "seed-rustenburg-evt",
+          "town_id": null
+        }
+      ]
+    },
+    {
+      "slug": "mafikeng",
+      "name": "Mahikeng",
+      "region": "Ramotshere · provincial capital",
+      "district": "Ramotshere Moiloa",
+      "status": "ghost",
+      "render_pct": 31,
+      "opportunity_potential": 45,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/mafikeng",
+      "illustrative": true,
+      "coordinator_name": "Kelebogile Tau",
+      "youth_mapped": 56,
+      "active_signals": 1,
+      "open_opportunities": 2,
+      "lat": -25.8656,
+      "lng": 25.6447,
+      "description": "The capital of the North West and former capital of Bophuthatswana, Mafikeng (Mahikeng) is a city of historical significance — the 1899 Mafeking Siege made it famous worldwide. The museum and heritage sites tell stories of resilience.",
+      "population_estimate": 50000,
+      "archetype": "provincial_capital",
+      "opportunities": [
+        {
+          "id": "opp-kasi-mfk",
+          "title": "KasiBuy — Local Sellers & Spaza Partners Wanted",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-mfk",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-eco-mfk",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-mfk",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        }
+      ],
+      "stories": [
+        {
+          "id": "story-mfk-1",
+          "title": "Mafikeng First Digital Business Map",
+          "content": "Kelebogile mapped 47 businesses. 12 had no online presence. Now they do.",
+          "author_name": "Kelebogile T.",
+          "town_id": "town-mfk"
+        },
+        {
+          "slug": "mafikeng",
+          "title": "First Digital Business Map",
+          "content": "Kelebogile mapped 47 businesses. 12 had no online presence. Now they do. Mafikeng is going digital.",
+          "author_name": "Kelebogile T.",
+          "id": "seed-mafikeng-story",
+          "town_id": null
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-mfk-1",
+          "name": "Mafikeng Central Market",
+          "category": "retail",
+          "is_verified": true,
+          "town_id": "town-mfk"
+        }
+      ],
+      "events": [
+        {
+          "id": "evt-mfk-1",
+          "title": "Mafikeng Coordinator Training",
+          "description": "Two-day coordinator training.",
+          "event_date": "2026-07-18",
+          "town_id": "town-mfk"
+        }
+      ],
+      "access_points": [
+        {
+          "id": "ap-mfk-1",
+          "name": "Mafikeng Public Library",
+          "category": "library",
+          "is_verified": true,
+          "town_id": "town-mfk"
+        }
+      ],
+      "services": [
+        {
+          "title": "North-West University — Mafikeng campus",
+          "description": "Education, law, science, and commerce.",
+          "price_range": "R8,000 - R28,000/year",
+          "category": "education"
+        },
+        {
+          "title": "Mafikeng Museum — Bophuthatswana parliament",
+          "description": "History of the former homeland and Setswana culture.",
+          "price_range": "R20 - R40",
+          "category": "tourism"
+        }
+      ]
+    },
+    {
+      "slug": "klerksdorp",
+      "name": "Klerksdorp",
+      "region": "City of Matlosana · mining",
+      "district": "City of Matlosana",
+      "status": "ghost",
+      "render_pct": 23,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/klerksdorp",
+      "illustrative": true,
+      "coordinator_name": "Bongani Zulu",
+      "youth_mapped": 78,
+      "active_signals": 0,
+      "open_opportunities": 1,
+      "lat": -26.8524,
+      "lng": 26.6688,
+      "description": "A gold mining town in the Witwatersrand basin, Klerksdorp is where South Africa's mining heritage meets small-town community life. The mining museum and surrounding mines tell the gold story.",
+      "population_estimate": 40000,
+      "archetype": "mining_town",
+      "opportunities": [
+        {
+          "id": "opp-fixe-klerks",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-klerks",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-kasi-klerks-2",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-klerks",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-fami-klerks-3",
+          "title": "FamilyHouse — Home Hospitality Host Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-klerks",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "potchefstroom",
+      "name": "Potchefstroom",
+      "region": "Tlokwe · university town",
+      "district": "Tlokwe",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 45,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/potchefstroom",
+      "illustrative": true,
+      "lat": -26.7145,
+      "lng": 27.1,
+      "description": "Home to the North-West University, Potchefstroom is a student town with a strong Afrikaans heritage, beautiful dam, and the annual Aardklop arts festival.",
+      "population_estimate": 70000,
+      "archetype": "university_town"
+    },
+    {
+      "slug": "lichtenburg",
+      "name": "Lichtenburg",
+      "region": "Ditsobotla · agriculture",
+      "district": "Ditsobotla",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/lichtenburg",
+      "illustrative": true,
+      "lat": -26.15,
+      "lng": 26.1667,
+      "description": "The diamond capital of the North West, Lichtenburg's alluvial diamond fields have produced gems for over a century. The town's annual show celebrates its mining and farming heritage.",
+      "population_estimate": 15000,
+      "archetype": "mining_town"
+    },
+    {
+      "slug": "vryburg",
+      "name": "Vryburg",
+      "region": "Naledi · cattle capital",
+      "district": "Naledi",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 28,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/vryburg",
+      "illustrative": true,
+      "lat": -26.95,
+      "lng": 24.7333,
+      "description": "Cattle capital of South Africa, centre of the Naledi municipality in the western North West."
+    },
+    {
+      "slug": "zeerust",
+      "name": "Zeerust",
+      "region": "Ramotshere · border town",
+      "district": "Ramotshere Moiloa",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 25,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/zeerust",
+      "illustrative": true,
+      "lat": -25.5333,
+      "lng": 26.0833,
+      "description": "Mining and farming town near the Botswana border, gateway to the Marico valley."
+    },
+    {
+      "slug": "ventersdorp",
+      "name": "Ventersdorp",
+      "region": "farming town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -26.2667,
+      "lng": 26.8167,
+      "description": "A small farming town in the western North West, Ventersdorp is surrounded by cattle and maize farms. The community's determination and rural values define its character.",
+      "population_estimate": 8000,
+      "archetype": "farming_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/ventersdorp",
+      "illustrative": true
+    },
+    {
+      "slug": "coligny",
+      "name": "Coligny",
+      "region": "farming town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -26.1,
+      "lng": 26.2,
+      "description": "A small farming town in the western North West, Coligny is surrounded by sunflower and maize farms — the golden fields stretching to the horizon define this corner of the province.",
+      "population_estimate": 5000,
+      "archetype": "farming_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/coligny",
+      "illustrative": true
+    },
+    {
+      "slug": "mahikeng",
+      "name": "Mahikeng",
+      "region": "provincial capital",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -25.8656,
+      "lng": 25.6447,
+      "description": "The capital of the North West, Mahikeng (formerly Mafikeng) is a city of historical significance and cultural diversity. The university, museums, and surrounding bushveld make it a hub of the province.",
+      "population_estimate": 50000,
+      "archetype": "provincial_capital",
+      "coordinator_status": "recruiting",
+      "route": "/town/mahikeng",
+      "illustrative": true
+    }
+  ],
+  "hero_image": "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80",
+  "description": "The platinum belt, Pilanesberg crater, and 8 towns in South Africa's mining heartland. From Rustenburg to Mafikeng, the North West blends mineral wealth with rich cultural heritage.",
+  "coordinators": [
+    {
+      "name": "Kelebogile Tau",
+      "status": "active",
+      "town": "mafikeng"
+    },
+    {
+      "name": "Nomvula Dlamini",
+      "status": "active",
+      "town": "brits"
+    },
+    {
+      "name": "Bongani Zulu",
+      "status": "active",
+      "town": "klerksdorp"
+    },
+    {
+      "name": "Kagiso Mothibi",
+      "status": "active",
+      "town": "rustenburg"
+    }
+  ],
+  "featured_stories": [
+    {
+      "title": "Mafikeng First Digital Business Map",
+      "content": "Kelebogile mapped 47 businesses. 12 had no online presence. Now they do.",
+      "author": "Kelebogile T.",
+      "town": "mafikeng"
+    }
+  ],
+  "top_opportunities": [
+    {
+      "title": "Rustenburg Platinum Belt Skills Programme",
+      "type": "training",
+      "source": "private",
+      "town": "rustenburg"
+    },
+    {
+      "title": "KasiBuy — Local Sellers & Spaza Partners Wanted",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "mafikeng"
+    },
+    {
+      "title": "EcoChar — 5-Day Charcoal Production Training",
+      "type": "training",
+      "source": "ngo",
+      "town": "mafikeng"
+    },
+    {
+      "title": "Orbit Music — Youth AI Music Creation Workshop",
+      "type": "training",
+      "source": "ngo",
+      "town": "brits"
+    },
+    {
+      "title": "Inside.Town — Community Podcast Producer",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "brits"
+    }
+  ]
+}

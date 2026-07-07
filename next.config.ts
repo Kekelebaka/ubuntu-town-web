@@ -3,7 +3,7 @@ import { NextConfig } from "next";
 const config: NextConfig = {
   cacheComponents: false,
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true, // Pre-existing auth template type errors (not Ubuntu Town code)
   },
   images: {
     remotePatterns: [
@@ -16,6 +16,12 @@ const config: NextConfig = {
       {
         protocol: 'https',
         hostname: '*.supabase.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
         port: '',
         pathname: '/**',
       },

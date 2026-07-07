@@ -1,0 +1,525 @@
+{
+  "slug": "eastern-cape",
+  "name": "Eastern Cape",
+  "default_lens": "resident",
+  "network": {
+    "towns": 50,
+    "provinces": 9,
+    "coordinators": 53
+  },
+  "aggregates": {
+    "towns": 16,
+    "live": 0,
+    "building": 3,
+    "unclaimed": 13,
+    "opportunity_index_avg": 8.6
+  },
+  "data_vintage": "2026-06",
+  "towns": [
+    {
+      "slug": "kwamaqoma",
+      "name": "KwaMaqoma",
+      "region": "Nxuba · Fort Beaufort area",
+      "district": "Nxuba",
+      "status": "building",
+      "render_pct": 18,
+      "opportunity_potential": 35,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/kwamaqoma",
+      "illustrative": true,
+      "lat": -32.95,
+      "lng": 26.8833,
+      "description": "Historic Xhosa town near Fort Hare University, birthplace of African intellectual tradition."
+    },
+    {
+      "slug": "east-london",
+      "name": "East London",
+      "region": "Buffalo City · port & industry",
+      "district": "Buffalo City",
+      "status": "building",
+      "render_pct": 36,
+      "opportunity_potential": 55,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/east-london",
+      "illustrative": false,
+      "coordinator_name": "Andile Xhosa",
+      "youth_mapped": 156,
+      "active_signals": 1,
+      "open_opportunities": 3,
+      "lat": -33.0117,
+      "lng": 27.9104,
+      "description": "South Africa's only river port city, East London sits where the Buffalo River meets the Indian Ocean. The city's surfing beaches, museums, and vibrant communities make it the heart of the Wild Coast.",
+      "population_estimate": 267000,
+      "archetype": "port_city",
+      "opportunities": [
+        {
+          "id": "opp-epwp-el",
+          "title": "EPWP Community Works Programme",
+          "type": "internship",
+          "source": "government",
+          "deadline_date": null,
+          "town_id": "town-el",
+          "metadata": {
+            "ongoing": true
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "sig-el-1",
+          "title": "Raw sewage overflow — Mdantsane",
+          "category": "infrastructure",
+          "status": "pending",
+          "town_id": "town-el"
+        }
+      ],
+      "stories": [
+        {
+          "slug": "east-london",
+          "title": "Wild Coast Coding Academy",
+          "content": "In Mdantsane, youth are learning to code through free programmes. Now some work remotely for Cape Town companies.",
+          "author_name": "Ayanda N.",
+          "id": "seed-east-london-story",
+          "town_id": null
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-el-1",
+          "name": "Mdantsane Youth Centre",
+          "category": "education",
+          "is_verified": true,
+          "town_id": "town-el"
+        }
+      ],
+      "access_points": [
+        {
+          "id": "ap-el-1",
+          "name": "Mdantsane Library",
+          "category": "library",
+          "is_verified": true,
+          "town_id": "town-el"
+        }
+      ],
+      "services": [
+        {
+          "title": "Buffalo City TVET",
+          "description": "Business, engineering, and hospitality programmes.",
+          "price_range": "R4,000 - R10,000/year",
+          "category": "education"
+        },
+        {
+          "title": "East London Museum — dodo exhibit",
+          "description": "Home to the only complete dodo skeleton in the world.",
+          "price_range": "R30 - R50",
+          "category": "tourism"
+        }
+      ]
+    },
+    {
+      "slug": "gqeberha",
+      "name": "Gqeberha",
+      "region": "Nelson Mandela Bay · port city",
+      "district": "Nelson Mandela Bay",
+      "status": "building",
+      "render_pct": 46,
+      "opportunity_potential": 58,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/gqeberha",
+      "illustrative": false,
+      "coordinator_name": "Nomsa Plaatjes",
+      "youth_mapped": 210,
+      "active_signals": 0,
+      "open_opportunities": 2,
+      "lat": -33.9608,
+      "lng": 25.6022,
+      "description": "Formerly Port Elizabeth, Gqeberha is the Friendly City — a coastal metropolis where the St Croix Island penguins, Shark Rock Pier, and the annual Ironman triathlon define a city of sea and sport.",
+      "population_estimate": 312000,
+      "archetype": "coastal_city",
+      "opportunities": [
+        {
+          "id": "opp-fami-pe",
+          "title": "FamilyHouse — Home Hospitality Host Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-pe",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        },
+        {
+          "id": "opp-ecoc-pe-2",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-pe",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        },
+        {
+          "id": "opp-bunt-pe-3",
+          "title": "BuntuBar — Mobile Bar Event Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-pe",
+          "metadata": {
+            "ecosystem": "buntubar"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "gqeberha",
+          "name": "Addo Elephant National Park",
+          "category": "tourism",
+          "is_verified": false,
+          "id": "seed-gqeberha-biz",
+          "town_id": null
+        }
+      ]
+    },
+    {
+      "slug": "mthatha",
+      "name": "Mthatha",
+      "region": "OR Tambo · Transkei capital",
+      "district": "OR Tambo",
+      "status": "ghost",
+      "render_pct": 22,
+      "opportunity_potential": 40,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/mthatha",
+      "illustrative": true,
+      "coordinator_name": "Noluthando Madikizela",
+      "youth_mapped": 67,
+      "active_signals": 0,
+      "open_opportunities": 2,
+      "lat": -31.5889,
+      "lng": 28.6014,
+      "description": "The capital of the former Transkei and gateway to the Wild Coast, Mthatha is where Mandela's legacy lives on — the Nelson Mandela Museum tells the story of his early years in these rolling green hills.",
+      "population_estimate": 72000,
+      "archetype": "gateway_town",
+      "opportunities": [
+        {
+          "id": "opp-coord-mth",
+          "title": "Ubuntu Town Coordinator — Mthatha",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-mth",
+          "metadata": {
+            "earning": "Base stipend + workpack payments + revenue share",
+            "ecosystem": "coordinator"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "mthatha",
+          "name": "Mandela Museum",
+          "category": "tourism",
+          "is_verified": false,
+          "id": "seed-mthatha-biz",
+          "town_id": null
+        }
+      ]
+    },
+    {
+      "slug": "queenstown",
+      "name": "Queenstown",
+      "region": "E Mgungundlovu · Midlands hub",
+      "district": "Intsika Yethu",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 35,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/queenstown",
+      "illustrative": true,
+      "lat": -31.9,
+      "lng": 26.8833,
+      "description": "Hub of the Central Plateau, known as the \"Garden Town\" for its tree-lined streets and parks."
+    },
+    {
+      "slug": "king-williams-town",
+      "name": "King William's Town",
+      "region": "Amahlathi · border town",
+      "district": "Amahlathi",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 32,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/king-williams-town",
+      "illustrative": true,
+      "lat": -32.8833,
+      "lng": 27.4,
+      "description": "Historic frontier town on the Buffalo River, gateway to the Wild Coast and Transkei."
+    },
+    {
+      "slug": "butterworth",
+      "name": "Butterworth",
+      "region": "Ngqushwa · former Transkei",
+      "district": "Ngqushwa",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 28,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/butterworth",
+      "illustrative": true,
+      "lat": -32.3333,
+      "lng": 28.05,
+      "description": "Major town in the former Transkei, serving the surrounding rural communities of the Wild Coast."
+    },
+    {
+      "slug": "matatiele",
+      "name": "Matatiele",
+      "region": "Alfred Nzo · mountain town",
+      "district": "Alfred Nzo",
+      "status": "ghost",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/matatiele",
+      "illustrative": true,
+      "coordinator_name": "Thandi Mahlangu",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -30.3167,
+      "lng": 29.4167,
+      "description": "Gateway to the Drakensberg from the Eastern Cape, surrounded by rolling green hills and cattle farms.",
+      "opportunities": [
+        {
+          "id": "opp-fram-matatiele",
+          "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-matatiele",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        },
+        {
+          "id": "opp-fixe-matatiele-2",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-matatiele",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-kasi-matatiele-3",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-matatiele",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "grahamstown",
+      "name": "Makhanda",
+      "region": "Raymond Mhlaba · arts & heritage",
+      "district": "Raymond Mhlaba",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 38,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/grahamstown",
+      "illustrative": true,
+      "lat": -33.3117,
+      "lng": 26.5286,
+      "description": "Now called Makhanda, this historic frontier town is home to Rhodes University and the National Arts Festival — South Africa's biggest arts event that fills the town with performance every July.",
+      "population_estimate": 35000,
+      "archetype": "university_town"
+    },
+    {
+      "slug": "cradock",
+      "name": "Cradock",
+      "region": "Inxuba Yethamma · Karoo",
+      "district": "Inxuba Yethamma",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/cradock",
+      "illustrative": true,
+      "lat": -32.1667,
+      "lng": 25.6167,
+      "description": "Karoo town on the Great Fish River, home to the Karoo National Botanical Garden and Schreiner heritage."
+    },
+    {
+      "slug": "kariega",
+      "name": "Kariega",
+      "region": "coastal town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -33.5333,
+      "lng": 26.1667,
+      "description": "A peaceful coastal town between Port Elizabeth and Grahamstown, Kariega offers stunning beaches, the Sundays River mouth, and easy access to Addo Elephant National Park.",
+      "population_estimate": 10000,
+      "archetype": "coastal_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/kariega",
+      "illustrative": true
+    },
+    {
+      "slug": "port-alfred",
+      "name": "Port Alfred",
+      "region": "coastal town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -33.5833,
+      "lng": 26.8833,
+      "description": "A small holiday town where the Kowie River meets the Indian Ocean, Port Alfred is known for its beaches, bridge, and the annual Royal St Andrew's Golf tournament.",
+      "population_estimate": 8000,
+      "archetype": "coastal_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/port-alfred",
+      "illustrative": true
+    },
+    {
+      "slug": "alice",
+      "name": "Alice",
+      "region": "university town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -32.7833,
+      "lng": 26.8333,
+      "description": "Home to the University of Fort Hare — the alma mater of Nelson Mandela, Robert Sobukwe, and Oliver Tambo — Alice is a small Eastern Cape town with an outsized place in African history.",
+      "population_estimate": 5000,
+      "archetype": "university_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/alice",
+      "illustrative": true
+    },
+    {
+      "slug": "komani",
+      "name": "Komani",
+      "region": "interior town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -31.9,
+      "lng": 26.8833,
+      "description": "Known historically as Queenstown, Komani is a major centre in the Eastern Cape's interior, surrounded by rolling grasslands and rich Xhosa heritage.",
+      "population_estimate": 35000,
+      "archetype": "interior_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/komani",
+      "illustrative": true
+    },
+    {
+      "slug": "port-st-johns",
+      "name": "Port St Johns",
+      "region": "wild coast",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -31.6333,
+      "lng": 29.55,
+      "description": "The gateway to the Wild Coast, Port St John sits at the mouth of the Umzimvubu River where two mountains frame a stunning lagoon. This is raw, unspoiled Africa.",
+      "population_estimate": 5000,
+      "archetype": "wild_coast",
+      "coordinator_status": "recruiting",
+      "route": "/town/port-st-johns",
+      "illustrative": true
+    },
+    {
+      "slug": "hogsback",
+      "name": "Hogsback",
+      "region": "mountain village",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -32.5833,
+      "lng": 26.95,
+      "description": "A mystical mountain village wrapped in indigenous forest and waterfalls, Hogsback is said to have inspired Tolkien's Middle-earth. The Amathole Mountains hold ancient forests and misty trails.",
+      "population_estimate": 1000,
+      "archetype": "mountain_village",
+      "coordinator_status": "recruiting",
+      "route": "/town/hogsback",
+      "illustrative": true
+    }
+  ],
+  "hero_image": "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=1200&q=80",
+  "description": "The Wild Coast, Mandela's homeland, and 10 towns where Xhosa culture meets dramatic coastline. From East London to Coffee Bay, the Eastern Cape is raw, beautiful, and deeply storied.",
+  "coordinators": [
+    {
+      "name": "Nomsa Plaatjes",
+      "status": "active",
+      "town": "gqeberha"
+    },
+    {
+      "name": "Noluthando Madikizela",
+      "status": "active",
+      "town": "mthatha"
+    },
+    {
+      "name": "Thandi Mahlangu",
+      "status": "active",
+      "town": "matatiele"
+    },
+    {
+      "name": "Andile Xhosa",
+      "status": "active",
+      "town": "east-london"
+    }
+  ],
+  "top_opportunities": [
+    {
+      "title": "EPWP Community Works Programme",
+      "type": "internship",
+      "source": "government",
+      "town": "east-london"
+    },
+    {
+      "title": "Ubuntu Town Coordinator — Mthatha",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "mthatha"
+    },
+    {
+      "title": "FamilyHouse — Home Hospitality Host Registration",
+      "type": "opportunity",
+      "source": "ngo",
+      "town": "gqeberha"
+    },
+    {
+      "title": "EcoChar — 5-Day Charcoal Production Training",
+      "type": "training",
+      "source": "ngo",
+      "town": "gqeberha"
+    },
+    {
+      "title": "BuntuBar — Mobile Bar Event Workshop",
+      "type": "training",
+      "source": "ngo",
+      "town": "gqeberha"
+    }
+  ]
+}

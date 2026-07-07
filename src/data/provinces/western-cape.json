@@ -1,0 +1,894 @@
+{
+  "slug": "western-cape",
+  "name": "Western Cape",
+  "default_lens": "visitor",
+  "network": {
+    "towns": 50,
+    "provinces": 9,
+    "coordinators": 53
+  },
+  "aggregates": {
+    "towns": 25,
+    "live": 0,
+    "building": 3,
+    "unclaimed": 22,
+    "opportunity_index_avg": 4.8
+  },
+  "data_vintage": "2026-06",
+  "towns": [
+    {
+      "slug": "stellenbosch",
+      "name": "Stellenbosch",
+      "region": "Cape Winelands · wine & university",
+      "district": "Cape Winelands",
+      "status": "building",
+      "render_pct": 15,
+      "opportunity_potential": 60,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/stellenbosch",
+      "illustrative": true,
+      "coordinator_name": "Karabo Letsie",
+      "youth_mapped": 45,
+      "active_signals": 1,
+      "open_opportunities": 2,
+      "lat": -33.9321,
+      "lng": 18.8602,
+      "description": "South Africa's second-oldest town and wine capital, Stellenbosch combines centuries-old Cape Dutch architecture with a thriving university town energy. Oak-lined streets, world-class vineyards, and a buzzing food scene make it both historic and thoroughly modern.",
+      "population_estimate": 180000,
+      "archetype": "university_town",
+      "opportunities": [
+        {
+          "id": "opp-family-stell",
+          "title": "FamilyHouse — Home Host & Accommodation Partner",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-stell",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "sig-stell-1",
+          "title": "Streetlight repair — Bird Street",
+          "category": "infrastructure",
+          "status": "resolved",
+          "town_id": "town-stell"
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-stell-1",
+          "name": "Kayamandi Crafts Collective",
+          "category": "retail",
+          "is_verified": true,
+          "town_id": "town-stell"
+        },
+        {
+          "slug": "stellenbosch",
+          "name": "Stellenbosch Wine Estates",
+          "category": "food",
+          "is_verified": false,
+          "id": "seed-stellenbosch-biz",
+          "town_id": null
+        }
+      ]
+    },
+    {
+      "slug": "george",
+      "name": "George",
+      "region": "Garden Route · regional hub",
+      "district": "Garden Route",
+      "status": "building",
+      "render_pct": 0,
+      "opportunity_potential": 55,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/george",
+      "illustrative": true,
+      "coordinator_name": "Anele Swarts",
+      "lat": -33.9608,
+      "lng": 22.4617,
+      "description": "Gateway to the Garden Route, George is nestled between the Outeniqua Mountains and the Indian Ocean, offering access to some of South Africa's most stunning natural landscapes. The town is a hub for outdoor adventure — hiking, mountain biking, and watersports.",
+      "population_estimate": 80000,
+      "archetype": "garden_route",
+      "opportunities": [
+        {
+          "id": "opp-kasi-george",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-george",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-fixe-george",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-george",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-ubun-george",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-george",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "george",
+          "name": "Outeniqua Transport Museum",
+          "category": "tourism",
+          "is_verified": false,
+          "id": "seed-george-biz",
+          "town_id": null
+        }
+      ]
+    },
+    {
+      "slug": "paarl",
+      "name": "Paarl",
+      "region": "Cape Winelands · wine & granite",
+      "district": "Cape Winelands",
+      "status": "ghost",
+      "render_pct": 19,
+      "opportunity_potential": 50,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/paarl",
+      "illustrative": true,
+      "coordinator_name": "Kagiso Motaung",
+      "youth_mapped": 38,
+      "active_signals": 0,
+      "open_opportunities": 1,
+      "lat": -33.734,
+      "lng": 18.9558,
+      "description": "The Pearl of the Winelands sits beneath the massive Paarl Rock, where Afrikaans language and culture were born at the Language Monument. The town's vineyards, olive groves, and historic Main Street make it a cornerstone of Cape heritage.",
+      "population_estimate": 110000,
+      "archetype": "winelands_town",
+      "opportunities": [
+        {
+          "id": "opp-kasi-paarl",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-paarl",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-fami-paarl-2",
+          "title": "FamilyHouse — Home Hospitality Host Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-paarl",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        },
+        {
+          "id": "opp-ecoc-paarl-3",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-paarl",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "knysna",
+      "name": "Knysna",
+      "region": "Garden Route · lagoon & forest",
+      "district": "Garden Route",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 48,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/knysna",
+      "illustrative": true,
+      "lat": -34.0362,
+      "lng": 23.0475,
+      "description": "The Jewel of the Garden Route, Knysna wraps around a vast lagoon between two dramatic headlands, with indigenous forest, oyster farms, and the famous Knysna Heads creating one of South Africa's most beautiful settings.",
+      "population_estimate": 52000,
+      "archetype": "garden_route",
+      "businesses": [
+        {
+          "slug": "knysna",
+          "name": "Knysna Heads Restaurant",
+          "category": "food",
+          "is_verified": false,
+          "id": "seed-knysna-biz",
+          "town_id": null
+        }
+      ],
+      "events": [
+        {
+          "slug": "knysna",
+          "title": "Knysna Oyster Festival",
+          "description": "Food, sport, and oysters on the Garden Route",
+          "event_date": "2026-07-01",
+          "id": "seed-knysna-evt",
+          "town_id": null
+        }
+      ]
+    },
+    {
+      "slug": "hermanus",
+      "name": "Hermanus",
+      "region": "Overberg · whale coast",
+      "district": "Overberg",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 46,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/hermanus",
+      "illustrative": true,
+      "lat": -34.4172,
+      "lng": 19.2345,
+      "description": "South Africa's premier whale-watching destination, Hermanus hosts the annual Whale Festival when southern right whales arrive in Walker Bay. The Hemel-en-Aarde Valley behind the town produces world-class Pinot Noir and Chardonnay.",
+      "population_estimate": 12000,
+      "archetype": "coastal_town",
+      "businesses": [
+        {
+          "slug": "hermanus",
+          "name": "Hermanus Whale Watching",
+          "category": "tourism",
+          "is_verified": false,
+          "id": "seed-hermanus-biz",
+          "town_id": null
+        }
+      ],
+      "events": [
+        {
+          "slug": "hermanus",
+          "title": "Whale Festival",
+          "description": "Celebration of the southern right whale season",
+          "event_date": "2026-10-01",
+          "id": "seed-hermanus-evt",
+          "town_id": null
+        }
+      ]
+    },
+    {
+      "slug": "mossel-bay",
+      "name": "Mossel Bay",
+      "region": "Garden Route · coast & energy",
+      "district": "Garden Route",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/mossel-bay",
+      "illustrative": true,
+      "lat": -34.175,
+      "lng": 22.1353,
+      "description": "Where Bartholomew Diaz first landed in 1488, Mossel Bay is a coastal town where history meets surf culture. The Dias Museum, the Post Office Tree, and golden beaches tell a story of discovery and ocean life spanning centuries.",
+      "population_estimate": 59000,
+      "archetype": "coastal_town"
+    },
+    {
+      "slug": "oudtshoorn",
+      "name": "Oudtshoorn",
+      "region": "Garden Route · Klein Karoo & Cango Caves",
+      "district": "Garden Route",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 44,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/oudtshoorn",
+      "illustrative": true,
+      "lat": -33.5833,
+      "lng": 22.2,
+      "description": "Ostrich capital of South Africa, home to the famous Cango Caves and annual Klein Karoo Nasionale Kunstefees."
+    },
+    {
+      "slug": "saldanha",
+      "name": "Saldanha",
+      "region": "West Coast · port & industry",
+      "district": "West Coast",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 42,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/saldanha",
+      "illustrative": true,
+      "lat": -33.0167,
+      "lng": 17.9333,
+      "description": "Deep-water port town on the West Coast, industrial hub and gateway to the West Coast National Park."
+    },
+    {
+      "slug": "swellendam",
+      "name": "Swellendam",
+      "region": "Overberg · historic Cape",
+      "district": "Overberg",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 38,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/swellendam",
+      "illustrative": true,
+      "lat": -34.0237,
+      "lng": 20.4524,
+      "description": "One of the oldest towns in South Africa, Swellendam is a heritage gem with perfectly preserved Cape Dutch buildings, art galleries, and the annual Berry Festival. The Bontebok National Park nearby protects one of the rarest antelope species on earth.",
+      "population_estimate": 8000,
+      "archetype": "heritage_town"
+    },
+    {
+      "slug": "grabouw",
+      "name": "Grabouw",
+      "region": "Overberg · Elgin apples",
+      "district": "Overberg",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 36,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/grabouw",
+      "illustrative": true,
+      "lat": -34.15,
+      "lng": 19.0333,
+      "description": "Apple capital of South Africa in the Elgin Valley, surrounded by orchards and cool-climate vineyards."
+    },
+    {
+      "slug": "robertson",
+      "name": "Robertson",
+      "region": "Cape Winelands · wine & roses",
+      "district": "Cape Winelands",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 34,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/robertson",
+      "illustrative": true,
+      "lat": -33.8,
+      "lng": 19.8833,
+      "description": "Wine and roses town in the Breede River Valley, heart of the Robertson Wine Route."
+    },
+    {
+      "slug": "malmesbury",
+      "name": "Malmesbury",
+      "region": "West Coast · Swartland wheat",
+      "district": "West Coast",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 32,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/malmesbury",
+      "illustrative": true,
+      "lat": -33.3833,
+      "lng": 18.7167,
+      "description": "Swartland wheat town and gateway to the Swartland wine region, with historic Cape Dutch architecture."
+    },
+    {
+      "slug": "worcester",
+      "name": "Worcester",
+      "region": "Cape Winelands · Breede Valley",
+      "district": "Cape Winelands",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 40,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/worcester",
+      "illustrative": true,
+      "lat": -33.6552,
+      "lng": 19.4273,
+      "description": "The largest town in the Boland, Worcester sits in a wine-rich valley surrounded by dramatic mountain ranges. The town's art scene, the Karoo National Botanical Garden, and its position on the N1 make it a vital Free State–Western Cape link.",
+      "population_estimate": 58000,
+      "archetype": "boland_town"
+    },
+    {
+      "slug": "caledon",
+      "name": "Caledon",
+      "region": "Overberg · agri & spa",
+      "district": "Overberg",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/caledon",
+      "illustrative": true,
+      "lat": -34.2333,
+      "lng": 19.4333,
+      "description": "Overberg agri-town known for its hot springs, barley fields, and annual Caledon Wildflower Show."
+    },
+    {
+      "slug": "vredenburg",
+      "name": "Vredenburg",
+      "region": "West Coast · regional hub",
+      "district": "West Coast",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/vredenburg",
+      "illustrative": true,
+      "lat": -32.9,
+      "lng": 17.9833,
+      "description": "West Coast regional hub serving the fishing and mining communities of the Saldanha Bay area."
+    },
+    {
+      "slug": "beaufort-west",
+      "name": "Beaufort West",
+      "region": "Central Karoo · N1 gateway",
+      "district": "Central Karoo",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 28,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/beaufort-west",
+      "illustrative": true,
+      "lat": -33.2833,
+      "lng": 22.5833,
+      "description": "Karoo gateway on the N1, the halfway mark between Cape Town and Johannesburg with Karoo hospitality."
+    },
+    {
+      "slug": "cape-town",
+      "name": "Cape Town",
+      "region": "",
+      "status": "building",
+      "render_pct": 85,
+      "opportunity_potential": 165,
+      "coordinator_status": "assigned",
+      "route": "/town/cape-town",
+      "illustrative": false,
+      "coordinator_name": "Lindiwe Mthembu",
+      "youth_mapped": 298,
+      "active_signals": 2,
+      "open_opportunities": 6,
+      "lat": -33.9249,
+      "lng": 18.4241,
+      "description": "The Mother City sits beneath the iconic flat-topped Table Mountain where two oceans meet, blending world-class natural beauty with a complex, vibrant culture. From the colourful Bo-Kaap to the innovation hubs of the CBD, Cape Town is where South Africa's past and future collide in the most dramatic landscape on earth.",
+      "population_estimate": 4618000,
+      "archetype": "major_city",
+      "opportunities": [
+        {
+          "id": "opp-nyda-ct",
+          "title": "NYDA National Youth Service Phase V — 100,000 Paid Opportunities",
+          "type": "volunteer",
+          "source": "government",
+          "deadline_date": "2026-09-30",
+          "town_id": "town-ct",
+          "metadata": {
+            "national": true
+          }
+        },
+        {
+          "id": "opp-funza-ct",
+          "title": "Funza Lushaka Teaching Bursary 2027",
+          "type": "training",
+          "source": "government",
+          "deadline_date": "2026-10-31",
+          "town_id": "town-ct",
+          "metadata": {}
+        },
+        {
+          "id": "opp-epwp-ct",
+          "title": "EPWP Community Works Programme",
+          "type": "internship",
+          "source": "government",
+          "deadline_date": null,
+          "town_id": "town-ct",
+          "metadata": {
+            "ongoing": true
+          }
+        },
+        {
+          "id": "opp-fix-ct",
+          "title": "FixEasy24 — Verified Service Providers Needed",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ct",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-kasi-ct",
+          "title": "KasiBuy — Local Sellers & Spaza Partners Wanted",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ct",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-frame-ct",
+          "title": "FrameSouth — Town Photographer & Visual Partner",
+          "type": "internship",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ct",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        },
+        {
+          "id": "opp-aicafe-ct",
+          "title": "AI Cafe — Internet Cafe Partner / AI Access Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ct",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        },
+        {
+          "id": "opp-acad-ct",
+          "title": "Ubuntu Academy — Digital Skills Course",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ct",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        },
+        {
+          "id": "opp-orbit-ct",
+          "title": "Orbit Music — Monthly AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ct",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        },
+        {
+          "id": "opp-inside-ct",
+          "title": "Inside.Town — Podcast Host & Town Voice",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ct",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        },
+        {
+          "id": "opp-family-ct",
+          "title": "FamilyHouse — Home Host & Accommodation Partner",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ct",
+          "metadata": {
+            "earning": "Booking commission + profile fees",
+            "ecosystem": "familyhouse"
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "sig-ct-1",
+          "title": "Water pressure critically low — Khayelitsha",
+          "category": "infrastructure",
+          "status": "pending",
+          "town_id": "town-ct"
+        },
+        {
+          "id": "sig-ct-2",
+          "title": "NYDA entrepreneurship workshop",
+          "category": "education",
+          "status": "pending",
+          "town_id": "town-ct"
+        }
+      ],
+      "stories": [
+        {
+          "id": "story-ct-1",
+          "title": "From Khayelitsha to Cape Town IT",
+          "content": "Sipho started as volunteer coordinator, now works at a tech startup.",
+          "author_name": "Sipho N.",
+          "town_id": "town-ct"
+        },
+        {
+          "slug": "cape-town",
+          "title": "From Khayelitsha to Cape Town IT",
+          "content": "Sipho started as volunteer coordinator, now works at a tech startup in the CBD. Ubuntu Town changed his life.",
+          "author_name": "Sipho N.",
+          "id": "seed-cape-town-story",
+          "town_id": null
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-ct-1",
+          "name": "Khayelitsha Market",
+          "category": "retail",
+          "is_verified": true,
+          "town_id": "town-ct"
+        },
+        {
+          "id": "biz-ct-2",
+          "name": "Gugulethu Food Garden",
+          "category": "retail",
+          "is_verified": true,
+          "town_id": "town-ct"
+        }
+      ],
+      "events": [
+        {
+          "id": "evt-ct-1",
+          "title": "Cape Town Youth Skills Fair",
+          "description": "Free skills fair with 20+ exhibitors.",
+          "event_date": "2026-07-22",
+          "town_id": "town-ct"
+        },
+        {
+          "slug": "cape-town",
+          "title": "Cape Town Youth Skills Fair",
+          "description": "Free skills fair with 20+ exhibitors and training providers",
+          "event_date": "2026-07-22",
+          "id": "seed-cape-town-evt",
+          "town_id": null
+        }
+      ],
+      "access_points": [
+        {
+          "id": "ap-ct-1",
+          "name": "Khayelitsha Public Library",
+          "category": "library",
+          "is_verified": true,
+          "town_id": "town-ct"
+        }
+      ],
+      "services": [
+        {
+          "title": "Cape Peninsula TVET — business programmes",
+          "description": "Business studies, IT, and hospitality. Campuses across Cape Town.",
+          "price_range": "R8,000 - R20,000/year",
+          "category": "education"
+        },
+        {
+          "title": "MyCiTi Bus — central line",
+          "description": "Integrated rapid transit system connecting CBD, suburbs, and airport.",
+          "price_range": "R7 - R50",
+          "category": "transport"
+        },
+        {
+          "title": "Khayelitsha Community Health Centre",
+          "description": "Primary healthcare services, HIV/TB treatment, maternal health.",
+          "price_range": "Free",
+          "category": "healthcare"
+        }
+      ]
+    },
+    {
+      "slug": "plettenberg-bay",
+      "name": "Plettenberg Bay",
+      "region": "coastal town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -34.052,
+      "lng": 23.3715,
+      "description": "A playground of natural beauty on the Garden Route, Plett offers pristine beaches, whale watching, and the ancient Robberg Nature Reserve peninsula. The town blends eco-tourism with a relaxed coastal lifestyle.",
+      "population_estimate": 32000,
+      "archetype": "coastal_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/plettenberg-bay",
+      "illustrative": true
+    },
+    {
+      "slug": "cango-caves",
+      "name": "Cango Caves",
+      "region": "natural wonder",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -33.3869,
+      "lng": 22.2064,
+      "description": "Near the ostrich capital of Oudtshoorn, the Cango Caves are one of Africa's greatest natural wonders — a 20-million-year-old limestone system with chambers that can hold a cathedral.",
+      "population_estimate": 500,
+      "archetype": "natural_wonder",
+      "coordinator_status": "recruiting",
+      "route": "/town/cango-caves",
+      "illustrative": true
+    },
+    {
+      "slug": "cederberg",
+      "name": "Cederberg",
+      "region": "wilderness",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -32.35,
+      "lng": 19.1,
+      "description": "The Cederberg Wilderness Area is a landscape of dramatic rock formations, ancient San rock art, and endemic plant species found nowhere else on earth. This is where the Wild Coast meets the wilderness.",
+      "population_estimate": 3000,
+      "archetype": "wilderness",
+      "coordinator_status": "recruiting",
+      "route": "/town/cederberg",
+      "illustrative": true
+    },
+    {
+      "slug": "hopefield",
+      "name": "Hopefield",
+      "region": "west coast",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -33.0667,
+      "lng": 18.35,
+      "description": "A small West Coast town that explodes into colour during spring flower season, Hopefield is the gateway to the West Coast's wildflower displays and the nearby West Coast National Park.",
+      "population_estimate": 4500,
+      "archetype": "west_coast",
+      "coordinator_status": "recruiting",
+      "route": "/town/hopefield",
+      "illustrative": true
+    },
+    {
+      "slug": "citrusdal",
+      "name": "Citrusdal",
+      "region": "cederberg",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -32.5833,
+      "lng": 19.0167,
+      "description": "Nestled in the Olifants River Valley at the foot of the Cederberg, Citrusdal is South Africa's citrus capital — the orchards that fill supermarket shelves across the country start here.",
+      "population_estimate": 6000,
+      "archetype": "cederberg",
+      "coordinator_status": "recruiting",
+      "route": "/town/citrusdal",
+      "illustrative": true
+    },
+    {
+      "slug": "porterville",
+      "name": "Porterville",
+      "region": "west coast",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -33.0167,
+      "lng": 18.9833,
+      "description": "Known as the windiest town on the West Coast, Porterville has turned its relentless breeze into an asset as a world-class paragliding destination. The nearby Cederberg hikes are spectacular.",
+      "population_estimate": 3500,
+      "archetype": "west_coast",
+      "coordinator_status": "recruiting",
+      "route": "/town/porterville",
+      "illustrative": true
+    },
+    {
+      "slug": "langebaan",
+      "name": "Langebaan",
+      "region": "lagoon town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -33.0917,
+      "lng": 18.0333,
+      "description": "A laid-back lagoon town in the West Coast National Park, Langebaan offers kitesurfing, sailing, and some of the best birdwatching in the Western Cape. The spring wildflower season transforms the surrounding strandveld.",
+      "population_estimate": 8000,
+      "archetype": "lagoon_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/langebaan",
+      "illustrative": true
+    },
+    {
+      "slug": "george-west",
+      "name": "George West",
+      "region": "farming town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -33.2333,
+      "lng": 19.0167,
+      "description": "Not to be confused with George on the Garden Route, this small Western Cape farming community serves the surrounding agricultural district. A quiet corner of the province where farming life continues.",
+      "population_estimate": 2000,
+      "archetype": "farming_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/george-west",
+      "illustrative": true
+    }
+  ],
+  "hero_image": "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=1200&q=80",
+  "description": "From the iconic Table Mountain to the Garden Route, the Western Cape blends world-class natural beauty with a thriving innovation economy. 17 towns from Cape Town to the Cederberg form the backbone of South Africa's tourism and tech capital.",
+  "coordinators": [
+    {
+      "name": "Lindiwe Mthembu",
+      "status": "active",
+      "town": "cape-town"
+    },
+    {
+      "name": "Kagiso Motaung",
+      "status": "active",
+      "town": "paarl"
+    },
+    {
+      "name": "Karabo Letsie",
+      "status": "active",
+      "town": "stellenbosch"
+    },
+    {
+      "name": "Anele Swarts",
+      "status": "active",
+      "town": "george"
+    },
+    {
+      "name": "Sipho Ndlovu",
+      "status": "active",
+      "town": "cape-town"
+    }
+  ],
+  "featured_stories": [
+    {
+      "title": "From Khayelitsha to Cape Town IT",
+      "content": "Sipho started as volunteer coordinator, now works at a tech startup.",
+      "author": "Sipho N.",
+      "town": "cape-town"
+    }
+  ],
+  "top_opportunities": [
+    {
+      "title": "NYDA National Youth Service Phase V — 100,000 Paid Opportunities",
+      "type": "volunteer",
+      "source": "government",
+      "town": "cape-town"
+    },
+    {
+      "title": "Funza Lushaka Teaching Bursary 2027",
+      "type": "training",
+      "source": "government",
+      "town": "cape-town"
+    },
+    {
+      "title": "EPWP Community Works Programme",
+      "type": "internship",
+      "source": "government",
+      "town": "cape-town"
+    },
+    {
+      "title": "FixEasy24 — Verified Service Providers Needed",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "cape-town"
+    },
+    {
+      "title": "KasiBuy — Local Sellers & Spaza Partners Wanted",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "cape-town"
+    }
+  ]
+}

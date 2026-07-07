@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { CreatePrivateItemForm } from '../ClientPage';
 
 export default function NewPrivateItemPage() {

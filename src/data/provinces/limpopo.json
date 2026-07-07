@@ -1,0 +1,503 @@
+{
+  "slug": "limpopo",
+  "name": "Limpopo",
+  "default_lens": "visitor",
+  "network": {
+    "towns": 50,
+    "provinces": 9,
+    "coordinators": 53
+  },
+  "aggregates": {
+    "towns": 12,
+    "live": 0,
+    "building": 1,
+    "unclaimed": 11,
+    "opportunity_index_avg": 7.6
+  },
+  "data_vintage": "2026-06",
+  "towns": [
+    {
+      "slug": "burgersfort",
+      "name": "Burgersfort",
+      "region": "Mogalakwena · mining & ECD",
+      "district": "Mogalakwena",
+      "status": "building",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/burgersfort",
+      "illustrative": true,
+      "coordinator_name": "Siphiwe Ndlovu",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -24.6833,
+      "lng": 30.3333,
+      "description": "Mining town in the Steelpoort valley, gateway to platinum and chrome deposits in the eastern bushveld.",
+      "opportunities": [
+        {
+          "id": "opp-fixe-burgersfort",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-burgersfort",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-kasi-burgersfort-2",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-burgersfort",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-fami-burgersfort-3",
+          "title": "FamilyHouse — Home Hospitality Host Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-burgersfort",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "polokwane",
+      "name": "Polokwane",
+      "region": "Capricorn · provincial capital",
+      "district": "Capricorn",
+      "status": "ghost",
+      "render_pct": 49,
+      "opportunity_potential": 90,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/polokwane",
+      "illustrative": true,
+      "coordinator_name": "Tshilidzi Mudau",
+      "youth_mapped": 89,
+      "active_signals": 1,
+      "open_opportunities": 3,
+      "lat": -23.9045,
+      "lng": 29.4688,
+      "description": "The capital of Limpopo and gateway to the northern bushveld, Polokwane is a fast-growing city where Sepedi, Venda, Tsonga, and Sotho cultures converge. The Peter Mokaba Stadium and surrounding game reserves make it a city in nature.",
+      "population_estimate": 130000,
+      "archetype": "provincial_capital",
+      "opportunities": [
+        {
+          "id": "opp-nyda-pol",
+          "title": "NYDA National Youth Service Phase V — 100,000 Paid Opportunities",
+          "type": "volunteer",
+          "source": "government",
+          "deadline_date": "2026-09-30",
+          "town_id": "town-pol",
+          "metadata": {
+            "national": true
+          }
+        },
+        {
+          "id": "opp-mining-pol",
+          "title": "Limpopo Mining Sector Artisan Training",
+          "type": "training",
+          "source": "private",
+          "deadline_date": "2026-11-30",
+          "town_id": "town-pol",
+          "metadata": {
+            "provider": "Mining Qualifications Authority"
+          }
+        },
+        {
+          "id": "opp-fix-pol",
+          "title": "FixEasy24 — Verified Service Providers Needed",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-pol",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-aicafe-pol",
+          "title": "AI Cafe — Internet Cafe Partner / AI Access Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-pol",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        },
+        {
+          "id": "opp-eco-pol",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-pol",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        },
+        {
+          "id": "opp-acad-pol",
+          "title": "Ubuntu Academy — Tender Readiness Basics",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-pol",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "sig-pol-1",
+          "title": "Street lights out — Seshego Zone 8",
+          "category": "infrastructure",
+          "status": "pending",
+          "town_id": "town-pol"
+        }
+      ],
+      "stories": [
+        {
+          "id": "story-pol-1",
+          "title": "Signal to Solution — Polokwane Street Light Fix",
+          "content": "After a signal, coordinator escalated. Within 10 days, LED replacements installed.",
+          "author_name": "Tshilidzi M.",
+          "town_id": "town-pol"
+        },
+        {
+          "slug": "polokwane",
+          "title": "Street Light Signal Fixed",
+          "content": "After a signal was logged, coordinator escalated. Within 10 days, LED replacements installed in Seshego.",
+          "author_name": "Tshilidzi M.",
+          "id": "seed-polokwane-story",
+          "town_id": null
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-pol-1",
+          "name": "Seshego Spaza Network",
+          "category": "retail",
+          "is_verified": true,
+          "town_id": "town-pol"
+        }
+      ],
+      "access_points": [
+        {
+          "id": "ap-pol-1",
+          "name": "Seshego Library",
+          "category": "library",
+          "is_verified": true,
+          "town_id": "town-pol"
+        }
+      ],
+      "services": [
+        {
+          "title": "University of Limpopo — Turfloop campus",
+          "description": "Medicine, law, science, and humanities. Main campus.",
+          "price_range": "R10,000 - R35,000/year",
+          "category": "education"
+        },
+        {
+          "title": "Mall of the North — anchor tenant directory",
+          "description": "Regional shopping centre with 200+ stores, food court, and cinema.",
+          "price_range": "Varies",
+          "category": "retail"
+        }
+      ]
+    },
+    {
+      "slug": "tzaneen",
+      "name": "Tzaneen",
+      "region": "Mopani · subtropical agriculture",
+      "district": "Mopani",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 42,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/tzaneen",
+      "illustrative": true,
+      "lat": -23.8167,
+      "lng": 30.1667,
+      "description": "In Limpopo's tropical lowveld, Tzaneen is surrounded by subtropical fruit farms, forests, and the stunning Magoebaskloof Pass. Tea, coffee, and avocado farms create a lush landscape unlike anywhere else in South Africa.",
+      "population_estimate": 25000,
+      "archetype": "tropical"
+    },
+    {
+      "slug": "thohoyandou",
+      "name": "Thohoyandou",
+      "region": "Vhembe · Venda capital",
+      "district": "Vhembe",
+      "status": "ghost",
+      "render_pct": 18,
+      "opportunity_potential": 40,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/thohoyandou",
+      "illustrative": true,
+      "coordinator_name": "Mashudu Tshivhase",
+      "youth_mapped": 34,
+      "active_signals": 0,
+      "open_opportunities": 2,
+      "lat": -23.0833,
+      "lng": 29.4833,
+      "description": "The heart of Venda country, Thohoyandou was the capital of the former Venda homeland and remains the cultural centre of the Vhavenda people. The University of Venda and Phiphidi Waterfall are local landmarks.",
+      "population_estimate": 80000,
+      "archetype": "cultural_hub",
+      "opportunities": [
+        {
+          "id": "opp-coord-thoh",
+          "title": "Ubuntu Town Coordinator — Thohoyandou",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-thoh",
+          "metadata": {
+            "ecosystem": "coordinator"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "thohoyandou",
+          "name": "University of Venda",
+          "category": "education",
+          "is_verified": false,
+          "id": "seed-thohoyandou-biz",
+          "town_id": null
+        }
+      ]
+    },
+    {
+      "slug": "mokopane",
+      "name": "Mokopane",
+      "region": "Mogalakwena · agriculture & mining",
+      "district": "Mogalakwena",
+      "status": "ghost",
+      "render_pct": 9,
+      "opportunity_potential": 35,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/mokopane",
+      "illustrative": true,
+      "coordinator_name": "Sizwe Mabaso",
+      "youth_mapped": 42,
+      "active_signals": 0,
+      "open_opportunities": 1,
+      "lat": -24.1833,
+      "lng": 29.0167,
+      "description": "Near the famous Makapansgat Caves where early human fossils were found, Mokopane is a farming town where citrus and cattle thrive in the Limpopo bushveld.",
+      "population_estimate": 30000,
+      "archetype": "mining_town",
+      "opportunities": [
+        {
+          "id": "opp-coord-mokop",
+          "title": "Ubuntu Town Coordinator — Mokopane",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-mokop",
+          "metadata": {
+            "ecosystem": "coordinator"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "bela-bela",
+      "name": "Bela-Bela",
+      "region": "Thabazimbi · tourism & hot springs",
+      "district": "Thabazimbi",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 38,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/bela-bela",
+      "illustrative": true,
+      "lat": -24.8833,
+      "lng": 28.2833,
+      "description": "Hot springs resort town in the Waterberg, popular for wildlife lodges and the Modimolle mountain."
+    },
+    {
+      "slug": "giyani",
+      "name": "Giyani",
+      "region": "Mopani · Tsonga heartland",
+      "district": "Mopani",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/giyani",
+      "illustrative": true,
+      "lat": -23.2833,
+      "lng": 30.7167,
+      "description": "The former capital of Gazankulu, Giyani is a Tsonga-speaking community surrounded by subtropical farmland. The town's community spirit and cultural festivals keep Tsonga traditions alive.",
+      "population_estimate": 20000,
+      "archetype": "former_homeland"
+    },
+    {
+      "slug": "lephalale",
+      "name": "Lephalale",
+      "region": "Waterberg · energy & coal",
+      "district": "Waterberg",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 38,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/lephalale",
+      "illustrative": true,
+      "lat": -23.6667,
+      "lng": 27.7,
+      "description": "Coal mining and power generation hub in the western Waterberg, home to Medupi and Matimba power stations."
+    },
+    {
+      "slug": "musina",
+      "name": "Musina",
+      "region": "Vhembe · border & agriculture",
+      "district": "Vhembe",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 28,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/musina",
+      "illustrative": true,
+      "lat": -22.35,
+      "lng": 29.7167,
+      "description": "South Africa's northernmost town near the Zimbabwe border, Musina is surrounded by massive baobab trees and the Limpopo River. The town is a gateway to the Great Limpopo Transfrontier Park.",
+      "population_estimate": 5000,
+      "archetype": "border_town"
+    },
+    {
+      "slug": "phafula",
+      "name": "Phafula",
+      "region": "rural",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -23.8,
+      "lng": 29.3,
+      "description": "Deep in Limpopo's mountain bushveld, Phafula represents the rural heart of the province where community and landscape are inseparable.",
+      "population_estimate": 3000,
+      "archetype": "rural",
+      "coordinator_status": "recruiting",
+      "route": "/town/phafula",
+      "illustrative": true
+    },
+    {
+      "slug": "tubatse",
+      "name": "Tubatse",
+      "region": "mining town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -24.4833,
+      "lng": 29.7333,
+      "description": "A mining and farming community in Limpopo's Sekhukhune district, Tubatse is where mineral wealth meets traditional community life.",
+      "population_estimate": 15000,
+      "archetype": "mining_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/tubatse",
+      "illustrative": true
+    },
+    {
+      "slug": "limpopo-town",
+      "name": "Limpopo Town",
+      "region": "rural",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -23.5,
+      "lng": 29.5,
+      "description": "A small Limpopo community surrounded by bushveld and farmlands, representing the rural heart of the province.",
+      "population_estimate": 8000,
+      "archetype": "rural",
+      "coordinator_status": "recruiting",
+      "route": "/town/limpopo-town",
+      "illustrative": true
+    }
+  ],
+  "hero_image": "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200&q=80",
+  "description": "The great north — Venda culture, baobab trees, and 9 towns where Sepedi, Venda, and Tsonga traditions converge. Limpopo is South Africa's gateway to the African continent.",
+  "coordinators": [
+    {
+      "name": "Mashudu Tshivhase",
+      "status": "active",
+      "town": "thohoyandou"
+    },
+    {
+      "name": "Siphiwe Ndlovu",
+      "status": "active",
+      "town": "burgersfort"
+    },
+    {
+      "name": "Sizwe Mabaso",
+      "status": "active",
+      "town": "mokopane"
+    },
+    {
+      "name": "Tshilidzi Mudau",
+      "status": "active",
+      "town": "polokwane"
+    }
+  ],
+  "featured_stories": [
+    {
+      "title": "Signal to Solution — Polokwane Street Light Fix",
+      "content": "After a signal, coordinator escalated. Within 10 days, LED replacements installed.",
+      "author": "Tshilidzi M.",
+      "town": "polokwane"
+    }
+  ],
+  "top_opportunities": [
+    {
+      "title": "NYDA National Youth Service Phase V — 100,000 Paid Opportunities",
+      "type": "volunteer",
+      "source": "government",
+      "town": "polokwane"
+    },
+    {
+      "title": "Limpopo Mining Sector Artisan Training",
+      "type": "training",
+      "source": "private",
+      "town": "polokwane"
+    },
+    {
+      "title": "FixEasy24 — Verified Service Providers Needed",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "polokwane"
+    },
+    {
+      "title": "AI Cafe — Internet Cafe Partner / AI Access Agent",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "polokwane"
+    },
+    {
+      "title": "EcoChar — 5-Day Charcoal Production Training",
+      "type": "training",
+      "source": "ngo",
+      "town": "polokwane"
+    }
+  ]
+}

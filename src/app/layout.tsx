@@ -1,4 +1,5 @@
 import '@/styles/globals.css';
+import '@/styles/utown.css';
 import localFont from 'next/font/local';
 import { Bricolage_Grotesque, IBM_Plex_Mono, Caveat } from 'next/font/google';
 import { DynamicLayoutProviders } from './DynamicLayoutProviders';
