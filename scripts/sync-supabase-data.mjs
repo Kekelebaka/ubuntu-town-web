@@ -30,7 +30,31 @@ if (SUPABASE_URL.includes('placeholder') || SUPABASE_KEY === 'placeholder-key') 
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Province ID → JSON slug mapping
+// Auto-detect schema: check if towns table has province_id (old) or province (uto)
+let USE_UTO = false;
+
+async function detectSchema() {
+  try {
+    const { data } = await sb.from('towns').select('province_id').limit(1);
+    if (data && data.length > 0 && data[0].province_id !== undefined) {
+      USE_UTO = false;
+      console.log('[sync] Schema: old (province_id)');
+      return;
+    }
+  } catch {}
+  // Try uto-style
+  try {
+    const { data } = await sb.from('towns').select('province').limit(1);
+    if (data !== null) {
+      USE_UTO = true;
+      console.log('[sync] Schema: uto (province text)');
+      return;
+    }
+  } catch {}
+  console.log('[sync] Schema: defaulting to old');
+}
+
+// Province ID → JSON slug mapping (old schema)
 const PROV_MAP = {
   'prov-gauteng': 'gauteng',
   'prov-wc': 'western-cape',
@@ -59,9 +83,15 @@ function calcRenderPct(metrics, oppCount) {
 (async () => {
   console.log('[sync] Querying Supabase...');
   
-  // Fetch all data in parallel
+  await detectSchema();
+  
+  // Fetch all data in parallel — adjust selects based on schema
+  const townSelect = USE_UTO 
+    ? 'id,name,slug,province,population_estimate'
+    : 'id,name,slug,province_id,coordinator_id,population_estimate';
+  
   const [townsRes, metricsRes, oppsRes, coordsRes] = await Promise.all([
-    sb.from('towns').select('id,name,slug,province_id,coordinator_id,population_estimate'),
+    sb.from('towns').select(townSelect),
     sb.from('town_metrics').select('town_id,youth_mapped,active_coordinators,open_opportunities,active_signals'),
     sb.from('opportunities').select('town_id,type'),
     sb.from('coordinators').select('id,display_name,status,town_id'),
@@ -108,7 +138,12 @@ function calcRenderPct(metrics, oppCount) {
     const provData = JSON.parse(readFileSync(filePath, 'utf-8'));
     
     // Find Supabase towns for this province
-    const provTowns = dbTowns.filter(t => t.province_id === provId);
+    const provTowns = USE_UTO
+      ? dbTowns.filter(t => {
+          const prov = (t.province || '').toLowerCase().replace(/\s+/g, '-');
+          return prov === provSlug || provSlug.includes(prov);
+        })
+      : dbTowns.filter(t => t.province_id === provId);
     
     // Enrich existing towns
     for (const jsonTown of provData.towns) {
@@ -124,7 +159,8 @@ function calcRenderPct(metrics, oppCount) {
         
         if (coords.length > 0) {
           jsonTown.coordinator_status = 'assigned';
-          jsonTown.coordinator_name = coords[0].display_name;
+          // uto coordinator visibility rule: never show name until contract signed
+          if (!USE_UTO) jsonTown.coordinator_name = coords[0].display_name;
         }
         
         if (metrics) {
@@ -171,7 +207,9 @@ function calcRenderPct(metrics, oppCount) {
         illustrative: false,
       };
       
-      if (hasCoordinator) newTown.coordinator_name = coords[0].display_name;
+      if (hasCoordinator) {
+        if (!USE_UTO) newTown.coordinator_name = coords[0].display_name;
+      }
       if (metrics) {
         newTown.youth_mapped = metrics.youth_mapped;
         newTown.active_signals = metrics.active_signals;
