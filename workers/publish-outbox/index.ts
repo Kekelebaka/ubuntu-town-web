@@ -22,21 +22,23 @@ interface Env {
   REVALIDATE_URL?: string;
 }
 
+const MAX_ATTEMPTS = 3;
+
 function getSupabase(): SupabaseClient {
   return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
     auth: { autoRefreshToken: false, persistSession: false },
+    db: { schema: 'uto' },
   });
 }
 
 interface OutboxRow {
   id: string;
-  community_work_id: string;
+  work_id: string;
   channel: string;
   status: string;
   attempts: number;
-  max_attempts: number;
   payload: Record<string, unknown>;
-  error: string | null;
+  last_error: string | null;
 }
 
 // ============================================================================
@@ -75,16 +77,16 @@ async function handleSearch(supabase: SupabaseClient, row: OutboxRow): Promise<s
   const { title, description, action } = row.payload as { title: string; description: string; action: string };
 
   if (action === 'upsert') {
-    // The search_vector is already maintained by the trigger.
+    // The fts column is already maintained by the trigger.
     // This handler can additionally upsert to an external search service (Algolia, Meilisearch, etc.)
     // For now, just verify the row exists and is searchable.
     const { data } = await supabase
       .from('community_work')
-      .select('id, search_vector')
-      .eq('id', row.community_work_id)
+      .select('id, fts')
+      .eq('id', row.work_id)
       .single();
 
-    return `Search index: ${data?.search_vector ? 'vector exists' : 'no vector'} for "${title}"`;
+    return `Search index: ${data?.fts ? 'vector exists' : 'no vector'} for "${title}"`;
   }
   return `Search: ${action} (no-op)`;
 }
@@ -116,7 +118,7 @@ async function handleAiIndex(supabase: SupabaseClient, row: OutboxRow): Promise<
           await supabase
             .from('community_work')
             .update({ embedding: JSON.stringify(result.data[0].embedding) })
-            .eq('id', row.community_work_id);
+            .eq('id', row.work_id);
           return `Embedded: ${title} (${result.data[0].embedding.length} dims)`;
         }
       } catch (err) {
@@ -163,13 +165,13 @@ const HANDLERS: Record<string, (supabase: SupabaseClient, row: OutboxRow) => Pro
 // ============================================================================
 
 export async function drainOutbox(supabase: SupabaseClient): Promise<{ processed: number; failed: number; errors: string[] }> {
-  // Fetch pending rows, ordered by scheduled_at
+  // Fetch pending rows, ordered by created_at
   const { data: rows, error: fetchError } = await supabase
     .from('publish_outbox')
     .select('*')
     .in('status', ['pending', 'failed'])
     .lt('attempts', 3)  // max_attempts
-    .order('scheduled_at', { ascending: true })
+    .order('created_at', { ascending: true })
     .limit(50);
 
   if (fetchError) {
@@ -196,7 +198,7 @@ export async function drainOutbox(supabase: SupabaseClient): Promise<{ processed
       const msg = `No handler for channel: ${row.channel}`;
       await supabase
         .from('publish_outbox')
-        .update({ status: 'failed', error: msg, processed_at: new Date().toISOString() })
+        .update({ status: 'failed', last_error: msg, processed_at: new Date().toISOString() })
         .eq('id', row.id);
       failed++;
       errors.push(msg);
@@ -207,15 +209,15 @@ export async function drainOutbox(supabase: SupabaseClient): Promise<{ processed
       const result = await handler(supabase, row);
       await supabase
         .from('publish_outbox')
-        .update({ status: 'done', error: null, processed_at: new Date().toISOString() })
+        .update({ status: 'done', last_error: null, processed_at: new Date().toISOString() })
         .eq('id', row.id);
       processed++;
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Unknown error';
-      const newStatus = row.attempts + 1 >= row.max_attempts ? 'failed' : 'pending';
+      const newStatus = row.attempts + 1 >= MAX_ATTEMPTS ? 'failed' : 'pending';
       await supabase
         .from('publish_outbox')
-        .update({ status: newStatus, error: msg, processed_at: new Date().toISOString() })
+        .update({ status: newStatus, last_error: msg, processed_at: new Date().toISOString() })
         .eq('id', row.id);
       failed++;
       errors.push(`[${row.channel}] ${msg}`);

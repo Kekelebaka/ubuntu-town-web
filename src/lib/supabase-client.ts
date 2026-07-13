@@ -20,6 +20,7 @@ export const supabase = createClient(
       autoRefreshToken: true,
       persistSession: true,
     },
+    db: { schema: 'uto' },
   }
 );
 

@@ -8,7 +8,6 @@ interface CommunityWorkItem {
   id: string;
   type: string;
   title: string;
-  summary: string | null;
   description: string | null;
   visibility: string;
   published_at: string | null;
@@ -47,7 +46,7 @@ export default function CommunityWorkSection({ townId, townSlug }: { townId: str
     async function fetchWork() {
       const { data, error } = await supabase
         .from('community_work')
-        .select('id, type, title, summary, description, visibility, published_at')
+        .select('id, type, title, description, visibility, published_at')
         .eq('town_id', townId)
         .eq('status', 'published')
         .in('visibility', ['public', 'national'])
@@ -130,8 +129,8 @@ export default function CommunityWorkSection({ townId, townSlug }: { townId: str
                     )}
                   </div>
                   <h4 style={{ fontSize: 15, fontWeight: 600, color: '#1A1A2E', margin: '0 0 4px' }}>{item.title}</h4>
-                  {item.summary && (
-                    <p style={{ fontSize: 13, color: '#666', margin: 0, lineHeight: 1.4 }}>{item.summary}</p>
+                  {item.description && (
+                    <p style={{ fontSize: 13, color: '#666', margin: 0, lineHeight: 1.4 }}>{item.description}</p>
                   )}
                   {item.published_at && (
                     <p style={{ fontSize: 11, color: '#999', margin: '8px 0 0' }}>

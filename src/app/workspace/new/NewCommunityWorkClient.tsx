@@ -80,11 +80,11 @@ export default function NewCommunityWorkPage() {
         const { error: fewError } = await supabase
           .from('work_fixeasy_worker')
           .insert({
-            community_work_id: cw.id,
+            work_id: cw.id,
             full_name: fullName,
-            phone: phone || null,
-            whatsapp: whatsapp || null,
-            service_category: serviceCategory || 'general',
+            whatsapp: whatsapp || phone || null,
+            skills: [serviceCategory],
+            available: true,
           });
         if (fewError) throw fewError;
       }

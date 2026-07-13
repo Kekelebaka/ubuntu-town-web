@@ -38,7 +38,7 @@ const STATUS_COLORS: Record<string, string> = {
   approved: 'bg-green-100 text-green-700',
   published: 'bg-emerald-100 text-emerald-700',
   rejected: 'bg-red-100 text-red-700',
-  returned: 'bg-orange-100 text-orange-700',
+  archived: 'bg-gray-100 text-gray-500',
 };
 
 export default function WorkspacePage() {
@@ -251,7 +251,7 @@ function getStatusStyle(status: string) {
     approved: { background: '#D1FAE5', color: '#047857' },
     published: { background: '#A7F3D0', color: '#065F46' },
     rejected: { background: '#FEE2E2', color: '#DC2626' },
-    returned: { background: '#FFEDD5', color: '#C2410C' },
+    archived: { background: '#F3F4F6', color: '#6B7280' },
   };
   return styles[status] || styles.draft;
 }
