@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   description: 'Manage your town\'s community work. Add workers, businesses, events, and more.',
 };
 
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export default function WorkspacePage() {

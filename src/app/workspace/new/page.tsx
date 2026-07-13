@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   description: 'Register a worker, host, business, event, or podcast in your town.',
 };
 
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export default function NewCommunityWorkPage() {
