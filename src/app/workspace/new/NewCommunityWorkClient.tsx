@@ -15,6 +15,9 @@ const WORK_TYPES = [
 
 type Step = 'type' | 'details' | 'visibility' | 'submitting' | 'done';
 
+const inputStyle = { width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #E8DCC8', fontSize: 14, background: 'white', boxSizing: 'border-box' } as const;
+const labelStyle = { fontSize: 13, fontWeight: 600, color: '#1A1A2E', display: 'block', marginBottom: 6 } as const;
+
 export default function NewCommunityWorkPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>('type');
@@ -28,9 +31,39 @@ export default function NewCommunityWorkPage() {
 
   // FixEasy Worker fields
   const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
   const [serviceCategory, setServiceCategory] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
+  const [yearsExperience, setYearsExperience] = useState('');
+  const [hourlyRate, setHourlyRate] = useState('');
+
+  // FamilyHouse fields
+  const [propertyName, setPropertyName] = useState('');
+  const [rooms, setRooms] = useState('');
+  const [sleeps, setSleeps] = useState('');
+  const [pricePerNight, setPricePerNight] = useState('');
+  const [amenities, setAmenities] = useState('');
+  const [hostWhatsapp, setHostWhatsapp] = useState('');
+
+  // Business fields
+  const [businessName, setBusinessName] = useState('');
+  const [businessCategory, setBusinessCategory] = useState('');
+  const [businessWhatsapp, setBusinessWhatsapp] = useState('');
+  const [businessPhone, setBusinessPhone] = useState('');
+  const [businessAddress, setBusinessAddress] = useState('');
+
+  // Event fields
+  const [eventName, setEventName] = useState('');
+  const [startsAt, setStartsAt] = useState('');
+  const [endsAt, setEndsAt] = useState('');
+  const [venue, setVenue] = useState('');
+  const [isFree, setIsFree] = useState(false);
+  const [ticketUrl, setTicketUrl] = useState('');
+
+  // Podcast fields
+  const [episodeTitle, setEpisodeTitle] = useState('');
+  const [hostNameField, setHostNameField] = useState('');
+  const [audioUrl, setAudioUrl] = useState('');
+  const [guests, setGuests] = useState('');
 
   useEffect(() => {
     async function init() {
@@ -52,10 +85,37 @@ export default function NewCommunityWorkPage() {
     init();
   }, [router]);
 
+  const resetAllTypeFields = () => {
+    setFullName(''); setServiceCategory(''); setWhatsapp(''); setYearsExperience(''); setHourlyRate('');
+    setPropertyName(''); setRooms(''); setSleeps(''); setPricePerNight(''); setAmenities(''); setHostWhatsapp('');
+    setBusinessName(''); setBusinessCategory(''); setBusinessWhatsapp(''); setBusinessPhone(''); setBusinessAddress('');
+    setEventName(''); setStartsAt(''); setEndsAt(''); setVenue(''); setIsFree(false); setTicketUrl('');
+    setEpisodeTitle(''); setHostNameField(''); setAudioUrl(''); setGuests('');
+  };
+
   const handleSubmit = async () => {
     if (!townId || !userId) { setError('Not authorized'); return; }
     setStep('submitting');
     setError('');
+
+    // Resolve the type-specific title / owner_ref / detail before creating the community_work row.
+    let resolvedTitle = title;
+    let ownerRef: string | null = null;
+    let detail: Record<string, unknown> | null = null;
+
+    if (selectedType === 'fixeasy_worker') {
+      resolvedTitle = fullName;
+    } else if (selectedType === 'familyhouse') {
+      resolvedTitle = propertyName;
+      detail = { whatsapp: hostWhatsapp || null };
+    } else if (selectedType === 'business') {
+      resolvedTitle = businessName;
+    } else if (selectedType === 'event') {
+      resolvedTitle = eventName;
+    } else if (selectedType === 'podcast') {
+      resolvedTitle = episodeTitle;
+      ownerRef = hostNameField || null;
+    }
 
     try {
       // 1. Create the community_work record
@@ -64,37 +124,97 @@ export default function NewCommunityWorkPage() {
         .insert({
           type: selectedType,
           town_id: townId,
-          title: title,
+          title: resolvedTitle,
           description: description || null,
           visibility: visibility,
           status: 'submitted', // Will auto-advance via trigger if self-approve is on
           created_by: userId,
+          ...(ownerRef !== null ? { owner_ref: ownerRef } : {}),
+          ...(detail !== null ? { detail } : {}),
         })
         .select('id')
         .single();
 
       if (cwError) throw cwError;
 
+      const workId = cw?.id;
+
       // 2. Create typed detail record
-      if (selectedType === 'fixeasy_worker' && cw) {
-        const { error: fewError } = await supabase
+      if (selectedType === 'fixeasy_worker' && workId) {
+        const { error: detailError } = await supabase
           .from('work_fixeasy_worker')
           .insert({
-            work_id: cw.id,
+            work_id: workId,
             full_name: fullName,
-            whatsapp: whatsapp || phone || null,
             skills: [serviceCategory],
+            whatsapp: whatsapp || null,
+            years_experience: yearsExperience ? Number(yearsExperience) : null,
+            hourly_rate_zar: hourlyRate ? Number(hourlyRate) : null,
             available: true,
           });
-        if (fewError) throw fewError;
+        if (detailError) throw detailError;
+      } else if (selectedType === 'familyhouse' && workId) {
+        const { error: detailError } = await supabase
+          .from('work_familyhouse')
+          .insert({
+            work_id: workId,
+            rooms: rooms ? Number(rooms) : null,
+            sleeps: sleeps ? Number(sleeps) : null,
+            nightly_rate_zar: pricePerNight ? Number(pricePerNight) : null,
+            amenities: amenities ? amenities.split(',').map(s => s.trim()).filter(Boolean) : [],
+          });
+        if (detailError) throw detailError;
+      } else if (selectedType === 'business' && workId) {
+        const { error: detailError } = await supabase
+          .from('work_business')
+          .insert({
+            work_id: workId,
+            category: businessCategory,
+            whatsapp: businessWhatsapp || null,
+            phone: businessPhone || null,
+            address: businessAddress || null,
+          });
+        if (detailError) throw detailError;
+      } else if (selectedType === 'event' && workId) {
+        const { error: detailError } = await supabase
+          .from('work_event')
+          .insert({
+            work_id: workId,
+            starts_at: startsAt || null,
+            ends_at: endsAt || null,
+            venue: venue,
+            is_free: isFree,
+            ticket_url: ticketUrl || null,
+          });
+        if (detailError) throw detailError;
+      } else if (selectedType === 'podcast' && workId) {
+        const { error: detailError } = await supabase
+          .from('work_podcast')
+          .insert({
+            work_id: workId,
+            spotify_url: audioUrl || null,
+            guests: guests ? guests.split(',').map(s => s.trim()).filter(Boolean) : [],
+          });
+        if (detailError) throw detailError;
       }
 
+      setTitle(resolvedTitle);
       setStep('done');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to create community work';
       setError(msg);
       setStep('visibility'); // Go back to let them retry
     }
+  };
+
+  // Per-type validation for the Continue button on step 2.
+  const isDetailsValid = () => {
+    if (selectedType === 'fixeasy_worker') return fullName.trim() !== '' && serviceCategory.trim() !== '';
+    if (selectedType === 'familyhouse') return propertyName.trim() !== '';
+    if (selectedType === 'business') return businessName.trim() !== '' && businessCategory.trim() !== '';
+    if (selectedType === 'event') return eventName.trim() !== '' && startsAt.trim() !== '' && venue.trim() !== '';
+    if (selectedType === 'podcast') return episodeTitle.trim() !== '';
+    return false;
   };
 
   return (
@@ -157,58 +277,21 @@ export default function NewCommunityWorkPage() {
             <p style={{ fontSize: 14, color: '#666', marginBottom: 24 }}>Fill in the details. This will be reviewed before publishing.</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div>
-                <label style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E', display: 'block', marginBottom: 6 }}>Title *</label>
-                <input
-                  type="text" value={title} onChange={e => setTitle(e.target.value)}
-                  placeholder={selectedType === 'fixeasy_worker' ? 'e.g. Thabo Mokoena — Plumber' : 'Title'}
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #E8DCC8', fontSize: 14, background: 'white', boxSizing: 'border-box' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E', display: 'block', marginBottom: 6 }}>Description</label>
-                <textarea
-                  value={description} onChange={e => setDescription(e.target.value)}
-                  placeholder="Brief description of this community work..."
-                  rows={3}
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #E8DCC8', fontSize: 14, background: 'white', resize: 'vertical', boxSizing: 'border-box' }}
-                />
-              </div>
 
               {/* FixEasy Worker specific fields */}
               {selectedType === 'fixeasy_worker' && (
                 <>
-                  <div style={{ borderTop: '1px solid #E8DCC8', paddingTop: 16, marginTop: 8 }}>
-                    <p style={{ fontSize: 12, fontWeight: 600, color: '#B8860B', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 0.5 }}>Service Provider Details</p>
-                  </div>
                   <div>
-                    <label style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E', display: 'block', marginBottom: 6 }}>Full Name *</label>
+                    <label style={labelStyle}>Full Name *</label>
                     <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                       placeholder="e.g. Thabo Mokoena"
-                      style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #E8DCC8', fontSize: 14, background: 'white', boxSizing: 'border-box' }}
+                      style={inputStyle}
                     />
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                    <div>
-                      <label style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E', display: 'block', marginBottom: 6 }}>Phone</label>
-                      <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
-                        placeholder="+27..."
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #E8DCC8', fontSize: 14, background: 'white', boxSizing: 'border-box' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E', display: 'block', marginBottom: 6 }}>WhatsApp</label>
-                      <input type="tel" value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
-                        placeholder="+27..."
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #E8DCC8', fontSize: 14, background: 'white', boxSizing: 'border-box' }}
-                      />
-                    </div>
-                  </div>
                   <div>
-                    <label style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E', display: 'block', marginBottom: 6 }}>Service Category *</label>
+                    <label style={labelStyle}>Service Category *</label>
                     <select value={serviceCategory} onChange={e => setServiceCategory(e.target.value)}
-                      style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #E8DCC8', fontSize: 14, background: 'white', boxSizing: 'border-box' }}
+                      style={inputStyle}
                     >
                       <option value="">Select category...</option>
                       <option value="plumber">Plumber</option>
@@ -222,20 +305,234 @@ export default function NewCommunityWorkPage() {
                       <option value="other">Other</option>
                     </select>
                   </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div>
+                      <label style={labelStyle}>WhatsApp</label>
+                      <input type="tel" value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
+                        placeholder="+27..."
+                        style={inputStyle}
+                      />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Years of Experience</label>
+                      <input type="number" value={yearsExperience} onChange={e => setYearsExperience(e.target.value)}
+                        placeholder="e.g. 5"
+                        style={inputStyle}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Hourly Rate (R)</label>
+                    <input type="number" value={hourlyRate} onChange={e => setHourlyRate(e.target.value)}
+                      placeholder="e.g. 150"
+                      style={inputStyle}
+                    />
+                  </div>
                 </>
               )}
 
+              {/* FamilyHouse specific fields */}
+              {selectedType === 'familyhouse' && (
+                <>
+                  <div>
+                    <label style={labelStyle}>Property Name *</label>
+                    <input type="text" value={propertyName} onChange={e => setPropertyName(e.target.value)}
+                      placeholder="e.g. Mama Dee's Cottage"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div>
+                      <label style={labelStyle}>Rooms</label>
+                      <input type="number" value={rooms} onChange={e => setRooms(e.target.value)}
+                        placeholder="e.g. 3"
+                        style={inputStyle}
+                      />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Sleeps</label>
+                      <input type="number" value={sleeps} onChange={e => setSleeps(e.target.value)}
+                        placeholder="e.g. 6"
+                        style={inputStyle}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Price per Night (R)</label>
+                    <input type="number" value={pricePerNight} onChange={e => setPricePerNight(e.target.value)}
+                      placeholder="e.g. 450"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Amenities</label>
+                    <input type="text" value={amenities} onChange={e => setAmenities(e.target.value)}
+                      placeholder="e.g. WiFi, Braai, Parking"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Host WhatsApp</label>
+                    <input type="tel" value={hostWhatsapp} onChange={e => setHostWhatsapp(e.target.value)}
+                      placeholder="+27..."
+                      style={inputStyle}
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Business specific fields */}
+              {selectedType === 'business' && (
+                <>
+                  <div>
+                    <label style={labelStyle}>Business Name *</label>
+                    <input type="text" value={businessName} onChange={e => setBusinessName(e.target.value)}
+                      placeholder="e.g. Sisi's Spaza Shop"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Category *</label>
+                    <select value={businessCategory} onChange={e => setBusinessCategory(e.target.value)}
+                      style={inputStyle}
+                    >
+                      <option value="">Select category...</option>
+                      <option value="spaza">Spaza</option>
+                      <option value="restaurant">Restaurant</option>
+                      <option value="salon">Salon</option>
+                      <option value="retail">Retail</option>
+                      <option value="services">Services</option>
+                      <option value="transport">Transport</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div>
+                      <label style={labelStyle}>WhatsApp</label>
+                      <input type="tel" value={businessWhatsapp} onChange={e => setBusinessWhatsapp(e.target.value)}
+                        placeholder="+27..."
+                        style={inputStyle}
+                      />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Phone</label>
+                      <input type="tel" value={businessPhone} onChange={e => setBusinessPhone(e.target.value)}
+                        placeholder="+27..."
+                        style={inputStyle}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Address</label>
+                    <input type="text" value={businessAddress} onChange={e => setBusinessAddress(e.target.value)}
+                      placeholder="Street, town"
+                      style={inputStyle}
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Event specific fields */}
+              {selectedType === 'event' && (
+                <>
+                  <div>
+                    <label style={labelStyle}>Event Name *</label>
+                    <input type="text" value={eventName} onChange={e => setEventName(e.target.value)}
+                      placeholder="e.g. Youth Music Night"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div>
+                      <label style={labelStyle}>Date &amp; Time *</label>
+                      <input type="datetime-local" value={startsAt} onChange={e => setStartsAt(e.target.value)}
+                        style={inputStyle}
+                      />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>End Time</label>
+                      <input type="datetime-local" value={endsAt} onChange={e => setEndsAt(e.target.value)}
+                        style={inputStyle}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Venue *</label>
+                    <input type="text" value={venue} onChange={e => setVenue(e.target.value)}
+                      placeholder="e.g. Community Hall"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <input type="checkbox" id="isFree" checked={isFree} onChange={e => setIsFree(e.target.checked)}
+                      style={{ width: 18, height: 18 }}
+                    />
+                    <label htmlFor="isFree" style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E' }}>Free entry</label>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Ticket URL</label>
+                    <input type="text" value={ticketUrl} onChange={e => setTicketUrl(e.target.value)}
+                      placeholder="https://..."
+                      style={inputStyle}
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Podcast specific fields */}
+              {selectedType === 'podcast' && (
+                <>
+                  <div>
+                    <label style={labelStyle}>Episode Title *</label>
+                    <input type="text" value={episodeTitle} onChange={e => setEpisodeTitle(e.target.value)}
+                      placeholder="e.g. Ep 12: Building Ubuntu Town"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Host Name</label>
+                    <input type="text" value={hostNameField} onChange={e => setHostNameField(e.target.value)}
+                      placeholder="e.g. Nomvula K."
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Audio / Spotify URL</label>
+                    <input type="text" value={audioUrl} onChange={e => setAudioUrl(e.target.value)}
+                      placeholder="https://open.spotify.com/..."
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Guests</label>
+                    <input type="text" value={guests} onChange={e => setGuests(e.target.value)}
+                      placeholder="e.g. Sipho M., Lindiwe T."
+                      style={inputStyle}
+                    />
+                  </div>
+                </>
+              )}
+
+              <div style={{ borderTop: '1px solid #E8DCC8', paddingTop: 16, marginTop: 8 }}>
+                <label style={labelStyle}>Description / Notes</label>
+                <textarea
+                  value={description} onChange={e => setDescription(e.target.value)}
+                  placeholder="Brief description of this community work..."
+                  rows={3}
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #E8DCC8', fontSize: 14, background: 'white', resize: 'vertical', boxSizing: 'border-box' }}
+                />
+              </div>
+
               <button
                 onClick={() => {
-                  if (!title.trim()) { setError('Title is required'); return; }
-                  if (selectedType === 'fixeasy_worker' && !fullName.trim()) { setError('Full name is required for workers'); return; }
+                  if (!isDetailsValid()) { setError('Please fill in all required fields'); return; }
                   setError('');
                   setStep('visibility');
                 }}
-                disabled={!title.trim()}
+                disabled={!isDetailsValid()}
                 style={{
-                  background: title.trim() ? '#EEB849' : '#E8DCC8', color: 'white', padding: '14px 24px',
-                  borderRadius: 12, fontWeight: 700, fontSize: 14, border: 'none', cursor: title.trim() ? 'pointer' : 'not-allowed',
+                  background: isDetailsValid() ? '#EEB849' : '#E8DCC8', color: 'white', padding: '14px 24px',
+                  borderRadius: 12, fontWeight: 700, fontSize: 14, border: 'none', cursor: isDetailsValid() ? 'pointer' : 'not-allowed',
                   marginTop: 8,
                 }}
               >
@@ -321,7 +618,7 @@ export default function NewCommunityWorkPage() {
               <button onClick={() => router.push('/workspace')} style={{ background: '#EEB849', color: 'white', padding: '12px 24px', borderRadius: 12, fontWeight: 600, fontSize: 14, border: 'none', cursor: 'pointer' }}>
                 Back to Workspace
               </button>
-              <button onClick={() => { setStep('type'); setTitle(''); setDescription(''); setFullName(''); setPhone(''); setWhatsapp(''); setServiceCategory(''); }} style={{ background: 'white', color: '#666', padding: '12px 24px', borderRadius: 12, fontSize: 14, border: '1px solid #E8DCC8', cursor: 'pointer' }}>
+              <button onClick={() => { setStep('type'); setSelectedType(''); setTitle(''); setDescription(''); resetAllTypeFields(); }} style={{ background: 'white', color: '#666', padding: '12px 24px', borderRadius: 12, fontSize: 14, border: '1px solid #E8DCC8', cursor: 'pointer' }}>
                 Add Another
               </button>
             </div>
