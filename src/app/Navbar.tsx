@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Sparkles, FileText, Hammer } from 'lucide-react';
+import AdminNavEntry from '@/components/AdminNavEntry';
 
 export default function Navbar() {
   return (
@@ -19,6 +20,7 @@ export default function Navbar() {
             <Link href="/chat" className="transition-colors hover:text-[#b98114] flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" />Kopano AI</Link>
             <Link href="/cv" className="transition-colors hover:text-[#b98114] flex items-center gap-1"><FileText className="w-3.5 h-3.5" />CV Builder</Link>
             <Link href="/about" className="transition-colors hover:text-[#b98114]">About</Link>
+            <AdminNavEntry />
           </nav>
         </div>
         <div className="flex items-center gap-2">
