@@ -79,9 +79,9 @@ export function MobileNavigation() {
             </button>
             <Link href="/" className="block" aria-label="Home page">
               <img
-                src="https://usenextbase.com/logos/nextbase/Logo%2006.png"
+                src=""
                 className="h-9 block sm:h-9"
-                alt="Nextbase Logo"
+                alt="Ubuntu Town"
               />
             </Link>
           </div>

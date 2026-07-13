@@ -1,0 +1,210 @@
+/* Ubuntu Town — Shared Design Tokens & Common Classes */
+/* Imported by layout.tsx, used by all page components */
+
+/* Design tokens are already in globals.css via Tailwind @theme.
+   This file adds the non-Tailwind utility classes shared across
+   TownClient, ProvinceClient, and NationalView. */
+
+/* ─── Shared component classes ─── */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .55em;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold-deep, #B98114);
+  background: rgba(238,184,73,.14);
+  border: 1px solid rgba(185,129,20,.25);
+  padding: .45em 1em;
+  border-radius: 999px;
+}
+.eyebrow::before {
+  content: "";
+  width: .5em;
+  height: .5em;
+  border-radius: 50%;
+  background: var(--gold, #EEB849);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  font-weight: 700;
+  font-family: var(--display, 'Plus Jakarta Sans', system-ui, sans-serif);
+  font-size: .92rem;
+  background: linear-gradient(180deg, #F2C45E, #E0A52E);
+  color: #1B1206;
+  border: none;
+  padding: .8em 1.5em;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 10px 24px -8px rgba(185,129,20,.6);
+  cursor: pointer;
+  transition: transform .15s;
+}
+.btn:hover { transform: translateY(-2px); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  font-weight: 700;
+  font-family: var(--display, 'Plus Jakarta Sans', system-ui, sans-serif);
+  font-size: .92rem;
+  background: var(--paper, #FFFFFF);
+  color: var(--ink, #151015);
+  border: 1px solid var(--line2, #ECE3D2);
+  padding: .8em 1.5em;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: .15s;
+}
+.btn-ghost:hover {
+  border-color: var(--gold, #EEB849);
+  color: var(--gold-deep, #B98114);
+}
+
+.card {
+  background: var(--paper, #FFFFFF);
+  border: 1px solid var(--line, rgba(21,16,21,.10));
+  border-radius: var(--r, 18px);
+  padding: 1.5rem;
+  box-shadow: var(--sh, 0 1px 2px rgba(21,16,21,.04), 0 8px 30px rgba(21,16,21,.06));
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: .6em;
+}
+.logo .mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: var(--creamhi, #FFF8E7);
+  border: 1px solid var(--line2, #ECE3D2);
+  display: grid;
+  place-items: center;
+  font-size: 21px;
+}
+.logo .wm {
+  font-family: var(--display, 'Plus Jakarta Sans', system-ui, sans-serif);
+  font-weight: 800;
+  font-size: 1.12rem;
+  line-height: 1;
+}
+.logo .tg {
+  font-size: .56rem;
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold-deep, #B98114);
+}
+
+section.section {
+  padding: 72px 0;
+}
+section.section h2 {
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  margin: 14px 0;
+}
+section.section .lead {
+  color: var(--muted, #6E665A);
+  max-width: 680px;
+  font-size: 1.06rem;
+}
+
+.dir {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.di {
+  background: var(--paper, #FFFFFF);
+  border: 1px solid var(--line, rgba(21,16,21,.10));
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .88rem;
+}
+.di b { font-weight: 600; }
+.di span { color: var(--muted, #6E665A); font-size: .78rem; }
+
+.oprow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line, rgba(21,16,21,.10));
+  font-size: .88rem;
+}
+.oprow:last-child { border-bottom: none; }
+.oprow .sc {
+  font-family: var(--mono, 'IBM Plex Mono', monospace);
+  font-size: .78rem;
+  color: var(--gold-deep, #B98114);
+  font-weight: 700;
+}
+
+.loopline {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-family: var(--display, 'Plus Jakarta Sans', system-ui, sans-serif);
+  font-weight: 700;
+}
+.loopline .a {
+  color: var(--gold, #EEB849);
+  font-weight: 800;
+}
+
+.chipset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.chipset span {
+  background: var(--cream2, #F6EDDB);
+  border: 1px solid var(--line2, #ECE3D2);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--ink, #151015);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(238,184,73,.14);
+  border: 1px solid rgba(185,129,20,.25);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: .74rem;
+  font-weight: 700;
+  color: var(--gold-deep, #B98114);
+}
+
+footer.site {
+  background: var(--ink, #151015);
+  color: var(--cream, #FBF4E6);
+  padding: 54px 0 30px;
+}
+footer.site a { color: var(--gold, #EEB849); }
+footer.site .muted {
+  color: #A99C84;
+  font-size: .8rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 860px) {
+  section.section { padding: 52px 0; }
+}

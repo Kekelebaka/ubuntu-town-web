@@ -53,9 +53,9 @@ export default function CoordinatorDashboard() {
   useEffect(() => {
     async function init() {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user?.email) { setAuthState('not_logged_in'); return; }
+      if (!user) { setAuthState('not_logged_in'); return; }
       setUserEmail(user.email);
-      const { data: coordData } = await supabase.from('coordinators').select('*').eq('email', user.email).single();
+      const { data: coordData } = await supabase.from('coordinators').select('*').eq('id', user.id).single();
       if (!coordData) { setAuthState('not_coordinator'); return; }
       setCoordinator(coordData);
       const { data: townData } = await supabase.from('towns').select('*').eq('id', coordData.town_id).single();

@@ -1,65 +1,168 @@
 @import "tailwindcss";
 
-@theme {
-  /* Warm cream default — matching www.ubuntutown.co.za Brand Bible */
-  --color-background: #fbf4e6;
-  --color-foreground: #1a1a2e;
-  --color-card: #ffffff;
-  --color-card-foreground: #1a1a2e;
-  --color-popover: #ffffff;
-  --color-popover-foreground: #1a1a2e;
-  --color-primary: #eeb849;
-  --color-primary-foreground: #1a1a2e;
-  --color-secondary: #f5edd8;
-  --color-secondary-foreground: #1a1a2e;
-  --color-muted: #f5edd8;
-  --color-muted-foreground: #6b5e4b;
-  --color-accent: #f5edd8;
-  --color-accent-foreground: #1a1a2e;
-  --color-destructive: #dc2626;
-  --color-destructive-foreground: #ffffff;
-  --color-border: #e8dcc8;
-  --color-input: #e8dcc8;
-  --color-ring: #eeb849;
-  --color-sidebar: #f5edd8;
-  --color-sidebar-foreground: #1a1a2e;
-  --color-sidebar-primary: #eeb849;
-  --color-sidebar-primary-foreground: #1a1a2e;
-  --color-sidebar-accent: #f5edd8;
-  --color-sidebar-accent-foreground: #1a1a2e;
-  --color-sidebar-border: #e8dcc8;
-  --color-sidebar-ring: #eeb849;
+/* Ubuntu Town OS — dark strategy works with next-themes (class) and [data-theme] */
+@custom-variant dark (&:where(.dark, [data-theme="dark"], .dark *, [data-theme="dark"] *));
 
-  /* Ubuntu Town brand colors — from AbantuBoBuntu Brand Bible */
-  --color-ubuntu-dark: #070509;
-  --color-ubuntu-cream: #fbf4e6;
-  --color-ubuntu-card: #ffffff;
-  --color-ubuntu-border: #e8dcc8;
-  --color-ubuntu-gold: #eeb849;
-  --color-ubuntu-gold-dark: #b98114;
-  --color-ubuntu-orange: #D87321;
-  --color-ubuntu-burgundy: #a13a54;
-  --color-ubuntu-purple: #301336;
-  --color-ubuntu-text: #1a1a2e;
-  --color-ubuntu-text-muted: #6b5e4b;
-  --color-ubuntu-light: #f3f4f6;
-  --color-learning: #10b981;
-  --color-proof: #06b6d4;
-  --color-kasibuy: #3b82f6;
-  --color-fixeasy: #ef4444;
+/* ---------------------------------------------------------------------------
+   Semantic tokens — LIGHT (default). Ubuntu Town OS CI.
+   Token NAMES are unchanged from the previous theme so existing shadcn
+   components keep working; only the VALUES are reskinned + a dark variant added.
+--------------------------------------------------------------------------- */
+:root {
+  --background:#FBF7F2;
+  --foreground:#1F1329;
+  --card:#FFFFFF;
+  --card-foreground:#1F1329;
+  --popover:#FFFFFF;
+  --popover-foreground:#1F1329;
+  --primary:#6B1F66;              /* Ubuntu Purple — primary action */
+  --primary-foreground:#FFFFFF;
+  --secondary:#F1E9DD;
+  --secondary-foreground:#1F1329;
+  --muted:#F1E9DD;
+  --muted-foreground:#6E6560;
+  --accent:#EBE0D0;              /* soft sand for hovers/highlights */
+  --accent-foreground:#1F1329;
+  --destructive:#C0392B;
+  --destructive-foreground:#FFFFFF;
+  --border:#E7DFD2;
+  --input:#E7DFD2;
+  --ring:#6B1F66;
+  --sidebar:#F6F0E8;
+  --sidebar-foreground:#1F1329;
+  --sidebar-primary:#6B1F66;
+  --sidebar-primary-foreground:#FFFFFF;
+  --sidebar-accent:#EBE0D0;
+  --sidebar-accent-foreground:#1F1329;
+  --sidebar-border:#E7DFD2;
+  --sidebar-ring:#6B1F66;
+  --radius:0.75rem;
+}
 
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+/* ---------------------------------------------------------------------------
+   Semantic tokens — DARK
+--------------------------------------------------------------------------- */
+.dark, [data-theme="dark"] {
+  --background:#150F1F;
+  --foreground:#F4EFEA;
+  --card:#211830;
+  --card-foreground:#F4EFEA;
+  --popover:#211830;
+  --popover-foreground:#F4EFEA;
+  --primary:#C879BC;
+  --primary-foreground:#150F1F;
+  --secondary:#241B33;
+  --secondary-foreground:#F4EFEA;
+  --muted:#241B33;
+  --muted-foreground:#B4A9C0;
+  --accent:#2C2140;
+  --accent-foreground:#F4EFEA;
+  --destructive:#E5533D;
+  --destructive-foreground:#150F1F;
+  --border:#352A46;
+  --input:#352A46;
+  --ring:#C879BC;
+  --sidebar:#0E0916;
+  --sidebar-foreground:#F4EFEA;
+  --sidebar-primary:#C879BC;
+  --sidebar-primary-foreground:#150F1F;
+  --sidebar-accent:#2C2140;
+  --sidebar-accent-foreground:#F4EFEA;
+  --sidebar-border:#352A46;
+  --sidebar-ring:#C879BC;
+}
+
+/* ---------------------------------------------------------------------------
+   Tailwind theme mapping. `inline` => utilities reference the CSS vars, so the
+   :root / .dark overrides above re-theme everything at runtime.
+--------------------------------------------------------------------------- */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Ubuntu Town OS brand palette (static across light/dark) */
+  --color-ubuntu-purple:#6B1F66;
+  --color-ubuntu-purple-deep:#521350;
+  --color-ubuntu-purple-soft:#B266A8;
+  --color-ubuntu-orange:#F79412;
+  --color-ubuntu-amber:#FFB02E;
+  --color-ubuntu-cream:#FBF7F2;
+  --color-ubuntu-ink:#1F1329;
+  --color-ubuntu-green:#4F9E1E;
+  --color-ubuntu-pink:#F3B7D7;
+  --color-ubuntu-indigo:#3B2E8C;
+  --color-ubuntu-dark:#231A2E;
+  --color-ubuntu-sand:#F1E9DD;
+  --color-ubuntu-line:#E7DFD2;
+  --color-ubuntu-muted:#6E6560;
+
+  /* Legacy aliases retained so pre-existing components keep rendering */
+  --color-ubuntu-gold:#F79412;
+  --color-ubuntu-gold-dark:#B98114;
+  --color-ubuntu-burgundy:#A13A54;
+  --color-ubuntu-text:#1F1329;
+  --color-ubuntu-text-muted:#6E6560;
+  --color-ubuntu-card:#FFFFFF;
+  --color-ubuntu-border:#E7DFD2;
+  --color-ubuntu-light:#F3F4F6;
+  --color-learning:#4F9E1E;
+  --color-proof:#06B6D4;
+  --color-kasibuy:#3B82F6;
+  --color-fixeasy:#EF4444;
+
+  /* Opportunity-node accents */
+  --color-node-academy:#4F9E1E;
+  --color-node-plug:#F79412;
+  --color-node-kasibuy:#6B1F66;
+  --color-node-fixeasy:#C0392B;
+  --color-node-eco:#4F9E1E;
+  --color-node-health:#E5548A;
+
+  /* Fonts (variables provided by next/font in layout.tsx) */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
+  --font-mono: var(--font-plex-mono), var(--font-roboto-mono), ui-monospace, monospace;
+  --font-hand: var(--font-caveat), cursive;
+
+  /* Radius scale (derived from --radius) */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  * { @apply border-border; }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
+  h1,h2,h3,h4,h5,h6 { font-family: var(--font-display); letter-spacing: -0.01em; }
 }

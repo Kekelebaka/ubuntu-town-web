@@ -27,26 +27,16 @@ export const getCachedLoggedInSupabaseUser = cache(async () => {
   return data.session.user;
 });
 
-export const getCachedLoggedInUserClaims = cache(async () => {
+// Fixed: replaced getClaims() with getUser() (auth-js 2.x migration)
+export const getCachedLoggedInUserId = cache(async () => {
   const supabase = await createSupabaseClient();
-  const { data, error } = await supabase.auth.getClaims();
-  if (error) {
-    throw error;
-  }
-  if (!data?.claims) {
-    throw new Error('No claims found');
-  }
-  return data.claims;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('No user found');
+  return user.id;
 });
-
 
 export const getCachedIsUserLoggedIn = cache(async () => {
-  const claims = await getCachedLoggedInUserClaims();
-  console.log('claims', claims);
-  return claims.sub !== null;
-});
-
-export const getCachedLoggedInUserId = cache(async () => {
-  const claims = await getCachedLoggedInUserClaims();
-  return claims.sub;
+  const supabase = await createSupabaseClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  return !!user;
 });

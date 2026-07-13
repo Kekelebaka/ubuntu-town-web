@@ -61,7 +61,7 @@ export function Login({ next }: LoginProps) {
           {tab === 'password' && (
             <EmailAndPassword
               isLoading={passwordStatus === 'executing'}
-              onSubmit={(data) => executePassword({ ...data, next: redirectTo })}
+              onSubmit={(data) => executePassword(data)}
               view="sign-in"
             />
           )}
@@ -81,7 +81,7 @@ export function Login({ next }: LoginProps) {
             <RenderProviders
               providers={['google', 'github', 'twitter']}
               isLoading={providerStatus === 'executing'}
-              onProviderLoginRequested={(provider) => executeProvider({ provider: provider as AuthProvider, next: redirectTo })}
+              onProviderLoginRequested={(provider) => executeProvider({ provider: provider as 'google' | 'github' | 'twitter', next: redirectTo })}
             />
           )}
         </div>

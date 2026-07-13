@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { getUserPrivateItems } from '@/data/anon/privateItems';
 import { Suspense } from 'react';
 import { PrivateItemsHeader } from './private-items-header';
