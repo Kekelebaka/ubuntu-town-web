@@ -3,6 +3,9 @@ import { NextResponse } from 'next/server';
 // Revalidate town pages + search after publish
 // Called by the outbox worker with REVALIDATE_TOKEN
 
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   const token = req.headers.get('x-revalidate-token');
   const expected = process.env.REVALIDATE_TOKEN;
