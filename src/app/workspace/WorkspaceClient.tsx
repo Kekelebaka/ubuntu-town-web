@@ -6,10 +6,11 @@ import { supabase } from '@/lib/supabase-client';
 import {
   MapPin, Plus, FileText, CheckCircle, Clock, Eye, AlertCircle, LogOut,
   MessageCircle, Bell, Radio, Compass, Trophy, Camera, Shield, Activity,
+  Inbox, Megaphone, Pin, X, Send, UserPlus, Check,
 } from 'lucide-react';
 
 type AuthState = 'loading' | 'not_logged_in' | 'no_role' | 'ready';
-type Tab = 'work' | 'activity' | 'missions' | 'leaderboard';
+type Tab = 'work' | 'inbox' | 'activity' | 'missions' | 'leaderboard';
 
 interface CommunityWork {
   id: string;
@@ -30,6 +31,8 @@ interface PresenceUser { user_id: string; name: string; }
 interface ActivityRow { at: string; actor: string; action: string; work_type: string; title: string; status: string; }
 interface Notification { id: string; type: string; title: string; body?: string; work_id?: string; read_at?: string; created_at: string; }
 interface Mission { key: string; title: string; target: number; done: number; complete: boolean; }
+interface Assignment { id: string; work_id: string; title: string; work_type: string; status: string; note?: string; assigned_by: string; created_at: string; completed_at?: string | null; }
+interface Announcement { id: string; title: string; body?: string; pinned: boolean; created_at: string; author_id: string; town_id?: string; }
 
 const WORK_TYPE_LABELS: Record<string, string> = {
   daycare: '🧸 Daycare OS', fixeasy_worker: '🔧 FixEasy Worker',
@@ -39,6 +42,7 @@ const WORK_TYPE_LABELS: Record<string, string> = {
 
 const TABS: { id: Tab; label: string; icon: any }[] = [
   { id: 'work', label: 'Work', icon: FileText },
+  { id: 'inbox', label: 'Inbox', icon: Inbox },
   { id: 'activity', label: 'Activity', icon: Activity },
   { id: 'missions', label: 'Missions', icon: Compass },
   { id: 'leaderboard', label: 'Leaderboard', icon: Trophy },
@@ -63,6 +67,10 @@ export default function WorkspacePage() {
   const [readiness, setReadiness] = useState<number>(0);
   const [missions, setMissions] = useState<Mission[]>([]);
 
+  // Inbox + Announcements
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+
   const reloadWorksAndStats = async (townId: string, roleKey: string) => {
     const q = supabase.from('community_work').select('id,type,title,status,visibility,created_at,published_at,photo_verified,gps_verified,contact_verified,verify_count').order('created_at', { ascending: false });
     if (roleKey === 'coordinator' || roleKey === 'deputy') q.eq('town_id', townId);
@@ -81,6 +89,8 @@ export default function WorkspacePage() {
   useEffect(() => {
     let chan: any = null;
     let notifChan: any = null;
+    let assignChan: any = null;
+    let annChan: any = null;
 
     (async () => {
       const { data: { user: u } } = await supabase.auth.getUser();
@@ -115,16 +125,56 @@ export default function WorkspacePage() {
       const { data: nData } = await supabase.from('notifications').select('*').is('read_at', null).order('created_at', { ascending: false }).limit(20);
       if (nData) { setNotifs(nData); setUnreadNotifs(nData.length); }
 
+      // Assignments
+      const { data: aData } = await supabase.rpc('my_assignments');
+      if (aData) setAssignments(aData as Assignment[]);
+
+      // Announcements — town + national (town_id is null)
+      const { data: annData } = await supabase
+        .from('announcements')
+        .select('*')
+        .or(`town_id.eq.${townId},town_id.is.null`)
+        .order('pinned', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if (annData) setAnnouncements(annData);
+
       // REALTIME channel: town presence + work_changes + activity
       const channelName = 'town:' + townId;
       chan = supabase.channel(channelName, { config: { presence: { key: u.id } } })
         .on('presence', { event: 'sync' }, () => {
-          const state = chan.presenceState<{ user_id: string; name: string }>();
-          const list: PresenceUser[] = Object.values(state).flat().map(p => ({ user_id: p.user_id, name: p.name })).filter(p => p.user_id !== u.id);
+          const state = chan.presenceState();
+          const list: PresenceUser[] = [];
+          Object.values(state).forEach(presences => {
+            presences.forEach(p => {
+              const data = p as any;
+              if (data.user_id !== u.id && data.user_id && data.name) {
+                list.push({ user_id: data.user_id, name: data.name });
+              }
+            });
+          });
           setPresence(list);
         })
-        .on('presence', { event: 'join' }, ({ newPresences }) => setPresence(p => [...p.filter(x => x.user_id !== newPresences[0]?.user_id), ...(newPresences as PresenceUser[])]))
-        .on('presence', { event: 'leave' }, ({ leftPresences }) => setPresence(p => p.filter(x => x.user_id !== leftPresences[0]?.user_id)))
+        .on('presence', { event: 'join' }, ({ newPresences }) => {
+          const joined: PresenceUser[] = [];
+          newPresences.forEach(p => {
+            const data = p as any;
+            if (data.user_id !== u.id && data.user_id && data.name) {
+              joined.push({ user_id: data.user_id, name: data.name });
+            }
+          });
+          setPresence(prev => [...prev.filter(x => !joined.some(j => j.user_id === x.user_id)), ...joined]);
+        })
+        .on('presence', { event: 'leave' }, ({ leftPresences }) => {
+          const left: string[] = [];
+          leftPresences.forEach(p => {
+            const data = p as any;
+            if (data.user_id && data.user_id !== u.id) {
+              left.push(data.user_id);
+            }
+          });
+          setPresence(prev => prev.filter(x => !left.includes(x.user_id)));
+        })
         .on('postgres_changes', { event: '*', schema: 'uto', table: 'community_work', filter: 'town_id=eq.' + townId }, () => reloadWorksAndStats(townId!, roleKey))
         .on('postgres_changes', { event: '*', schema: 'uto', table: 'work_approvals' }, async () => {
           const { data: actData } = await supabase.rpc('town_activity', { _town_id: townId, _limit: 30 });
@@ -144,10 +194,37 @@ export default function WorkspacePage() {
         })
         .subscribe();
 
+      // Assignments channel — refetch my_assignments on any change
+      assignChan = supabase.channel('assign:' + u.id)
+        .on('postgres_changes', { event: '*', schema: 'uto', table: 'work_assignments', filter: 'assignee_id=eq.' + u.id }, async () => {
+          const { data: aData } = await supabase.rpc('my_assignments');
+          if (aData) setAssignments(aData as Assignment[]);
+        })
+        .subscribe();
+
+      // Announcements channel
+      annChan = supabase.channel('ann:' + townId)
+        .on('postgres_changes', { event: '*', schema: 'uto', table: 'announcements' }, async () => {
+          const { data: annData } = await supabase
+            .from('announcements')
+            .select('*')
+            .or(`town_id.eq.${townId},town_id.is.null`)
+            .order('pinned', { ascending: false })
+            .order('created_at', { ascending: false })
+            .limit(50);
+          if (annData) setAnnouncements(annData);
+        })
+        .subscribe();
+
       setAuthState('ready');
     })();
 
-    return () => { if (chan) supabase.removeChannel(chan); if (notifChan) supabase.removeChannel(notifChan); };
+    return () => {
+      if (chan) supabase.removeChannel(chan);
+      if (notifChan) supabase.removeChannel(notifChan);
+      if (assignChan) supabase.removeChannel(assignChan);
+      if (annChan) supabase.removeChannel(annChan);
+    };
   }, []);
 
   const handleLogout = async () => { await supabase.auth.signOut(); window.location.href = '/'; };
@@ -161,6 +238,8 @@ export default function WorkspacePage() {
   if (authState === 'loading') return <Loader>Loading workspace...</Loader>;
   if (authState === 'not_logged_in') return <Gate icon={<MapPin size={48} color="#EEB849" />} title="Ubuntu Workspace" body="Sign in with your coordinator email." href="/login?next=/workspace" />;
   if (authState === 'no_role') return <Gate icon={<AlertCircle size={48} color="#E8734A" />} title="Not a Coordinator" body={`Signed in as ${user?.email}`} body2="You need a coordinator role." />;
+
+  const openAssignments = assignments.filter(a => a.status === 'open');
 
   return (
     <div style={{ minHeight: '100vh', background: '#FBF4E6' }}>
@@ -199,6 +278,13 @@ export default function WorkspacePage() {
             <span style={{ fontWeight: 700, color: '#1A1A2E' }}>{readiness}</span>
           </div>
 
+          {/* Inbox badge (open assignments count) */}
+          {openAssignments.length > 0 && (
+            <button onClick={() => setTab('inbox')} style={{ background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: 8, padding: '4px 10px', fontSize: 11, fontWeight: 700, color: '#92400E', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Inbox size={12} /> {openAssignments.length} open
+            </button>
+          )}
+
           {/* Notifications bell */}
           <div style={{ position: 'relative' }}>
             <button onClick={() => setShowNotifs(!showNotifs)} style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', padding: 6 }}>
@@ -209,12 +295,18 @@ export default function WorkspacePage() {
               <div style={{ position: 'absolute', top: 38, right: 0, width: 320, background: 'white', border: '1px solid #E8DCC8', borderRadius: 12, boxShadow: '0 10px 30px rgba(0,0,0,0.1)', zIndex: 100, maxHeight: 440, overflowY: 'auto' }}>
                 <div style={{ padding: '12px 16px', borderBottom: '1px solid #E8DCC8', fontWeight: 700, fontSize: 13 }}>Notifications</div>
                 {notifs.length === 0 ? <div style={{ padding: 20, textAlign: 'center', color: '#999', fontSize: 12 }}>All clear ✨</div> : notifs.map(n => (
-                  <div key={n.id} onClick={() => markNotifRead(n.id)} style={{ padding: '10px 14px', borderBottom: '1px solid #F3EDE0', cursor: n.read_at ? 'default' : 'pointer', background: n.read_at ? 'white' : '#FFFBEB' }}>
-                    <div style={{ fontSize: 12, fontWeight: 600 }}>{n.title}</div>
+                  <div key={n.id} onClick={() => { markNotifRead(n.id); if (n.work_id) window.location.href = '/workspace/work?id=' + n.work_id; }} style={{ padding: '10px 14px', borderBottom: '1px solid #F3EDE0', cursor: n.read_at ? 'default' : 'pointer', background: n.read_at ? 'white' : '#FFFBEB' }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      {n.type === 'assignment' && <UserPlus size={12} color="#D97706" />}
+                      {n.type === 'mention' && <MessageCircle size={12} color="#4F46E5" />}
+                      {n.type === 'approval' && <CheckCircle size={12} color="#059669" />}
+                      {n.type === 'rejection' && <AlertCircle size={12} color="#DC2626" />}
+                      {n.title}
+                    </div>
                     {n.body && <div style={{ fontSize: 11, color: '#666', marginTop: 2 }}>{n.body}</div>}
                     <div style={{ fontSize: 10, color: '#999', marginTop: 4 }}>{new Date(n.created_at).toLocaleString('en-ZA')}</div>
                   </div>
-                ))}
+                )).filter((n, i) => i < 30)}
               </div>
             )}
           </div>
@@ -230,13 +322,18 @@ export default function WorkspacePage() {
             const active = tab === t.id;
             return <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: '8px 14px', borderRadius: 8, background: active ? '#EEB849' : 'transparent', color: active ? 'white' : '#666', border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
               <Icon size={14} /> {t.label}
+              {t.id === 'inbox' && openAssignments.length > 0 && <span style={{ background: active ? 'white' : '#EEB849', color: active ? '#EEB849' : 'white', borderRadius: 10, padding: '1px 6px', fontSize: 10, fontWeight: 700 }}>{openAssignments.length}</span>}
             </button>;
           })}
         </div>
       </div>
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '20px 16px' }}>
+        {/* Announcements strip — always visible */}
+        {announcements.length > 0 && <AnnouncementsStrip announcements={announcements} townId={town?.id || null} userId={user?.id} />}
+
         {tab === 'work' && <WorkTab works={works} stats={stats} town={town} />}
+        {tab === 'inbox' && <InboxTab assignments={assignments} />}
         {tab === 'activity' && <ActivityTab activity={activity} />}
         {tab === 'missions' && <MissionsTab missions={missions} readiness={readiness} />}
         {tab === 'leaderboard' && <LeaderboardTab />}
@@ -246,6 +343,151 @@ export default function WorkspacePage() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
       `}</style>
+    </div>
+  );
+}
+
+// ─── ANNOUNCEMENTS STRIP ──────────────────────────────────────────────────────
+function AnnouncementsStrip({ announcements, townId, userId }: { announcements: Announcement[], townId: string | null, userId: string }) {
+  const [showForm, setShowForm] = useState(false);
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [pinned, setPinned] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const post = async () => {
+    if (!title.trim() || !townId) return;
+    setSubmitting(true);
+    await supabase.from('announcements').insert({ town_id: townId, author_id: userId, title, body: body || null, pinned });
+    setTitle(''); setBody(''); setPinned(false); setShowForm(false);
+    setSubmitting(false);
+  };
+
+  return (
+    <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', marginBottom: 16, overflow: 'hidden' }}>
+      <div style={{ padding: '10px 18px', borderBottom: '1px solid #E8DCC8', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h3 style={{ fontSize: 13, fontWeight: 700, color: '#1A1A2E', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Megaphone size={14} color="#EEB849" /> Announcements
+        </h3>
+        <button onClick={() => setShowForm(!showForm)} style={{ background: '#EEB849', color: 'white', border: 'none', borderRadius: 8, padding: '4px 10px', fontSize: 11, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Plus size={12} /> Post
+        </button>
+      </div>
+
+      {showForm && (
+        <div style={{ padding: 14, borderBottom: '1px solid #E8DCC8', background: '#FFFBEB' }}>
+          <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #E8DCC8', fontSize: 13, marginBottom: 8, boxSizing: 'border-box' }} />
+          <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Body (optional)" rows={2} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #E8DCC8', fontSize: 13, marginBottom: 8, boxSizing: 'border-box', resize: 'vertical' }} />
+          <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#666', marginBottom: 10, cursor: 'pointer' }}>
+            <input type="checkbox" checked={pinned} onChange={e => setPinned(e.target.checked)} style={{ cursor: 'pointer' }} /> Pin to top
+          </label>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button onClick={post} disabled={submitting || !title.trim()} style={{ background: '#059669', color: 'white', border: 'none', borderRadius: 8, padding: '8px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, opacity: submitting ? 0.6 : 1 }}>
+              <Send size={12} /> {submitting ? 'Posting…' : 'Post'}
+            </button>
+            <button onClick={() => setShowForm(false)} style={{ background: 'transparent', color: '#666', border: '1px solid #E8DCC8', borderRadius: 8, padding: '8px 14px', fontSize: 12, cursor: 'pointer' }}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      <div>
+        {announcements.slice(0, 5).map(a => (
+          <div key={a.id} style={{ padding: '10px 18px', borderBottom: '1px solid #F3EDE0', display: 'flex', gap: 10 }}>
+            {a.pinned && <Pin size={12} color="#EEB849" style={{ marginTop: 2, flexShrink: 0 }} />}
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E' }}>{a.title}</div>
+              {a.body && <div style={{ fontSize: 12, color: '#666', marginTop: 2 }}>{a.body}</div>}
+              <div style={{ fontSize: 10, color: '#999', marginTop: 4 }}>{new Date(a.created_at).toLocaleString('en-ZA')}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── TAB: INBOX ──────────────────────────────────────────────────────────────
+function InboxTab({ assignments }: { assignments: Assignment[] }) {
+  const openOnes = assignments.filter(a => a.status === 'open');
+  const doneOnes = assignments.filter(a => a.status === 'done');
+  const droppedOnes = assignments.filter(a => a.status === 'dropped');
+
+  const markDone = async (id: string) => {
+    await supabase.from('work_assignments').update({ status: 'done', completed_at: new Date().toISOString() }).eq('id', id);
+  };
+  const markDropped = async (id: string) => {
+    await supabase.from('work_assignments').update({ status: 'dropped' }).eq('id', id);
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+        {[
+          { l: 'Open', v: openOnes.length, c: '#D97706', bg: '#FFFBEB' },
+          { l: 'Done', v: doneOnes.length, c: '#059669', bg: '#ECFDF5' },
+          { l: 'Dropped', v: droppedOnes.length, c: '#6B7280', bg: '#F9FAFB' },
+        ].map(s => (
+          <div key={s.l} style={{ background: s.bg, borderRadius: 12, padding: 14, border: '1px solid #E8DCC8' }}>
+            <span style={{ fontSize: 11, color: '#666' }}>{s.l}</span>
+            <p style={{ fontSize: 24, fontWeight: 700, color: '#1A1A2E', margin: '6px 0 0' }}>{s.v}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Open assignments */}
+      <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', overflow: 'hidden' }}>
+        <div style={{ padding: '12px 18px', borderBottom: '1px solid #E8DCC8' }}>
+          <h2 style={{ fontSize: 14, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>🔴 Open Assignments</h2>
+        </div>
+        {openOnes.length === 0 ? (
+          <div style={{ padding: 40, textAlign: 'center', color: '#999', fontSize: 13 }}>No open assignments. 🎉</div>
+        ) : <div>{openOnes.map(a => (
+          <AssignmentRow key={a.id} a={a} onDone={markDone} onDropped={markDropped} />
+        ))}</div>}
+      </div>
+
+      {/* Completed */}
+      {(doneOnes.length > 0 || droppedOnes.length > 0) && (
+        <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', overflow: 'hidden' }}>
+          <div style={{ padding: '12px 18px', borderBottom: '1px solid #E8DCC8' }}>
+            <h2 style={{ fontSize: 14, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>Completed & Dropped</h2>
+          </div>
+          <div>{[...doneOnes, ...droppedOnes].slice(0, 20).map(a => (
+            <div key={a.id} style={{ padding: '10px 18px', borderBottom: '1px solid #F3EDE0', opacity: 0.6 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                <span style={{ fontSize: 11 }}>{WORK_TYPE_LABELS[a.work_type] || a.work_type}</span>
+                <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 20, background: a.status === 'done' ? '#D1FAE5' : '#F3F4F6', color: a.status === 'done' ? '#047857' : '#6B7280' }}>{a.status}</span>
+              </div>
+              <div style={{ fontSize: 13, color: '#1A1A2E' }}>{a.title}</div>
+              {a.note && <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>{a.note}</div>}
+            </div>
+          ))}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AssignmentRow({ a, onDone, onDropped }: { a: Assignment; onDone: (id: string) => void; onDropped: (id: string) => void }) {
+  return (
+    <div style={{ padding: '12px 18px', borderBottom: '1px solid #F3EDE0' }}>
+      <Link href={`/workspace/work?id=${a.work_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+          <span style={{ fontSize: 12 }}>{WORK_TYPE_LABELS[a.work_type] || a.work_type}</span>
+          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 20, background: '#FEF3C7', color: '#B45309' }}>open</span>
+        </div>
+        <p style={{ fontSize: 14, fontWeight: 600, color: '#1A1A2E', margin: 0 }}>{a.title}</p>
+        {a.note && <p style={{ fontSize: 12, color: '#666', marginTop: 4 }}>{a.note}</p>}
+      </Link>
+      <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+        <button onClick={() => onDone(a.id)} style={{ background: '#D1FAE5', color: '#047857', border: 'none', borderRadius: 6, padding: '6px 12px', fontSize: 11, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Check size={12} /> Done
+        </button>
+        <button onClick={() => onDropped(a.id)} style={{ background: '#F3F4F6', color: '#6B7280', border: 'none', borderRadius: 6, padding: '6px 12px', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+          Drop
+        </button>
+      </div>
     </div>
   );
 }
@@ -336,7 +578,7 @@ function ActivityTab({ activity }: { activity: ActivityRow[] }) {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13 }}><strong>{a.actor}</strong> {a.action} <em>{WORK_TYPE_LABELS[a.work_type] || a.work_type}</em>: {a.title}</div>
-            <div style={{ fontSize: 10, color: '#999', marginTop: 2 }}>{new Date(a.at).toLocaleString('en-ZA')} · → {a.status}</div>
+            <div style={{ fontSize: 10, color: '#999', marginTop: 2 }}>{new Date(a.at).toLocaleString('en-ZA')} → {a.status}</div>
           </div>
         </div>
       ))}</div>}
