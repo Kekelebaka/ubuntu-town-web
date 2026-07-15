@@ -55,17 +55,48 @@ export default function CoordinatorDashboard() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { setAuthState('not_logged_in'); return; }
       setUserEmail(user.email);
-      const { data: coordData } = await supabase.from('coordinators').select('*').eq('id', user.id).single();
-      if (!coordData) { setAuthState('not_coordinator'); return; }
-      setCoordinator(coordData);
-      const { data: townData } = await supabase.from('towns').select('*').eq('id', coordData.town_id).single();
+
+      // The user↔town link lives in role_assignments — the coordinators table has
+      // no user_id/email column, so the old `coordinators.eq('id', user.id)` lookup
+      // could never match and always reported "Not a Coordinator". Resolve the
+      // coordinator's town from their role assignment instead (same source of
+      // truth the workspace uses).
+      const { data: roles } = await supabase
+        .from('role_assignments')
+        .select('town_id, role_key')
+        .eq('user_id', user.id)
+        .in('role_key', ['coordinator', 'deputy', 'admin', 'ops'])
+        .limit(1);
+      if (!roles || roles.length === 0 || !roles[0].town_id) { setAuthState('not_coordinator'); return; }
+      const townId = roles[0].town_id as string;
+
+      const { data: townData } = await supabase.from('towns').select('*').eq('id', townId).single();
       if (townData) setTown(townData);
-      const { data: opps } = await supabase.from('opportunities').select('*').eq('town_id', coordData.town_id);
+
+      const { data: coCoords } = await supabase.from('coordinators').select('*').eq('town_id', townId);
+      if (coCoords) setAllCoordinators(coCoords as unknown as Coordinator[]);
+
+      // coordinators has no auth link, so we can't identify the exact profile row
+      // for this user. Show the town's first coordinator profile in the header,
+      // falling back to a profile derived from the signed-in user.
+      const profile = (coCoords && coCoords[0]) as unknown as Coordinator | undefined;
+      setCoordinator(
+        profile ?? ({
+          id: user.id,
+          town_id: townId,
+          display_name: (user.email || 'Coordinator').split('@')[0],
+          email: user.email,
+          phone: null,
+          status: 'bootcamp',
+          earnings: {},
+        } as Coordinator),
+      );
+
+      const { data: opps } = await supabase.from('opportunities').select('*').eq('town_id', townId);
       if (opps) setOpportunities(opps);
-      const { data: sigs } = await supabase.from('town_signals').select('*').eq('town_id', coordData.town_id);
+      const { data: sigs } = await supabase.from('town_signals').select('*').eq('town_id', townId);
       if (sigs) setSignals(sigs);
-      const { data: coCoords } = await supabase.from('coordinators').select('*').eq('town_id', coordData.town_id);
-      if (coCoords) setAllCoordinators(coCoords);
+
       setAuthState('coordinator');
     }
     init();

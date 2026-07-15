@@ -16,7 +16,12 @@ export function Login({ next }: LoginProps) {
   const router = useRouter();
   const [tab, setTab] = useState<'password' | 'magic' | 'social'>('password');
   const toastRef = useRef<string | number | undefined>(undefined);
-  const redirectTo = next || '/coordinator';
+  // Coordinators' home is the Workspace (this is what the bootcamp materials
+  // point to, and it authorizes via role_assignments). The old default of
+  // '/coordinator' sent everyone to a page that looked coordinators up by
+  // coordinators.id = auth uid — a link that never exists — so it always showed
+  // "Not a Coordinator".
+  const redirectTo = next || '/workspace';
 
   const { execute: executePassword, status: passwordStatus } = useAction(signInWithPasswordAction, {
     onExecute: () => { toastRef.current = toast.loading('Signing in...'); },
