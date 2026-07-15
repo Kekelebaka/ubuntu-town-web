@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase-client';
-import { MapPin, ArrowLeft, Wrench, Home, ShoppingBag, Calendar, Mic } from 'lucide-react';
+import { MapPin, ArrowLeft, Wrench, Home, ShoppingBag, Calendar, Mic, Baby } from 'lucide-react';
 
 const WORK_TYPES = [
+  { value: 'daycare', label: '🧸 Daycare OS', icon: <Baby size={20} />, desc: 'Register a daycare or ECD (early childhood development) centre' },
   { value: 'fixeasy_worker', label: '🔧 FixEasy Worker', icon: <Wrench size={20} />, desc: 'Register a plumber, electrician, handyman, or other service provider' },
   { value: 'familyhouse', label: '🏠 FamilyHouse Host', icon: <Home size={20} />, desc: 'List a room, cottage, or house for visitors' },
   { value: 'business', label: '🛒 Local Business', icon: <ShoppingBag size={20} />, desc: 'Add a spaza, salon, restaurant, or shop' },
@@ -51,6 +52,17 @@ export default function NewCommunityWorkPage() {
   const [businessPhone, setBusinessPhone] = useState('');
   const [businessAddress, setBusinessAddress] = useState('');
 
+  // Daycare OS fields
+  const [daycareName, setDaycareName] = useState('');
+  const [principalName, setPrincipalName] = useState('');
+  const [daycareWhatsapp, setDaycareWhatsapp] = useState('');
+  const [daycarePhone, setDaycarePhone] = useState('');
+  const [daycareAddress, setDaycareAddress] = useState('');
+  const [childrenCount, setChildrenCount] = useState('');
+  const [ageGroups, setAgeGroups] = useState('');
+  const [registrationStatus, setRegistrationStatus] = useState('');
+  const [subsidised, setSubsidised] = useState(false);
+
   // Event fields
   const [eventName, setEventName] = useState('');
   const [startsAt, setStartsAt] = useState('');
@@ -89,6 +101,7 @@ export default function NewCommunityWorkPage() {
     setFullName(''); setServiceCategory(''); setWhatsapp(''); setYearsExperience(''); setHourlyRate('');
     setPropertyName(''); setRooms(''); setSleeps(''); setPricePerNight(''); setAmenities(''); setHostWhatsapp('');
     setBusinessName(''); setBusinessCategory(''); setBusinessWhatsapp(''); setBusinessPhone(''); setBusinessAddress('');
+    setDaycareName(''); setPrincipalName(''); setDaycareWhatsapp(''); setDaycarePhone(''); setDaycareAddress(''); setChildrenCount(''); setAgeGroups(''); setRegistrationStatus(''); setSubsidised(false);
     setEventName(''); setStartsAt(''); setEndsAt(''); setVenue(''); setIsFree(false); setTicketUrl('');
     setEpisodeTitle(''); setHostNameField(''); setAudioUrl(''); setGuests('');
   };
@@ -110,6 +123,9 @@ export default function NewCommunityWorkPage() {
       detail = { whatsapp: hostWhatsapp || null };
     } else if (selectedType === 'business') {
       resolvedTitle = businessName;
+    } else if (selectedType === 'daycare') {
+      resolvedTitle = daycareName;
+      detail = { whatsapp: daycareWhatsapp || null, principal: principalName || null };
     } else if (selectedType === 'event') {
       resolvedTitle = eventName;
     } else if (selectedType === 'podcast') {
@@ -175,6 +191,21 @@ export default function NewCommunityWorkPage() {
             address: businessAddress || null,
           });
         if (detailError) throw detailError;
+      } else if (selectedType === 'daycare' && workId) {
+        const { error: detailError } = await supabase
+          .from('work_daycare')
+          .insert({
+            work_id: workId,
+            principal_name: principalName || null,
+            whatsapp: daycareWhatsapp || null,
+            phone: daycarePhone || null,
+            address: daycareAddress || null,
+            children_count: childrenCount ? Number(childrenCount) : null,
+            age_groups: ageGroups ? ageGroups.split(',').map(s => s.trim()).filter(Boolean) : [],
+            registration_status: registrationStatus || null,
+            subsidised: subsidised,
+          });
+        if (detailError) throw detailError;
       } else if (selectedType === 'event' && workId) {
         const { error: detailError } = await supabase
           .from('work_event')
@@ -212,6 +243,7 @@ export default function NewCommunityWorkPage() {
     if (selectedType === 'fixeasy_worker') return fullName.trim() !== '' && serviceCategory.trim() !== '';
     if (selectedType === 'familyhouse') return propertyName.trim() !== '';
     if (selectedType === 'business') return businessName.trim() !== '' && businessCategory.trim() !== '';
+    if (selectedType === 'daycare') return daycareName.trim() !== '';
     if (selectedType === 'event') return eventName.trim() !== '' && startsAt.trim() !== '' && venue.trim() !== '';
     if (selectedType === 'podcast') return episodeTitle.trim() !== '';
     return false;
@@ -327,6 +359,82 @@ export default function NewCommunityWorkPage() {
                       placeholder="e.g. 150"
                       style={inputStyle}
                     />
+                  </div>
+                </>
+              )}
+
+              {/* Daycare OS specific fields */}
+              {selectedType === 'daycare' && (
+                <>
+                  <div>
+                    <label style={labelStyle}>Daycare / ECD Centre Name *</label>
+                    <input type="text" value={daycareName} onChange={e => setDaycareName(e.target.value)}
+                      placeholder="e.g. Little Stars ECD Centre"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Principal / Contact Name</label>
+                    <input type="text" value={principalName} onChange={e => setPrincipalName(e.target.value)}
+                      placeholder="e.g. Mama Grace Dlamini"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div>
+                      <label style={labelStyle}>WhatsApp</label>
+                      <input type="tel" value={daycareWhatsapp} onChange={e => setDaycareWhatsapp(e.target.value)}
+                        placeholder="+27..."
+                        style={inputStyle}
+                      />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Phone</label>
+                      <input type="tel" value={daycarePhone} onChange={e => setDaycarePhone(e.target.value)}
+                        placeholder="+27..."
+                        style={inputStyle}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Address</label>
+                    <input type="text" value={daycareAddress} onChange={e => setDaycareAddress(e.target.value)}
+                      placeholder="Street, town"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div>
+                      <label style={labelStyle}>Number of Children</label>
+                      <input type="number" value={childrenCount} onChange={e => setChildrenCount(e.target.value)}
+                        placeholder="e.g. 25"
+                        style={inputStyle}
+                      />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Registration Status</label>
+                      <select value={registrationStatus} onChange={e => setRegistrationStatus(e.target.value)}
+                        style={inputStyle}
+                      >
+                        <option value="">Select...</option>
+                        <option value="registered">Registered (DSD)</option>
+                        <option value="in_progress">Registration in progress</option>
+                        <option value="unregistered">Not registered</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Age Groups Served</label>
+                    <input type="text" value={ageGroups} onChange={e => setAgeGroups(e.target.value)}
+                      placeholder="e.g. 0-2, 3-4, 5-6"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <input type="checkbox" id="subsidised" checked={subsidised} onChange={e => setSubsidised(e.target.checked)}
+                      style={{ width: 18, height: 18 }}
+                    />
+                    <label htmlFor="subsidised" style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E' }}>Receives government subsidy</label>
                   </div>
                 </>
               )}

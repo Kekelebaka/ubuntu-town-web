@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase-client';
-import { Wrench, Home, ShoppingBag, Calendar, Mic, ExternalLink } from 'lucide-react';
+import { Wrench, Home, ShoppingBag, Calendar, Mic, ExternalLink, Baby } from 'lucide-react';
 
 interface CommunityWorkItem {
   id: string;
@@ -15,6 +15,7 @@ interface CommunityWorkItem {
 }
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
+  daycare: <Baby size={16} />,
   fixeasy_worker: <Wrench size={16} />,
   familyhouse: <Home size={16} />,
   business: <ShoppingBag size={16} />,
@@ -23,6 +24,7 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 };
 
 const TYPE_LABELS: Record<string, string> = {
+  daycare: 'Daycare / ECD',
   fixeasy_worker: 'Service Provider',
   familyhouse: 'Hospitality Host',
   business: 'Local Business',
@@ -31,6 +33,7 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const TYPE_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  daycare: { bg: '#FFE4E6', text: '#9F1239', border: '#FB7185' },
   fixeasy_worker: { bg: '#FEF3C7', text: '#92400E', border: '#F59E0B' },
   familyhouse: { bg: '#DBEAFE', text: '#1E40AF', border: '#3B82F6' },
   business: { bg: '#D1FAE5', text: '#065F46', border: '#10B981' },

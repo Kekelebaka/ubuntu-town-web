@@ -24,6 +24,7 @@ interface TownInfo {
 }
 
 const WORK_TYPE_LABELS: Record<string, string> = {
+  daycare: '🧸 Daycare OS',
   fixeasy_worker: '🔧 FixEasy Worker',
   familyhouse: '🏠 FamilyHouse Host',
   business: '🛒 Local Business',
@@ -199,7 +200,7 @@ export default function WorkspacePage() {
         <div style={{ background: 'white', borderRadius: 16, padding: 24, marginBottom: 24, border: '1px solid #E8DCC8', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             <h2 style={{ fontSize: 18, fontWeight: 700, color: '#1A1A2E', margin: '0 0 4px' }}>Add Community Work</h2>
-            <p style={{ fontSize: 13, color: '#666', margin: 0 }}>Register a worker, host, business, event, or podcast episode.</p>
+            <p style={{ fontSize: 13, color: '#666', margin: 0 }}>Register a daycare, worker, host, business, event, or podcast episode.</p>
           </div>
           <Link href="/workspace/new" style={{ background: '#EEB849', color: 'white', padding: '12px 24px', borderRadius: 12, fontWeight: 700, fontSize: 14, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
             <Plus size={16} /> New
