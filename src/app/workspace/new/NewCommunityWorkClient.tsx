@@ -77,6 +77,12 @@ export default function NewCommunityWorkPage() {
   const [audioUrl, setAudioUrl] = useState('');
   const [guests, setGuests] = useState('');
 
+  // Verification + consent (WS3)
+  const [consentGiven, setConsentGiven] = useState(false);
+  const [consentMethod, setConsentMethod] = useState<'verbal' | 'written' | 'whatsapp' | ''>('');
+  const [subjectName, setSubjectName] = useState('');
+  const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>(null);
+
   useEffect(() => {
     async function init() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -104,6 +110,16 @@ export default function NewCommunityWorkPage() {
     setDaycareName(''); setPrincipalName(''); setDaycareWhatsapp(''); setDaycarePhone(''); setDaycareAddress(''); setChildrenCount(''); setAgeGroups(''); setRegistrationStatus(''); setSubsidised(false);
     setEventName(''); setStartsAt(''); setEndsAt(''); setVenue(''); setIsFree(false); setTicketUrl('');
     setEpisodeTitle(''); setHostNameField(''); setAudioUrl(''); setGuests('');
+    setConsentGiven(false); setConsentMethod(''); setSubjectName(''); setGpsCoords(null);
+  };
+
+  const captureGPS = () => {
+    if (!navigator.geolocation) { setError('Geolocation not supported'); return; }
+    navigator.geolocation.getCurrentPosition(
+      pos => setGpsCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      err => setError('GPS permission denied. You can still submit without GPS.'),
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   };
 
   const handleSubmit = async () => {
@@ -134,7 +150,7 @@ export default function NewCommunityWorkPage() {
     }
 
     try {
-      // 1. Create the community_work record
+      // 1. Create the community_work record (with GPS if captured)
       const { data: cw, error: cwError } = await supabase
         .from('community_work')
         .insert({
@@ -143,8 +159,12 @@ export default function NewCommunityWorkPage() {
           title: resolvedTitle,
           description: description || null,
           visibility: visibility,
-          status: 'submitted', // Will auto-advance via trigger if self-approve is on
+          status: 'submitted',
           created_by: userId,
+          gps_lat: gpsCoords?.lat || null,
+          gps_lng: gpsCoords?.lng || null,
+          gps_verified: !!gpsCoords,
+          contact_verified: !!(whatsapp || businessWhatsapp || daycareWhatsapp || hostWhatsapp),
           ...(ownerRef !== null ? { owner_ref: ownerRef } : {}),
           ...(detail !== null ? { detail } : {}),
         })
@@ -154,6 +174,18 @@ export default function NewCommunityWorkPage() {
       if (cwError) throw cwError;
 
       const workId = cw?.id;
+
+      // 1.5 Create consent record if required (POPIA)
+      if (workId && ['daycare', 'fixeasy_worker', 'business', 'familyhouse'].includes(selectedType)) {
+        if (!consentGiven) throw new Error('Consent is required for this work type.');
+        await supabase.from('work_consent').insert({
+          work_id: workId,
+          subject_name: subjectName || resolvedTitle,
+          consent_given: true,
+          method: consentMethod || 'written',
+          captured_by: userId,
+        });
+      }
 
       // 2. Create typed detail record
       if (selectedType === 'fixeasy_worker' && workId) {
@@ -682,6 +714,64 @@ export default function NewCommunityWorkPage() {
               ))}
             </div>
 
+            {/* Verification + Consent (POPIA) — required for person/business types */}
+            {['daycare', 'fixeasy_worker', 'business', 'familyhouse'].includes(selectedType) && (
+              <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: 12, padding: 16, marginBottom: 16 }}>
+                <h3 style={{ fontSize: 14, fontWeight: 700, color: '#92400E', marginBottom: 8 }}>🛡️ Verification & Consent</h3>
+                <p style={{ fontSize: 12, color: '#78350F', marginBottom: 12, lineHeight: 1.5 }}>
+                  For {selectedType === 'daycare' ? 'daycare' : selectedType === 'fixeasy_worker' ? 'worker' : selectedType === 'business' ? 'business' : 'family house'} records we need explicit consent from the subject and optional GPS for verification.
+                </p>
+
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A1A2E', marginBottom: 6 }}>Subject Name</label>
+                <input
+                  value={subjectName}
+                  onChange={e => setSubjectName(e.target.value)}
+                  placeholder="Name of the person / business owner"
+                  style={inputStyle}
+                />
+
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A1A2E', marginTop: 12, marginBottom: 6 }}>Consent Method</label>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                  {(['written', 'verbal', 'whatsapp'] as const).map(m => (
+                    <button
+                      key={m}
+                      onClick={() => setConsentMethod(m)}
+                      style={{
+                        flex: 1, padding: '10px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                        border: consentMethod === m ? '2px solid #EEB849' : '1px solid #E8DCC8',
+                        background: consentMethod === m ? '#FEF3C7' : 'white', color: '#1A1A2E',
+                      }}
+                    >
+                      {m === 'written' ? '📝 Written' : m === 'verbal' ? '🗣️ Verbal' : '💬 WhatsApp'}
+                    </button>
+                  ))}
+                </div>
+
+                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, cursor: 'pointer', fontSize: 12, color: '#1A1A2E', lineHeight: 1.5 }}>
+                  <input
+                    type="checkbox"
+                    checked={consentGiven}
+                    onChange={e => setConsentGiven(e.target.checked)}
+                    style={{ marginTop: 2, width: 16, height: 16, cursor: 'pointer' }}
+                  />
+                  <span>
+                    <strong>I confirm consent has been obtained</strong> from the subject for this record to be stored, displayed on Ubuntu Town, and used in line with our POPIA-compliant data principles.
+                  </span>
+                </label>
+
+                <button
+                  onClick={captureGPS}
+                  style={{
+                    marginTop: 12, width: '100%', padding: '10px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+                    background: gpsCoords ? '#D1FAE5' : 'white', border: gpsCoords ? '1px solid #059669' : '1px solid #E8DCC8',
+                    color: gpsCoords ? '#047857' : '#1A1A2E', cursor: 'pointer',
+                  }}
+                >
+                  {gpsCoords ? `✓ GPS captured (${gpsCoords.lat.toFixed(4)}, ${gpsCoords.lng.toFixed(4)})` : '📍 Tap to capture GPS (optional but recommended)'}
+                </button>
+              </div>
+            )}
+
             {error && (
               <div style={{ background: '#FEE2E2', color: '#DC2626', padding: '12px 16px', borderRadius: 10, fontSize: 13, marginBottom: 16 }}>
                 {error}
@@ -690,13 +780,14 @@ export default function NewCommunityWorkPage() {
 
             <button
               onClick={handleSubmit}
+              disabled={step === 'submitting'}
               style={{
                 background: '#059669', color: 'white', padding: '14px 24px',
                 borderRadius: 12, fontWeight: 700, fontSize: 14, border: 'none', cursor: 'pointer',
-                width: '100%',
+                width: '100%', opacity: step === 'submitting' ? 0.6 : 1,
               }}
             >
-              Submit for Review ✓
+              {step === 'submitting' ? 'Submitting…' : 'Submit for Review ✓'}
             </button>
             <p style={{ fontSize: 11, color: '#999', textAlign: 'center', marginTop: 8 }}>
               Your submission will be reviewed before publishing to the town page.

@@ -1,0 +1,47 @@
+name: Deploy Web
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'workers/**'
+      - '**.md'
+
+concurrency:
+  group: web-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Prepare env
+        run: test -f .env.local.uto || { echo "missing .env.local.uto"; exit 1; }
+        working-directory: apps/web
+
+      - name: Configure uto env
+        run: cp .env.local.uto .env.local
+        working-directory: apps/web
+
+      - name: Install
+        run: npm ci
+
+      - name: Build (next-on-pages)
+        run: npx @cloudflare/next-on-pages@1.13.12 --experimental-minify
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: npm
+          command: pages deploy .vercel/output/static --project-name=ubuntu-town-web --branch=main --commit-dirty=true
+          workingDirectory: apps/web
