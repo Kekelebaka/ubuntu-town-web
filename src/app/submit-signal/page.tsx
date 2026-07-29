@@ -22,17 +22,37 @@ export default function SubmitSignalPage() {
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    supabase.from('towns').select('id,name,slug').order('name').then(({ data }) => { if (data) setTowns(data); });
+    supabase
+      .from('towns')
+      .select('id,name,slug')
+      .order('name')
+      .then(({ data, error }) => {
+        if (error) {
+          setErrorMsg(`Could not load towns: ${error.message}`);
+          setStatus('error');
+          return;
+        }
+        if (data) setTowns(data);
+      });
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.town_id || !form.title || !form.category) return;
     setStatus('submitting');
-    const { error } = await supabase.from('town_signals').insert({
-      id: 'sig-' + Date.now().toString(36),
-      town_id: form.town_id, title: form.title, category: form.category,
-      description: form.description || null, status: 'pending',
+    // The browser client is pinned to the `uto` schema, where the canonical
+    // table is `signals` — `town_signals` only ever existed in the legacy
+    // `public` schema, so every submission through this form used to fail.
+    //   • no client-generated id: uto.signals.id defaults to gen_random_uuid()
+    //   • status is the uto.signal_status enum; 'new' is the initial state
+    //     ('pending' is not a member of that enum)
+    const { error } = await supabase.from('signals').insert({
+      town_id: form.town_id,
+      title: form.title,
+      category: form.category,
+      description: form.description || null,
+      status: 'new',
+      source: 'public_web',
     });
     if (error) { setStatus('error'); setErrorMsg(error.message); }
     else { setStatus('success'); }
@@ -68,7 +88,7 @@ export default function SubmitSignalPage() {
           <div>
             <label className="block text-sm font-semibold mb-2">Your Town *</label>
             <select value={form.town_id} onChange={(e) => setForm({ ...form, town_id: e.target.value })} required className="w-full bg-ubuntu-cream border border-ubuntu-border rounded-xl px-4 py-3 focus:outline-none focus:border-ubuntu-gold">
-              <option value="">Select a town...</option>
+              <option value="">{towns.length ? 'Select a town...' : 'Loading towns...'}</option>
               {towns.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
           </div>
