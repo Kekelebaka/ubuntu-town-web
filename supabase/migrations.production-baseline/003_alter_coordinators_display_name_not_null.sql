@@ -1,0 +1,2 @@
+-- Make display_name non-nullable with default value
+alter table coordinators alter column display_name set not null;alter table coordinators alter column display_name set default 'Coordinator';alter table coordinators alter column phone set default null

@@ -1,0 +1,1 @@
+ALTER TABLE public.towns ADD COLUMN IF NOT EXISTS context jsonb; ALTER TABLE public.towns ADD COLUMN IF NOT EXISTS context_updated_at timestamptz;
