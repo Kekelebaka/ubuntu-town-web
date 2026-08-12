@@ -1,0 +1,51 @@
+name: Deploy Web
+
+# Builds on GitHub's runners and deploys to Cloudflare Pages via wrangler
+# DIRECT UPLOAD. This path does NOT use Cloudflare's native Git integration,
+# so it is unaffected by the corrupted Pages Git installation (API error 8000011).
+#
+# Target: ubuntu-town-web-git (isolated on ubuntu-town-web-git.pages.dev).
+# Custom-domain cutover to enter.ubuntutown.co.za happens later, after Gate 3.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'workers/**'
+      - '**.md'
+  workflow_dispatch: {}          # lets you run it manually from the Actions tab
+
+concurrency:
+  group: web-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # NEXT_PUBLIC_* values are inlined at build time. .env.local.uto is
+      # committed and holds only publishable keys.
+      - name: Configure uto env
+        run: cp .env.local.uto .env.local
+
+      - name: Install
+        run: npm ci
+
+      - name: Build (next + next-on-pages edge)
+        run: npm run build:edge
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: npm
+          command: pages deploy .vercel/output/static --project-name=ubuntu-town-web-git --branch=main --commit-dirty=true
