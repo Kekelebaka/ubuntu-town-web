@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase-client';
 import { MapPin, ArrowLeft, Wrench, Home, ShoppingBag, Calendar, Mic, Baby } from 'lucide-react';
@@ -27,6 +27,11 @@ export default function NewCommunityWorkPage() {
   const [description, setDescription] = useState('');
   const [visibility, setVisibility] = useState<'public' | 'internal' | 'national'>('public');
   const [savedAsDraft, setSavedAsDraft] = useState(false);
+  // Re-entry guard. `step` is narrowed to 'visibility' inside the JSX block
+  // below, so comparing it to 'submitting' there is provably dead code; this
+  // ref is the honest way to stop a double-tap submitting twice.
+  const busyRef = useRef(false);
+  const [busy, setBusy] = useState(false);
   const [createdId, setCreatedId] = useState<string | null>(null);
   const [townId, setTownId] = useState('');
   const [userId, setUserId] = useState('');
@@ -126,6 +131,9 @@ export default function NewCommunityWorkPage() {
 
   const handleSubmit = async (asDraft = false) => {
     if (!townId || !userId) { setError('Not authorized'); return; }
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setBusy(true);
     setSavedAsDraft(asDraft);
     setStep('submitting');
     setError('');
@@ -270,6 +278,8 @@ export default function NewCommunityWorkPage() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to create community work';
       setError(msg);
+      busyRef.current = false;
+      setBusy(false);
       setStep('visibility'); // Go back to let them retry
     }
   };
@@ -784,14 +794,14 @@ export default function NewCommunityWorkPage() {
 
             <button
               onClick={() => handleSubmit(true)}
-              disabled={step === 'submitting'}
+              disabled={busy}
               style={{
                 background: '#1A1A2E', color: 'white', padding: '14px 24px', minHeight: 48,
                 borderRadius: 12, fontWeight: 700, fontSize: 15, border: 'none', cursor: 'pointer',
-                width: '100%', opacity: step === 'submitting' ? 0.6 : 1,
+                width: '100%', opacity: busy ? 0.6 : 1,
               }}
             >
-              {step === 'submitting' ? 'Saving…' : 'Save & add evidence'}
+              {busy ? 'Saving…' : 'Save & add evidence'}
             </button>
             <p style={{ fontSize: 12, color: '#8A8578', textAlign: 'center', margin: '8px 0 14px' }}>
               Recommended. Save it, attach your evidence, then submit for review.
@@ -799,11 +809,11 @@ export default function NewCommunityWorkPage() {
 
             <button
               onClick={() => handleSubmit(false)}
-              disabled={step === 'submitting'}
+              disabled={busy}
               style={{
                 background: 'white', color: '#1A1A2E', padding: '12px 24px', minHeight: 44,
                 borderRadius: 12, fontWeight: 600, fontSize: 14, border: '1px solid #E8DCC8', cursor: 'pointer',
-                width: '100%', opacity: step === 'submitting' ? 0.6 : 1,
+                width: '100%', opacity: busy ? 0.6 : 1,
               }}
             >
               Submit now without evidence
