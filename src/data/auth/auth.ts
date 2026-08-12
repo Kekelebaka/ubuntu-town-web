@@ -100,6 +100,39 @@ export const signInWithMagicLinkAction = actionClient
     // No need to return anything if the operation is successful
   });
 
+const verifyEmailOtpSchema = z.object({
+  email: z.string().email(),
+  token: z.string().min(6).max(10),
+});
+
+/**
+ * Verifies a 6-digit email OTP code and establishes the session.
+ *
+ * This is the code-entry counterpart to signInWithMagicLinkAction. When the
+ * Supabase "Magic Link" email template is switched to emit {{ .Token }}, the
+ * same signInWithOtp call delivers a code instead of a link; the user then
+ * types it here. This removes the mobile deep-link failure mode entirely
+ * (links opening in the wrong browser / being rewritten by mail clients),
+ * while still resolving to the same auth.users identity — no second identity
+ * model, no change to authorization.
+ */
+export const verifyEmailOtpAction = actionClient
+  .schema(verifyEmailOtpSchema)
+  .action(async ({ parsedInput: { email, token } }) => {
+    const supabase = await createSupabaseClient();
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token,
+      type: 'email',
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    // Session cookies are set by the server client on success.
+  });
+
 const signInWithProviderSchema = z.object({
   provider: z.enum(['google', 'github', 'twitter']),
   next: z.string().optional(),
