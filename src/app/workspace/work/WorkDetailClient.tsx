@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase-client';
-import { ArrowLeft, MessageCircle, CheckCircle, Shield, Camera, MapPin as MapPinIcon, UserPlus, Check, X } from 'lucide-react';
+import { ArrowLeft, MessageCircle, CheckCircle, Shield, Camera, MapPin as MapPinIcon, UserPlus, Check, X, Send } from 'lucide-react';
 import { CommentThread } from '../CommentThread';
+import EvidencePanel from '@/components/community-work/EvidencePanel';
+import { friendlyWorkError, STATUS_LABEL, STATUS_COLOR } from '@/lib/work-errors';
 
 interface WorkRow {
   id: string; type: string; title: string; description?: string; status: string; visibility: string;
@@ -29,6 +31,10 @@ export default function WorkDetailClient({ id }: { id: string }) {
   const [coordinators, setCoordinators] = useState<{ id: string; user_id: string; display_name: string }[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [notice, setNotice] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [proofCount, setProofCount] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -88,11 +94,45 @@ export default function WorkDetailClient({ id }: { id: string }) {
     if (typeof v === 'boolean') setVerified(v);
   }
 
-  async function transitionStatus(next: string) {
-    if (!work) return;
-    await supabase.from('community_work').update({ status: next }).eq('id', id);
+  /** Re-read authoritative state. Never trust the value we asked for. */
+  async function refreshWork() {
     const { data } = await supabase.from('community_work').select('*').eq('id', id).single();
     if (data) setWork(data);
+    return data as WorkRow | undefined;
+  }
+
+  /**
+   * Request a state transition and then re-read what the database actually did.
+   *
+   * This matters most for approval: app.tg_work_guard() rewrites 'approved' to
+   * 'published' inside the same statement, so 'approved' is never a durable
+   * status. We ask for 'approved' and report whatever authoritative status
+   * comes back — which is 'published'. There is no separate publish step, and
+   * no 'approved, awaiting publication' state to render.
+   */
+  async function transitionStatus(next: string, successCopy?: string) {
+    if (!work) return;
+    setBusy(next);
+    setErrorMsg('');
+    setNotice('');
+
+    const { error } = await supabase.from('community_work').update({ status: next }).eq('id', id);
+
+    if (error) {
+      const friendly = friendlyWorkError(error, 'transition');
+      setErrorMsg(friendly.message);
+      if (friendly.refresh) await refreshWork();
+      setBusy(null);
+      return;
+    }
+
+    const fresh = await refreshWork();
+    setBusy(null);
+
+    if (fresh) {
+      // Report the real outcome, not the requested one.
+      setNotice(successCopy ?? `Now ${(STATUS_LABEL[fresh.status] ?? fresh.status).toLowerCase()}.`);
+    }
   }
 
   async function assignWork() {
@@ -133,7 +173,7 @@ export default function WorkDetailClient({ id }: { id: string }) {
   }
 
   async function markDone(assignmentId: string) {
-    const { data: currentAssignment } = assignments.find(a => a.id === assignmentId);
+    const currentAssignment = assignments.find(a => a.id === assignmentId);
     if (!currentAssignment || currentAssignment.assignee_id !== currentUser?.id) return;
 
     await supabase.from('work_assignments')
@@ -155,7 +195,7 @@ export default function WorkDetailClient({ id }: { id: string }) {
   }
 
   async function markDropped(assignmentId: string) {
-    const { data: currentAssignment } = assignments.find(a => a.id === assignmentId);
+    const currentAssignment = assignments.find(a => a.id === assignmentId);
     if (!currentAssignment || currentAssignment.assignee_id !== currentUser?.id) return;
 
     await supabase.from('work_assignments')
@@ -194,7 +234,7 @@ export default function WorkDetailClient({ id }: { id: string }) {
         <div style={{ background: 'white', borderRadius: 14, padding: 20, border: '1px solid #E8DCC8' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <span style={{ fontSize: 13, fontWeight: 600, background: '#EEB84922', padding: '4px 10px', borderRadius: 8 }}>{work.type}</span>
-            <span style={{ fontSize: 11, background: statusBg(work.status), padding: '3px 8px', borderRadius: 20 }}>{work.status}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, background: (STATUS_COLOR[work.status]?.bg ?? '#F3F4F6'), color: (STATUS_COLOR[work.status]?.fg ?? '#4B5563'), padding: '3px 8px', borderRadius: 20 }}>{STATUS_LABEL[work.status] ?? work.status}</span>
             {verified === true && <span style={{ fontSize: 11, background: '#A7F3D0', color: '#065F46', padding: '3px 8px', borderRadius: 20, fontWeight: 700 }}>✓ Verified</span>}
             {work.verify_count > 0 && <span style={{ fontSize: 11, background: '#A7F3D0', color: '#065F46', padding: '3px 8px', borderRadius: 20 }}>✓ confirmed ×{work.verify_count}</span>}
           </div>
@@ -208,11 +248,32 @@ export default function WorkDetailClient({ id }: { id: string }) {
           </div>
         </div>
 
-        {/* Actions (for coordinators) */}
+        {/* Outcome / refusal messaging */}
+        {notice && (
+          <div role="status" style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', color: '#065F46', padding: '12px 14px', borderRadius: 12, fontSize: 14, fontWeight: 600 }}>{notice}</div>
+        )}
+        {errorMsg && (
+          <div role="alert" style={{ background: '#FEE2E2', border: '1px solid #FCA5A5', color: '#B91C1C', padding: '12px 14px', borderRadius: 12, fontSize: 14 }}>{errorMsg}</div>
+        )}
+
+        {/* Actions. Every button attempts the action and lets the database
+            decide; none of them is a security control. */}
         <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', padding: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          {work.status === 'submitted' && <button onClick={() => transitionStatus('in_review')} style={{ background: '#DBEAFE', color: '#1D4ED8', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Start Review</button>}
-          {work.status === 'in_review' && <button onClick={() => transitionStatus('approved')} style={{ background: '#D1FAE5', color: '#047857', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Approve & Publish</button>}
-          {['submitted', 'in_review'].includes(work.status) && <button onClick={() => transitionStatus('rejected')} style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Reject</button>}
+          {work.status === 'draft' && (
+            <button
+              onClick={() => transitionStatus('submitted', 'Submitted for review.')}
+              disabled={busy !== null}
+              style={{ background: '#1A1A2E', color: 'white', border: 'none', padding: '12px 18px', minHeight: 44, borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, opacity: busy ? 0.6 : 1 }}
+            >
+              <Send size={15} />{busy === 'submitted' ? 'Submitting…' : 'Submit for review'}
+            </button>
+          )}
+          {work.status === 'draft' && proofCount === 0 && (
+            <span style={{ alignSelf: 'center', fontSize: 12, color: '#8A8578' }}>Tip: attach evidence first — it makes review much faster.</span>
+          )}
+          {work.status === 'submitted' && <button onClick={() => transitionStatus('in_review')} disabled={busy !== null} style={{ background: '#DBEAFE', color: '#1D4ED8', border: 'none', padding: '12px 16px', minHeight: 44, borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>Start review</button>}
+          {['submitted', 'in_review'].includes(work.status) && <button onClick={() => transitionStatus('approved', 'Approved and published.')} disabled={busy !== null} style={{ background: '#059669', color: 'white', border: 'none', padding: '12px 16px', minHeight: 44, borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{busy === 'approved' ? 'Publishing…' : 'Approve & Publish'}</button>}
+          {['submitted', 'in_review'].includes(work.status) && <button onClick={() => transitionStatus('rejected', 'Sent back for changes.')} disabled={busy !== null} style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '12px 16px', minHeight: 44, borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>Send back</button>}
           <button onClick={() => setShowAssignForm(true)} style={{ background: '#FEF3C7', color: '#92400E', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><UserPlus size={14} />Assign</button>
           <button onClick={confirmVerification} style={{ background: '#E0E7FF', color: '#4338CA', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><CheckCircle size={14} />Confirm Verification</button>
         </div>
@@ -300,6 +361,9 @@ export default function WorkDetailClient({ id }: { id: string }) {
           </div>
         )}
 
+        {/* Evidence — unblocked by migration 0019 */}
+        <EvidencePanel workId={id} canAttach={['draft', 'submitted', 'in_review', 'rejected'].includes(work.status)} onChanged={setProofCount} />
+
         {/* Comments */}
         <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', overflow: 'hidden' }}>
           <CommentThread workId={id} />
@@ -309,10 +373,3 @@ export default function WorkDetailClient({ id }: { id: string }) {
   );
 }
 
-function statusBg(status: string): string {
-  const s: Record<string, string> = {
-    draft: '#F3F4F6', submitted: '#DBEAFE', in_review: '#FEF3C7',
-    approved: '#D1FAE5', published: '#A7F3D0', rejected: '#FEE2E2', archived: '#F3F4F6',
-  };
-  return s[status] || '#F3F4F6';
-}

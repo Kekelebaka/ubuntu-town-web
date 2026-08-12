@@ -520,6 +520,18 @@ function WorkTab({ works, stats, town }: { works: CommunityWork[], stats: any, t
         </Link>
       </div>
 
+      {/* Review queue. Visible to everyone; the queue itself is scoped by RLS,
+          so a coordinator sees only their town's submissions. */}
+      <div style={{ background: 'white', borderRadius: 14, padding: 18, marginBottom: 16, border: '1px solid #E8DCC8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+        <div>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>Review Queue</h2>
+          <p style={{ fontSize: 12, color: '#666', margin: '4px 0 0' }}>Submitted work waiting on a decision, with its evidence.</p>
+        </div>
+        <Link href="/workspace/review" style={{ background: '#1A1A2E', color: 'white', padding: '10px 18px', borderRadius: 10, fontWeight: 700, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+          Review
+        </Link>
+      </div>
+
       <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', overflow: 'hidden' }}>
         <div style={{ padding: '12px 18px', borderBottom: '1px solid #E8DCC8', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <h2 style={{ fontSize: 14, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>Your Community Work</h2>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase-client';
 import { MapPin, ArrowLeft, Wrench, Home, ShoppingBag, Calendar, Mic, Baby } from 'lucide-react';
@@ -26,6 +26,13 @@ export default function NewCommunityWorkPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [visibility, setVisibility] = useState<'public' | 'internal' | 'national'>('public');
+  const [savedAsDraft, setSavedAsDraft] = useState(false);
+  // Re-entry guard. `step` is narrowed to 'visibility' inside the JSX block
+  // below, so comparing it to 'submitting' there is provably dead code; this
+  // ref is the honest way to stop a double-tap submitting twice.
+  const busyRef = useRef(false);
+  const [busy, setBusy] = useState(false);
+  const [createdId, setCreatedId] = useState<string | null>(null);
   const [townId, setTownId] = useState('');
   const [userId, setUserId] = useState('');
   const [error, setError] = useState('');
@@ -122,8 +129,12 @@ export default function NewCommunityWorkPage() {
     );
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (asDraft = false) => {
     if (!townId || !userId) { setError('Not authorized'); return; }
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setBusy(true);
+    setSavedAsDraft(asDraft);
     setStep('submitting');
     setError('');
 
@@ -159,7 +170,7 @@ export default function NewCommunityWorkPage() {
           title: resolvedTitle,
           description: description || null,
           visibility: visibility,
-          status: 'submitted',
+          status: asDraft ? 'draft' : 'submitted',
           created_by: userId,
           gps_lat: gpsCoords?.lat || null,
           gps_lng: gpsCoords?.lng || null,
@@ -172,6 +183,7 @@ export default function NewCommunityWorkPage() {
         .single();
 
       if (cwError) throw cwError;
+      setCreatedId(cw?.id ?? null);
 
       const workId = cw?.id;
 
@@ -266,6 +278,8 @@ export default function NewCommunityWorkPage() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to create community work';
       setError(msg);
+      busyRef.current = false;
+      setBusy(false);
       setStep('visibility'); // Go back to let them retry
     }
   };
@@ -779,15 +793,30 @@ export default function NewCommunityWorkPage() {
             )}
 
             <button
-              onClick={handleSubmit}
-              disabled={step === 'submitting'}
+              onClick={() => handleSubmit(true)}
+              disabled={busy}
               style={{
-                background: '#059669', color: 'white', padding: '14px 24px',
-                borderRadius: 12, fontWeight: 700, fontSize: 14, border: 'none', cursor: 'pointer',
-                width: '100%', opacity: step === 'submitting' ? 0.6 : 1,
+                background: '#1A1A2E', color: 'white', padding: '14px 24px', minHeight: 48,
+                borderRadius: 12, fontWeight: 700, fontSize: 15, border: 'none', cursor: 'pointer',
+                width: '100%', opacity: busy ? 0.6 : 1,
               }}
             >
-              {step === 'submitting' ? 'Submitting…' : 'Submit for Review ✓'}
+              {busy ? 'Saving…' : 'Save & add evidence'}
+            </button>
+            <p style={{ fontSize: 12, color: '#8A8578', textAlign: 'center', margin: '8px 0 14px' }}>
+              Recommended. Save it, attach your evidence, then submit for review.
+            </p>
+
+            <button
+              onClick={() => handleSubmit(false)}
+              disabled={busy}
+              style={{
+                background: 'white', color: '#1A1A2E', padding: '12px 24px', minHeight: 44,
+                borderRadius: 12, fontWeight: 600, fontSize: 14, border: '1px solid #E8DCC8', cursor: 'pointer',
+                width: '100%', opacity: busy ? 0.6 : 1,
+              }}
+            >
+              Submit now without evidence
             </button>
             <p style={{ fontSize: 11, color: '#999', textAlign: 'center', marginTop: 8 }}>
               Your submission will be reviewed before publishing to the town page.
@@ -809,11 +838,18 @@ export default function NewCommunityWorkPage() {
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#D1FAE5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
               <span style={{ fontSize: 32 }}>✓</span>
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1A1A2E', marginBottom: 8 }}>Submitted!</h2>
+            <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1A1A2E', marginBottom: 8 }}>{savedAsDraft ? 'Saved' : 'Submitted!'}</h2>
             <p style={{ color: '#666', fontSize: 14, marginBottom: 24 }}>
-              &ldquo;{title}&rdquo; has been submitted for review. It will appear on the town page once approved.
+              {savedAsDraft
+                ? 'Now attach your evidence, then submit it for review.'
+                : 'It has been submitted for review. It will appear on the town page once approved.'}
             </p>
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+              {createdId && (
+                <button onClick={() => router.push(`/workspace/work?id=${createdId}`)} style={{ background: '#059669', color: 'white', padding: '12px 24px', minHeight: 44, borderRadius: 12, fontWeight: 700, fontSize: 14, border: 'none', cursor: 'pointer' }}>
+                  {savedAsDraft ? 'Add evidence' : 'Open work'}
+                </button>
+              )}
               <button onClick={() => router.push('/workspace')} style={{ background: '#EEB849', color: 'white', padding: '12px 24px', borderRadius: 12, fontWeight: 600, fontSize: 14, border: 'none', cursor: 'pointer' }}>
                 Back to Workspace
               </button>
