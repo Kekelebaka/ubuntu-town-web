@@ -14,7 +14,9 @@
     "typecheck": "tsc --noEmit",
     "generate:types": "export $(cat .env.local | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public,uto > src/lib/database.types.ts",
     "prebuild": "node scripts/sync-supabase-data.mjs",
-    "sync": "node scripts/sync-supabase-data.mjs"
+    "sync": "node scripts/sync-supabase-data.mjs",
+    "build:edge": "next-on-pages",
+    "verify": "npm run build && npm run build:edge"
   },
   "dependencies": {
     "@effect/platform": "^0.96.1",
