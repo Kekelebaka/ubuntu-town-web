@@ -1,0 +1,122 @@
+-- =============================================================================
+-- 0020_work_creation_tenancy.sql
+-- =============================================================================
+-- NORTH STAR GATE 1.5 — close creation-time tenancy on uto.community_work.
+--
+-- INDEPENDENT of 0018 (PR #8) and 0019 (PR #10). May merge in any order.
+-- Numbered 0020 to avoid collision with those two open branch heads.
+--
+-- ---------------------------------------------------------------------------
+-- THE DEFECT
+-- ---------------------------------------------------------------------------
+-- uto.community_work carried TWO permissive INSERT policies. PostgreSQL ORs
+-- permissive policies together, so the weaker one decided the outcome:
+--
+--   cw_insert_scope  WITH CHECK (created_by = auth.uid()
+--                                AND app.has_town_scope(town_id))     -- correct
+--
+--   cw_insert_self   WITH CHECK (created_by = auth.uid()
+--                                AND status IN ('draft','submitted')
+--                                AND visibility <> 'national')        -- NO TOWN PREDICATE
+--
+-- cw_insert_self never asked which town the row belonged to. Any authenticated
+-- user could therefore pick an arbitrary town_id, name themselves as creator,
+-- and manufacture a tenant-scoped work record.
+--
+-- That mattered beyond the row itself. app.can_write_work() grants authority to
+-- a work item's creator while it is draft/submitted/rejected, so the forged row
+-- then conferred genuine downstream authority — including, after Gate 1, the
+-- right to attach evidence to it. Creatorship was manufacturing tenancy:
+--
+--   WRONG:  creatorship -> tenancy -> authority
+--   RIGHT:  tenancy authorises creation -> creatorship follows
+--
+-- Gate 1 correctly prevented a coordinator from attaching proof to ANOTHER
+-- town's work. It could not prevent them from first fabricating their own work
+-- in that town. This migration closes that path.
+--
+-- ---------------------------------------------------------------------------
+-- THE CHANGE
+-- ---------------------------------------------------------------------------
+-- Drop cw_insert_self. Nothing else.
+--
+-- This is genuinely minimal rather than merely small. The only capability
+-- cw_insert_self uniquely provided was insertion WITHOUT town scope; every
+-- legitimate case it covered is already covered by cw_insert_scope, which
+-- permits any status and any visibility once town scope is demonstrated.
+-- Adding a town predicate to cw_insert_self would have made it a strict subset
+-- of cw_insert_scope — a redundant policy that only adds confusion. So the
+-- correct repair is removal.
+--
+-- Deliberately NOT changed: app.* bodies, role semantics, rank semantics,
+-- public_self_approve, the state machine, the Gate 1 proof policies,
+-- work_approvals, publish_outbox, subtype delegation.
+--
+-- STATUS-ON-CREATE FINDING (recorded, not changed): creation as either 'draft'
+-- or 'submitted' remains permitted. app.tg_work_guard() independently enforces
+-- that a new row must start as draft or submitted, so the state-machine
+-- contract is unaffected by removing this policy. Whether direct creation as
+-- 'submitted' should remain allowed is a product question, not a security one,
+-- and is left for a later architecture decision.
+-- =============================================================================
+
+begin;
+
+drop policy if exists cw_insert_self on uto.community_work;
+
+commit;
+
+-- =============================================================================
+-- EFFECTIVE CONTRACT AFTER
+-- =============================================================================
+-- A user may create a piece of community work only where BOTH hold:
+--   1. they name themselves as creator .......... created_by = auth.uid()
+--   2. they hold canonical scope in that town ... app.has_town_scope(town_id)
+--
+-- app.has_town_scope() resolves to national authority, or an admin / ops /
+-- coordinator / deputy role assignment for that specific town. National users
+-- therefore retain creation authority in every town, unchanged.
+--
+-- =============================================================================
+-- VALIDATION — executed against production, 16/16 assertions passed
+-- =============================================================================
+-- Real coordinators in two towns, the actual national admin, and an
+-- authenticated user holding no role. Run in a transaction and rolled back.
+--
+--  C01 coordinator creates draft in OWN town ................. created
+--  C02 coordinator creates submitted in OWN town ............. created
+--  C03 coordinator creates draft in ANOTHER town ............. denied 42501
+--  C04 coordinator creates submitted in ANOTHER town ......... denied 42501
+--  C05/C06 no-role user creates naming self as creator ....... denied 42501
+--  C07 coordinator forges created_by = another user .......... denied 42501
+--  C08 national creates work in any town ..................... created
+--  C09 coordinator attaches proof to own work ................ attached
+--  C10 escalation chain .............. broken at creation (C03/C04 deny)
+--  C11 coordinator edits own existing work ................... 1 row
+--
+--  Gate 1 regression, all still green:
+--  R-T02 cross-town proof attach ............................. denied 42501
+--  R-T04 re-parent proof to other town ....................... denied 42501
+--  R-T05 orphan proof ........................................ denied 42501
+--  R-T10 forge work_approvals ................................ denied 42501
+--  R-T11 national approves submitted work .................... final published
+--  R-T13 publish_outbox consequence .......................... 4 rows
+--  R-T14-17 audit chain ..... work.submitted > work.approved > work.published
+--
+-- Residue after rollback: community_work 1, proofs 0, audit_logs 0,
+-- publish_outbox 0, work_approvals 1, role_assignments 46, towns 58 —
+-- all identical to the pre-test baseline.
+--
+-- =============================================================================
+-- ROLLBACK  (restores the defect — for emergency use only)
+-- =============================================================================
+-- begin;
+-- create policy cw_insert_self on uto.community_work
+--   for insert to authenticated
+--   with check (
+--     created_by = auth.uid()
+--     and status = any (array['draft'::uto.work_status,'submitted'::uto.work_status])
+--     and visibility <> 'national'::uto.work_visibility
+--   );
+-- commit;
+-- =============================================================================
