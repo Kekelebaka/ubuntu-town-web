@@ -20,8 +20,8 @@ import type { ActorContext } from '@/lib/capabilities/resolve';
 import type { Capability } from '@/config/capabilities';
 
 const TABS = [
-  { key: 'today', label: 'Today', href: '/workspace', icon: Home, match: (p: string) => p === '/workspace' },
-  { key: 'town', label: 'Town', href: '/towns', icon: MapPin, match: (p: string) => p.startsWith('/town') },
+  { key: 'today', label: 'Today', href: '/workspace/today', icon: Home, match: (p: string) => p === '/workspace/today' || p === '/workspace' },
+  { key: 'town', label: 'Town', href: '/workspace/town', icon: MapPin, match: (p: string) => p.startsWith('/workspace/town') },
   { key: 'work', label: 'Work', href: '/workspace/review', icon: Briefcase, match: (p: string) => p.startsWith('/workspace/work') || p.startsWith('/workspace/review') || p.startsWith('/workspace/new') },
   { key: 'more', label: 'More', href: '#more', icon: LayoutGrid, match: () => false },
 ];
