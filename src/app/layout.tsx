@@ -4,6 +4,7 @@ import localFont from 'next/font/local';
 import { Bricolage_Grotesque, IBM_Plex_Mono, Caveat } from 'next/font/google';
 import { DynamicLayoutProviders } from './DynamicLayoutProviders';
 import { ClientLayout } from './ClientLayout';
+import ServiceWorkerRegister from '@/components/app-shell/ServiceWorkerRegister';
 
 const inter = localFont({
   src: [
@@ -202,12 +203,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         ></script>
         <meta name="theme-color" content="#6B1F66" />
         <meta name="msapplication-TileColor" content="#6B1F66" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Ubuntu Town" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body>
+        <ServiceWorkerRegister />
         <DynamicLayoutProviders>
           <ClientLayout>
             {children}

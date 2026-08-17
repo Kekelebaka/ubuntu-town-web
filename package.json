@@ -13,9 +13,9 @@
     "lint": "npx oxlint src/",
     "typecheck": "tsc --noEmit",
     "generate:types": "export $(cat .env.local | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public,uto > src/lib/database.types.ts",
-    "prebuild": "node scripts/sync-supabase-data.mjs",
+    "prebuild": "node scripts/sync-supabase-data.mjs && node scripts/decode-icons.mjs",
     "sync": "node scripts/sync-supabase-data.mjs",
-    "build:edge": "next-on-pages",
+    "build:edge": "node scripts/decode-icons.mjs && next-on-pages",
     "verify": "npm run build && npm run build:edge"
   },
   "dependencies": {
