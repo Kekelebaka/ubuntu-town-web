@@ -295,6 +295,19 @@ export default function NewCommunityWorkPage() {
     return false;
   };
 
+  // Names the specific missing required fields so the coordinator is never
+  // left with a dead 'Continue' button and no explanation.
+  const missingFields = (): string[] => {
+    const m: string[] = [];
+    if (selectedType === 'fixeasy_worker') { if (!fullName.trim()) m.push('Full name'); if (!serviceCategory.trim()) m.push('Service category'); }
+    else if (selectedType === 'familyhouse') { if (!propertyName.trim()) m.push('Property name'); }
+    else if (selectedType === 'business') { if (!businessName.trim()) m.push('Business name'); if (!businessCategory.trim()) m.push('Business category'); }
+    else if (selectedType === 'daycare') { if (!daycareName.trim()) m.push('Daycare name'); }
+    else if (selectedType === 'event') { if (!eventName.trim()) m.push('Event name'); if (!startsAt.trim()) m.push('Date & time'); if (!venue.trim()) m.push('Venue'); }
+    else if (selectedType === 'podcast') { if (!episodeTitle.trim()) m.push('Episode title'); }
+    return m;
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
       {/* Header */}
@@ -677,17 +690,23 @@ export default function NewCommunityWorkPage() {
                 />
               </div>
 
+              {!isDetailsValid() && missingFields().length > 0 && (
+                <p style={{ fontSize: 13, color: 'var(--muted-foreground)', margin: '4px 0 0' }}>
+                  Still needed: <span style={{ color: 'var(--foreground)', fontWeight: 600 }}>{missingFields().join(', ')}</span>
+                </p>
+              )}
               <button
                 onClick={() => {
-                  if (!isDetailsValid()) { setError('Please fill in all required fields'); return; }
+                  const miss = missingFields();
+                  if (miss.length > 0) { setError('Please add: ' + miss.join(', ')); return; }
                   setError('');
                   setStep('visibility');
                 }}
-                disabled={!isDetailsValid()}
+                aria-disabled={!isDetailsValid()}
                 style={{
-                  background: isDetailsValid() ? 'var(--color-ubuntu-orange)' : 'var(--border)', color: 'white', padding: '14px 24px',
-                  borderRadius: 12, fontWeight: 700, fontSize: 14, border: 'none', cursor: isDetailsValid() ? 'pointer' : 'not-allowed',
-                  marginTop: 8,
+                  background: isDetailsValid() ? 'var(--color-ubuntu-orange)' : 'var(--muted)', color: 'white', padding: '14px 24px',
+                  borderRadius: 12, fontWeight: 700, fontSize: 14, border: 'none', cursor: 'pointer',
+                  marginTop: 8, opacity: isDetailsValid() ? 1 : 0.85,
                 }}
               >
                 Continue →
