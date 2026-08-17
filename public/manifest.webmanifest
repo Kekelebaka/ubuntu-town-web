@@ -1,0 +1,19 @@
+{
+  "name": "Ubuntu Town",
+  "short_name": "Ubuntu Town",
+  "description": "Run your town from your phone — record community work, capture evidence, review and publish.",
+  "id": "/workspace",
+  "start_url": "/workspace",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FBF7F2",
+  "theme_color": "#6B1F66",
+  "lang": "en-ZA",
+  "categories": ["productivity", "government", "business"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
