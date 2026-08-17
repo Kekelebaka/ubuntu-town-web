@@ -181,8 +181,7 @@ export const CAPABILITIES: Capability[] = [
     route: '/workspace/people',
     surfaces: ['more'],
     requires: { roles: ['coordinator', 'deputy', 'ops', 'admin'] },
-    enforcedBy: 'uto.coordinators + role_assignments read policies',
-    comingSoon: true,
+    enforcedBy: 'town_read_coordinators + town_read_roles — app.has_town_scope(town_id)',
   },
   {
     key: 'people.invite',
