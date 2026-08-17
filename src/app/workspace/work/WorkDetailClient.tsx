@@ -222,23 +222,23 @@ export default function WorkDetailClient({ id }: { id: string }) {
   const completedAssignments = assignments.filter(a => a.status === 'done' || a.status === 'dropped');
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FBF4E6' }}>
-      <div style={{ borderBottom: '1px solid #E8DCC8', background: 'white', padding: '12px 0' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
+      <div style={{ borderBottom: '1px solid var(--border)', background: 'var(--card)', padding: '12px 0' }}>
         <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
           <Link href="/workspace" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#666', padding: 4, display: 'flex' }}><ArrowLeft size={20} /></Link>
-          <h1 style={{ fontSize: 16, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>Work Detail</h1>
+          <h1 style={{ fontSize: 16, fontWeight: 700, color: 'var(--foreground)', margin: 0 }}>Work Detail</h1>
         </div>
       </div>
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <div style={{ background: 'white', borderRadius: 14, padding: 20, border: '1px solid #E8DCC8' }}>
+        <div style={{ background: 'var(--card)', borderRadius: 14, padding: 20, border: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, background: '#EEB84922', padding: '4px 10px', borderRadius: 8 }}>{work.type}</span>
+            <span style={{ fontSize: 13, fontWeight: 600, background: 'var(--color-ubuntu-orange)22', padding: '4px 10px', borderRadius: 8 }}>{work.type}</span>
             <span style={{ fontSize: 11, fontWeight: 700, background: (STATUS_COLOR[work.status]?.bg ?? '#F3F4F6'), color: (STATUS_COLOR[work.status]?.fg ?? '#4B5563'), padding: '3px 8px', borderRadius: 20 }}>{STATUS_LABEL[work.status] ?? work.status}</span>
             {verified === true && <span style={{ fontSize: 11, background: '#A7F3D0', color: '#065F46', padding: '3px 8px', borderRadius: 20, fontWeight: 700 }}>✓ Verified</span>}
             {work.verify_count > 0 && <span style={{ fontSize: 11, background: '#A7F3D0', color: '#065F46', padding: '3px 8px', borderRadius: 20 }}>✓ confirmed ×{work.verify_count}</span>}
           </div>
-          <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 8px', color: '#1A1A2E' }}>{work.title}</h2>
+          <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 8px', color: 'var(--foreground)' }}>{work.title}</h2>
           {work.description && <p style={{ fontSize: 13, color: '#333', lineHeight: 1.6 }}>{work.description}</p>}
           <div style={{ display: 'flex', gap: 10, marginTop: 12, fontSize: 11, color: '#999' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: work.photo_verified ? '#059669' : '#CBD5E1' }}><Camera size={12} />Photo</span>
@@ -258,18 +258,18 @@ export default function WorkDetailClient({ id }: { id: string }) {
 
         {/* Actions. Every button attempts the action and lets the database
             decide; none of them is a security control. */}
-        <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', padding: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ background: 'var(--card)', borderRadius: 14, border: '1px solid var(--border)', padding: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {work.status === 'draft' && (
             <button
               onClick={() => transitionStatus('submitted', 'Submitted for review.')}
               disabled={busy !== null}
-              style={{ background: '#1A1A2E', color: 'white', border: 'none', padding: '12px 18px', minHeight: 44, borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, opacity: busy ? 0.6 : 1 }}
+              style={{ background: 'var(--foreground)', color: 'white', border: 'none', padding: '12px 18px', minHeight: 44, borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, opacity: busy ? 0.6 : 1 }}
             >
               <Send size={15} />{busy === 'submitted' ? 'Submitting…' : 'Submit for review'}
             </button>
           )}
           {work.status === 'draft' && proofCount === 0 && (
-            <span style={{ alignSelf: 'center', fontSize: 12, color: '#8A8578' }}>Tip: attach evidence first — it makes review much faster.</span>
+            <span style={{ alignSelf: 'center', fontSize: 12, color: 'var(--muted-foreground)' }}>Tip: attach evidence first — it makes review much faster.</span>
           )}
           {work.status === 'submitted' && <button onClick={() => transitionStatus('in_review')} disabled={busy !== null} style={{ background: '#DBEAFE', color: '#1D4ED8', border: 'none', padding: '12px 16px', minHeight: 44, borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>Start review</button>}
           {['submitted', 'in_review'].includes(work.status) && <button onClick={() => transitionStatus('approved', 'Approved and published.')} disabled={busy !== null} style={{ background: '#059669', color: 'white', border: 'none', padding: '12px 16px', minHeight: 44, borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{busy === 'approved' ? 'Publishing…' : 'Approve & Publish'}</button>}
@@ -280,17 +280,17 @@ export default function WorkDetailClient({ id }: { id: string }) {
 
         {/* Assign form */}
         {showAssignForm && (
-          <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', padding: 16 }}>
+          <div style={{ background: 'var(--card)', borderRadius: 14, border: '1px solid var(--border)', padding: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <h3 style={{ fontSize: 14, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>Assign to Coordinator</h3>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--foreground)', margin: 0 }}>Assign to Coordinator</h3>
               <button onClick={() => { setShowAssignForm(false); setAssigneeId(''); setAssignNote(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#999', padding: 0 }}>
                 <X size={18} />
               </button>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A1A2E', marginBottom: 6 }}>Assignee</label>
-                <select value={assigneeId} onChange={e => setAssigneeId(e.target.value)} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #E8DCC8', fontSize: 13, boxSizing: 'border-box' }}>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--foreground)', marginBottom: 6 }}>Assignee</label>
+                <select value={assigneeId} onChange={e => setAssigneeId(e.target.value)} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 13, boxSizing: 'border-box' }}>
                   <option value="">Select coordinator…</option>
                   {coordinators.map(c => (
                     <option key={c.user_id} value={c.user_id}>{c.display_name}</option>
@@ -298,8 +298,8 @@ export default function WorkDetailClient({ id }: { id: string }) {
                 </select>
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A1A2E', marginBottom: 6 }}>Note (optional)</label>
-                <textarea value={assignNote} onChange={e => setAssignNote(e.target.value)} placeholder="What needs to be done?" rows={3} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #E8DCC8', fontSize: 13, resize: 'vertical', boxSizing: 'border-box' }} />
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--foreground)', marginBottom: 6 }}>Note (optional)</label>
+                <textarea value={assignNote} onChange={e => setAssignNote(e.target.value)} placeholder="What needs to be done?" rows={3} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 13, resize: 'vertical', boxSizing: 'border-box' }} />
               </div>
               <button onClick={assignWork} disabled={submitting || !assigneeId} style={{ background: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: submitting || !assigneeId ? 0.6 : 1 }}>
                 {submitting ? 'Assigning…' : 'Assign Work'}
@@ -310,19 +310,19 @@ export default function WorkDetailClient({ id }: { id: string }) {
 
         {/* Assignments list */}
         {assignments.length > 0 && (
-          <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', overflow: 'hidden' }}>
-            <div style={{ padding: '12px 16px', borderBottom: '1px solid #E8DCC8' }}>
-              <h3 style={{ fontSize: 14, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>Assignments</h3>
+          <div style={{ background: 'var(--card)', borderRadius: 14, border: '1px solid var(--border)', overflow: 'hidden' }}>
+            <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--foreground)', margin: 0 }}>Assignments</h3>
             </div>
             <div>
               {openAssignments.length > 0 && (
                 <>
                   <div style={{ padding: '8px 16px', background: '#FFFBEB', borderBottom: '1px solid #FDE68A', fontSize: 11, fontWeight: 600, color: '#92400E' }}>Open ({openAssignments.length})</div>
                   {openAssignments.map(a => (
-                    <div key={a.id} style={{ padding: '12px 16px', borderBottom: '1px solid #F3EDE0' }}>
+                    <div key={a.id} style={{ padding: '12px 16px', borderBottom: '1px solid var(--secondary)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <span style={{ fontSize: 12, fontWeight: 600, color: '#1A1A2E' }}>{a.assignee_name}</span>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--foreground)' }}>{a.assignee_name}</span>
                           <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 20, background: '#FEF3C7', color: '#B45309' }}>open</span>
                         </div>
                         <div style={{ fontSize: 10, color: '#999' }}>{new Date(a.created_at).toLocaleDateString('en-ZA')}</div>
@@ -346,9 +346,9 @@ export default function WorkDetailClient({ id }: { id: string }) {
                 <>
                   <div style={{ padding: '8px 16px', background: '#F9FAFB', borderBottom: '1px solid #E5E7EB', fontSize: 11, fontWeight: 600, color: '#6B7280' }}>Completed ({completedAssignments.length})</div>
                   {completedAssignments.map(a => (
-                    <div key={a.id} style={{ padding: '10px 16px', borderBottom: '1px solid #F3EDE0', opacity: 0.6 }}>
+                    <div key={a.id} style={{ padding: '10px 16px', borderBottom: '1px solid var(--secondary)', opacity: 0.6 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: '#1A1A2E' }}>{a.assignee_name}</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--foreground)' }}>{a.assignee_name}</span>
                         <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 20, background: a.status === 'done' ? '#D1FAE5' : '#F3F4F6', color: a.status === 'done' ? '#047857' : '#6B7280' }}>{a.status}</span>
                       </div>
                       {a.note && <p style={{ fontSize: 11, color: '#999', margin: 0 }}>{a.note}</p>}
@@ -365,7 +365,7 @@ export default function WorkDetailClient({ id }: { id: string }) {
         <EvidencePanel workId={id} canAttach={['draft', 'submitted', 'in_review', 'rejected'].includes(work.status)} onChanged={setProofCount} />
 
         {/* Comments */}
-        <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', overflow: 'hidden' }}>
+        <div style={{ background: 'var(--card)', borderRadius: 14, border: '1px solid var(--border)', overflow: 'hidden' }}>
           <CommentThread workId={id} />
         </div>
       </div>

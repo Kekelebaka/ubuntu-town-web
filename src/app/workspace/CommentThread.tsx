@@ -49,35 +49,35 @@ export function CommentThread({ workId }: { workId: string }) {
   }
 
   return (
-    <div style={{ borderTop: '1px solid #E8DCC8', background: '#FBF4E633' }}>
-      <div style={{ padding: '10px 14px', fontSize: 12, fontWeight: 700, color: '#1A1A2E' }}>Discussion</div>
+    <div style={{ borderTop: '1px solid var(--border)', background: 'var(--background)33' }}>
+      <div style={{ padding: '10px 14px', fontSize: 12, fontWeight: 700, color: 'var(--foreground)' }}>Discussion</div>
       {comments.map(c => (
-        <div key={c.id} style={{ padding: '8px 14px', borderBottom: '1px solid #F3EDE0', fontSize: 12 }}>
-          <div style={{ fontWeight: 600, color: '#1A1A2E' }}>{c.author_name || 'Coordinator'}</div>
+        <div key={c.id} style={{ padding: '8px 14px', borderBottom: '1px solid var(--secondary)', fontSize: 12 }}>
+          <div style={{ fontWeight: 600, color: 'var(--foreground)' }}>{c.author_name || 'Coordinator'}</div>
           <div style={{ color: '#333', marginTop: 2 }}>{c.body}</div>
           <div style={{ color: '#999', fontSize: 10, marginTop: 4 }}>{new Date(c.created_at).toLocaleString('en-ZA')}</div>
         </div>
       ))}
       <div style={{ padding: '8px 14px', display: 'flex', gap: 8 }}>
-        <button onClick={() => { setShowMention(!showMention); loadMembers(); }} style={{ background: '#EEB84922', border: 'none', borderRadius: 6, padding: '6px 10px', cursor: 'pointer' }} title="Mention someone">
-          <AtSign size={14} color="#EEB849" />
+        <button onClick={() => { setShowMention(!showMention); loadMembers(); }} style={{ background: 'var(--color-ubuntu-orange)22', border: 'none', borderRadius: 6, padding: '6px 10px', cursor: 'pointer' }} title="Mention someone">
+          <AtSign size={14} color="var(--color-ubuntu-orange)" />
         </button>
         <input
           value={body}
           onChange={e => setBody(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && submit()}
           placeholder="Comment… use @name to mention"
-          style={{ flex: 1, border: '1px solid #E8DCC8', borderRadius: 8, padding: '8px 12px', fontSize: 12 }}
+          style={{ flex: 1, border: '1px solid var(--border)', borderRadius: 8, padding: '8px 12px', fontSize: 12 }}
         />
-        <button onClick={submit} style={{ background: '#EEB849', border: 'none', borderRadius: 8, padding: '8px 12px', cursor: 'pointer' }}>
+        <button onClick={submit} style={{ background: 'var(--color-ubuntu-orange)', border: 'none', borderRadius: 8, padding: '8px 12px', cursor: 'pointer' }}>
           <Send size={14} color="white" />
         </button>
       </div>
       {showMention && members.length > 0 && (
-        <div style={{ padding: '6px 14px', background: 'white', borderTop: '1px solid #E8DCC8', maxHeight: 120, overflowY: 'auto' }}>
+        <div style={{ padding: '6px 14px', background: 'var(--card)', borderTop: '1px solid var(--border)', maxHeight: 120, overflowY: 'auto' }}>
           {members.map(m => (
             <div key={m.id} onClick={() => { setBody(b => b + '@' + m.display_name + ' '); setShowMention(false); }} style={{ fontSize: 12, padding: '4px 8px', cursor: 'pointer', borderRadius: 4 }}
-              onMouseEnter={e => (e.currentTarget.style.background = '#FBF4E6')} onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--background)')} onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
               {m.display_name}
             </div>
           ))}

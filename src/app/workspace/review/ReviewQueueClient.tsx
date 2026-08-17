@@ -90,12 +90,12 @@ export default function ReviewQueueClient() {
 
   if (authed === false) {
     return (
-      <div style={{ minHeight: '100vh', background: '#FBF4E6', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <div style={{ minHeight: '100vh', background: 'var(--background)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
         <div style={{ textAlign: 'center', maxWidth: 320 }}>
-          <Inbox size={44} color="#EEB849" />
-          <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1A1A2E', margin: '16px 0 8px' }}>Review queue</h1>
+          <Inbox size={44} color="var(--color-ubuntu-orange)" />
+          <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', margin: '16px 0 8px' }}>Review queue</h1>
           <p style={{ fontSize: 14, color: '#666', marginBottom: 20 }}>Sign in to review community work.</p>
-          <Link href="/login?next=/workspace/review" style={{ background: '#EEB849', color: 'white', padding: '12px 24px', borderRadius: 12, fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
+          <Link href="/login?next=/workspace/review" style={{ background: 'var(--color-ubuntu-orange)', color: 'white', padding: '12px 24px', borderRadius: 12, fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
             Sign in
           </Link>
         </div>
@@ -104,15 +104,15 @@ export default function ReviewQueueClient() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FBF4E6' }}>
-      <div style={{ borderBottom: '1px solid #E8DCC8', background: 'white', padding: '12px 0', position: 'sticky', top: 0, zIndex: 10 }}>
+    <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
+      <div style={{ borderBottom: '1px solid var(--border)', background: 'var(--card)', padding: '12px 0', position: 'sticky', top: 0, zIndex: 10 }}>
         <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
           <Link href="/workspace" aria-label="Back to workspace" style={{ color: '#666', padding: 4, display: 'flex' }}>
             <ArrowLeft size={20} />
           </Link>
-          <h1 style={{ fontSize: 16, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>Review queue</h1>
+          <h1 style={{ fontSize: 16, fontWeight: 700, color: 'var(--foreground)', margin: 0 }}>Review queue</h1>
           {!loading && (
-            <span style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 700, color: '#8A8578' }}>
+            <span style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 700, color: 'var(--muted-foreground)' }}>
               {rows.length} waiting
             </span>
           )}
@@ -123,10 +123,10 @@ export default function ReviewQueueClient() {
         {loading && <p style={{ textAlign: 'center', color: '#999', padding: 40 }}>Loading…</p>}
 
         {!loading && rows.length === 0 && (
-          <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8DCC8', padding: 40, textAlign: 'center' }}>
-            <Inbox size={32} color="#CBBFA6" />
-            <p style={{ fontSize: 15, fontWeight: 600, color: '#1A1A2E', margin: '12px 0 4px' }}>Nothing waiting</p>
-            <p style={{ fontSize: 13, color: '#8A8578', margin: 0 }}>Work you can review will appear here once it is submitted.</p>
+          <div style={{ background: 'var(--card)', borderRadius: 14, border: '1px solid var(--border)', padding: 40, textAlign: 'center' }}>
+            <Inbox size={32} color="var(--muted-foreground)" />
+            <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--foreground)', margin: '12px 0 4px' }}>Nothing waiting</p>
+            <p style={{ fontSize: 13, color: 'var(--muted-foreground)', margin: 0 }}>Work you can review will appear here once it is submitted.</p>
           </div>
         )}
 
@@ -138,9 +138,9 @@ export default function ReviewQueueClient() {
           >
             <article
               style={{
-                background: 'white',
+                background: 'var(--card)',
                 borderRadius: 14,
-                border: '1px solid #E8DCC8',
+                border: '1px solid var(--border)',
                 padding: 16,
                 display: 'flex',
                 flexDirection: 'column',
@@ -160,15 +160,15 @@ export default function ReviewQueueClient() {
                 >
                   {STATUS_LABEL[w.status] ?? w.status}
                 </span>
-                <span style={{ fontSize: 11, fontWeight: 600, background: '#F3EDE0', color: '#5C5646', padding: '3px 9px', borderRadius: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--secondary)', color: 'var(--muted-foreground)', padding: '3px 9px', borderRadius: 8 }}>
                   {w.type}
                 </span>
-                <span style={{ fontSize: 11, color: '#8A8578' }}>{w.visibility}</span>
+                <span style={{ fontSize: 11, color: 'var(--muted-foreground)' }}>{w.visibility}</span>
               </div>
 
-              <h2 style={{ fontSize: 16, fontWeight: 700, color: '#1A1A2E', margin: 0, lineHeight: 1.35 }}>{w.title}</h2>
+              <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--foreground)', margin: 0, lineHeight: 1.35 }}>{w.title}</h2>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 12, color: '#8A8578', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 12, color: 'var(--muted-foreground)', flexWrap: 'wrap' }}>
                 {w.town_name && (
                   <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                     <MapPin size={12} />

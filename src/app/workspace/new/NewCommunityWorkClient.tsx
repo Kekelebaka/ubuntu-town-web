@@ -16,8 +16,8 @@ const WORK_TYPES = [
 
 type Step = 'type' | 'details' | 'visibility' | 'submitting' | 'done';
 
-const inputStyle = { width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #E8DCC8', fontSize: 14, background: 'white', boxSizing: 'border-box' } as const;
-const labelStyle = { fontSize: 13, fontWeight: 600, color: '#1A1A2E', display: 'block', marginBottom: 6 } as const;
+const inputStyle = { width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border)', fontSize: 14, background: 'var(--card)', boxSizing: 'border-box' } as const;
+const labelStyle = { fontSize: 13, fontWeight: 600, color: 'var(--foreground)', display: 'block', marginBottom: 6 } as const;
 
 export default function NewCommunityWorkPage() {
   const router = useRouter();
@@ -296,9 +296,9 @@ export default function NewCommunityWorkPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FBF4E6' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
       {/* Header */}
-      <div style={{ borderBottom: '1px solid #E8DCC8', background: 'white', padding: '12px 0' }}>
+      <div style={{ borderBottom: '1px solid var(--border)', background: 'var(--card)', padding: '12px 0' }}>
         <div style={{ maxWidth: 640, margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={() => {
             if (step === 'type') { router.push('/workspace'); return; }
@@ -308,7 +308,7 @@ export default function NewCommunityWorkPage() {
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>Add Community Work</h1>
+            <h1 style={{ fontSize: 16, fontWeight: 700, color: 'var(--foreground)', margin: 0 }}>Add Community Work</h1>
             <p style={{ fontSize: 11, color: '#999', margin: 0 }}>
               Step {step === 'type' ? '1' : step === 'details' ? '2' : '3'} of 3
             </p>
@@ -320,7 +320,7 @@ export default function NewCommunityWorkPage() {
         {/* Step 1: Choose Type */}
         {step === 'type' && (
           <div>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1A1A2E', marginBottom: 8 }}>What are you adding?</h2>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', marginBottom: 8 }}>What are you adding?</h2>
             <p style={{ fontSize: 14, color: '#666', marginBottom: 24 }}>Choose the type of community work to register.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {WORK_TYPES.map(wt => (
@@ -328,16 +328,16 @@ export default function NewCommunityWorkPage() {
                   key={wt.value}
                   onClick={() => { setSelectedType(wt.value); setStep('details'); }}
                   style={{
-                    background: 'white', border: selectedType === wt.value ? '2px solid #EEB849' : '1px solid #E8DCC8',
+                    background: 'var(--card)', border: selectedType === wt.value ? '2px solid var(--color-ubuntu-orange)' : '1px solid var(--border)',
                     borderRadius: 12, padding: '16px 20px', cursor: 'pointer', textAlign: 'left',
                     display: 'flex', alignItems: 'center', gap: 16, transition: 'border-color 0.15s',
                   }}
                 >
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: '#FBF4E6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--background)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {wt.icon}
                   </div>
                   <div>
-                    <p style={{ fontSize: 15, fontWeight: 600, color: '#1A1A2E', margin: 0 }}>{wt.label}</p>
+                    <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--foreground)', margin: 0 }}>{wt.label}</p>
                     <p style={{ fontSize: 12, color: '#999', margin: '4px 0 0' }}>{wt.desc}</p>
                   </div>
                 </button>
@@ -349,7 +349,7 @@ export default function NewCommunityWorkPage() {
         {/* Step 2: Details */}
         {step === 'details' && (
           <div>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1A1A2E', marginBottom: 8 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', marginBottom: 8 }}>
               {WORK_TYPES.find(w => w.value === selectedType)?.label || 'Details'}
             </h2>
             <p style={{ fontSize: 14, color: '#666', marginBottom: 24 }}>Fill in the details. This will be reviewed before publishing.</p>
@@ -480,7 +480,7 @@ export default function NewCommunityWorkPage() {
                     <input type="checkbox" id="subsidised" checked={subsidised} onChange={e => setSubsidised(e.target.checked)}
                       style={{ width: 18, height: 18 }}
                     />
-                    <label htmlFor="subsidised" style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E' }}>Receives government subsidy</label>
+                    <label htmlFor="subsidised" style={{ fontSize: 13, fontWeight: 600, color: 'var(--foreground)' }}>Receives government subsidy</label>
                   </div>
                 </>
               )}
@@ -621,7 +621,7 @@ export default function NewCommunityWorkPage() {
                     <input type="checkbox" id="isFree" checked={isFree} onChange={e => setIsFree(e.target.checked)}
                       style={{ width: 18, height: 18 }}
                     />
-                    <label htmlFor="isFree" style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E' }}>Free entry</label>
+                    <label htmlFor="isFree" style={{ fontSize: 13, fontWeight: 600, color: 'var(--foreground)' }}>Free entry</label>
                   </div>
                   <div>
                     <label style={labelStyle}>Ticket URL</label>
@@ -667,13 +667,13 @@ export default function NewCommunityWorkPage() {
                 </>
               )}
 
-              <div style={{ borderTop: '1px solid #E8DCC8', paddingTop: 16, marginTop: 8 }}>
+              <div style={{ borderTop: '1px solid var(--border)', paddingTop: 16, marginTop: 8 }}>
                 <label style={labelStyle}>Description / Notes</label>
                 <textarea
                   value={description} onChange={e => setDescription(e.target.value)}
                   placeholder="Brief description of this community work..."
                   rows={3}
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid #E8DCC8', fontSize: 14, background: 'white', resize: 'vertical', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border)', fontSize: 14, background: 'var(--card)', resize: 'vertical', boxSizing: 'border-box' }}
                 />
               </div>
 
@@ -685,7 +685,7 @@ export default function NewCommunityWorkPage() {
                 }}
                 disabled={!isDetailsValid()}
                 style={{
-                  background: isDetailsValid() ? '#EEB849' : '#E8DCC8', color: 'white', padding: '14px 24px',
+                  background: isDetailsValid() ? 'var(--color-ubuntu-orange)' : 'var(--border)', color: 'white', padding: '14px 24px',
                   borderRadius: 12, fontWeight: 700, fontSize: 14, border: 'none', cursor: isDetailsValid() ? 'pointer' : 'not-allowed',
                   marginTop: 8,
                 }}
@@ -699,7 +699,7 @@ export default function NewCommunityWorkPage() {
         {/* Step 3: Visibility + Submit */}
         {step === 'visibility' && (
           <div>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1A1A2E', marginBottom: 8 }}>Who should see this?</h2>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', marginBottom: 8 }}>Who should see this?</h2>
             <p style={{ fontSize: 14, color: '#666', marginBottom: 24 }}>Choose visibility. This determines where it publishes.</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
@@ -712,16 +712,16 @@ export default function NewCommunityWorkPage() {
                   key={v.value}
                   onClick={() => setVisibility(v.value as 'public' | 'internal' | 'national')}
                   style={{
-                    background: 'white', border: visibility === v.value ? '2px solid #EEB849' : '1px solid #E8DCC8',
+                    background: 'var(--card)', border: visibility === v.value ? '2px solid var(--color-ubuntu-orange)' : '1px solid var(--border)',
                     borderRadius: 12, padding: '16px 20px', cursor: 'pointer', textAlign: 'left',
                     display: 'flex', alignItems: 'center', gap: 12,
                   }}
                 >
-                  <div style={{ width: 20, height: 20, borderRadius: '50%', border: `2px solid ${visibility === v.value ? '#EEB849' : '#E8DCC8'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {visibility === v.value && <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#EEB849' }} />}
+                  <div style={{ width: 20, height: 20, borderRadius: '50%', border: `2px solid ${visibility === v.value ? 'var(--color-ubuntu-orange)' : 'var(--border)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {visibility === v.value && <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--color-ubuntu-orange)' }} />}
                   </div>
                   <div>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: '#1A1A2E', margin: 0 }}>{v.label}</p>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--foreground)', margin: 0 }}>{v.label}</p>
                     <p style={{ fontSize: 12, color: '#999', margin: '2px 0 0' }}>{v.desc}</p>
                   </div>
                 </button>
@@ -736,7 +736,7 @@ export default function NewCommunityWorkPage() {
                   For {selectedType === 'daycare' ? 'daycare' : selectedType === 'fixeasy_worker' ? 'worker' : selectedType === 'business' ? 'business' : 'family house'} records we need explicit consent from the subject and optional GPS for verification.
                 </p>
 
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A1A2E', marginBottom: 6 }}>Subject Name</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--foreground)', marginBottom: 6 }}>Subject Name</label>
                 <input
                   value={subjectName}
                   onChange={e => setSubjectName(e.target.value)}
@@ -744,7 +744,7 @@ export default function NewCommunityWorkPage() {
                   style={inputStyle}
                 />
 
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A1A2E', marginTop: 12, marginBottom: 6 }}>Consent Method</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--foreground)', marginTop: 12, marginBottom: 6 }}>Consent Method</label>
                 <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
                   {(['written', 'verbal', 'whatsapp'] as const).map(m => (
                     <button
@@ -752,8 +752,8 @@ export default function NewCommunityWorkPage() {
                       onClick={() => setConsentMethod(m)}
                       style={{
                         flex: 1, padding: '10px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                        border: consentMethod === m ? '2px solid #EEB849' : '1px solid #E8DCC8',
-                        background: consentMethod === m ? '#FEF3C7' : 'white', color: '#1A1A2E',
+                        border: consentMethod === m ? '2px solid var(--color-ubuntu-orange)' : '1px solid var(--border)',
+                        background: consentMethod === m ? '#FEF3C7' : 'white', color: 'var(--foreground)',
                       }}
                     >
                       {m === 'written' ? '📝 Written' : m === 'verbal' ? '🗣️ Verbal' : '💬 WhatsApp'}
@@ -761,7 +761,7 @@ export default function NewCommunityWorkPage() {
                   ))}
                 </div>
 
-                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, cursor: 'pointer', fontSize: 12, color: '#1A1A2E', lineHeight: 1.5 }}>
+                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, cursor: 'pointer', fontSize: 12, color: 'var(--foreground)', lineHeight: 1.5 }}>
                   <input
                     type="checkbox"
                     checked={consentGiven}
@@ -777,8 +777,8 @@ export default function NewCommunityWorkPage() {
                   onClick={captureGPS}
                   style={{
                     marginTop: 12, width: '100%', padding: '10px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                    background: gpsCoords ? '#D1FAE5' : 'white', border: gpsCoords ? '1px solid #059669' : '1px solid #E8DCC8',
-                    color: gpsCoords ? '#047857' : '#1A1A2E', cursor: 'pointer',
+                    background: gpsCoords ? '#D1FAE5' : 'white', border: gpsCoords ? '1px solid #059669' : '1px solid var(--border)',
+                    color: gpsCoords ? '#047857' : 'var(--foreground)', cursor: 'pointer',
                   }}
                 >
                   {gpsCoords ? `✓ GPS captured (${gpsCoords.lat.toFixed(4)}, ${gpsCoords.lng.toFixed(4)})` : '📍 Tap to capture GPS (optional but recommended)'}
@@ -796,14 +796,14 @@ export default function NewCommunityWorkPage() {
               onClick={() => handleSubmit(true)}
               disabled={busy}
               style={{
-                background: '#1A1A2E', color: 'white', padding: '14px 24px', minHeight: 48,
+                background: 'var(--foreground)', color: 'white', padding: '14px 24px', minHeight: 48,
                 borderRadius: 12, fontWeight: 700, fontSize: 15, border: 'none', cursor: 'pointer',
                 width: '100%', opacity: busy ? 0.6 : 1,
               }}
             >
               {busy ? 'Saving…' : 'Save & add evidence'}
             </button>
-            <p style={{ fontSize: 12, color: '#8A8578', textAlign: 'center', margin: '8px 0 14px' }}>
+            <p style={{ fontSize: 12, color: 'var(--muted-foreground)', textAlign: 'center', margin: '8px 0 14px' }}>
               Recommended. Save it, attach your evidence, then submit for review.
             </p>
 
@@ -811,8 +811,8 @@ export default function NewCommunityWorkPage() {
               onClick={() => handleSubmit(false)}
               disabled={busy}
               style={{
-                background: 'white', color: '#1A1A2E', padding: '12px 24px', minHeight: 44,
-                borderRadius: 12, fontWeight: 600, fontSize: 14, border: '1px solid #E8DCC8', cursor: 'pointer',
+                background: 'var(--card)', color: 'var(--foreground)', padding: '12px 24px', minHeight: 44,
+                borderRadius: 12, fontWeight: 600, fontSize: 14, border: '1px solid var(--border)', cursor: 'pointer',
                 width: '100%', opacity: busy ? 0.6 : 1,
               }}
             >
@@ -827,7 +827,7 @@ export default function NewCommunityWorkPage() {
         {/* Submitting */}
         {step === 'submitting' && (
           <div style={{ textAlign: 'center', padding: 48 }}>
-            <div style={{ width: 40, height: 40, border: '3px solid #EEB849', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px' }} />
+            <div style={{ width: 40, height: 40, border: '3px solid var(--color-ubuntu-orange)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px' }} />
             <p style={{ color: '#666' }}>Submitting...</p>
           </div>
         )}
@@ -838,7 +838,7 @@ export default function NewCommunityWorkPage() {
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#D1FAE5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
               <span style={{ fontSize: 32 }}>✓</span>
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1A1A2E', marginBottom: 8 }}>{savedAsDraft ? 'Saved' : 'Submitted!'}</h2>
+            <h2 style={{ fontSize: 24, fontWeight: 700, color: 'var(--foreground)', marginBottom: 8 }}>{savedAsDraft ? 'Saved' : 'Submitted!'}</h2>
             <p style={{ color: '#666', fontSize: 14, marginBottom: 24 }}>
               {savedAsDraft
                 ? 'Now attach your evidence, then submit it for review.'
@@ -850,10 +850,10 @@ export default function NewCommunityWorkPage() {
                   {savedAsDraft ? 'Add evidence' : 'Open work'}
                 </button>
               )}
-              <button onClick={() => router.push('/workspace')} style={{ background: '#EEB849', color: 'white', padding: '12px 24px', borderRadius: 12, fontWeight: 600, fontSize: 14, border: 'none', cursor: 'pointer' }}>
+              <button onClick={() => router.push('/workspace')} style={{ background: 'var(--color-ubuntu-orange)', color: 'white', padding: '12px 24px', borderRadius: 12, fontWeight: 600, fontSize: 14, border: 'none', cursor: 'pointer' }}>
                 Back to Workspace
               </button>
-              <button onClick={() => { setStep('type'); setSelectedType(''); setTitle(''); setDescription(''); resetAllTypeFields(); }} style={{ background: 'white', color: '#666', padding: '12px 24px', borderRadius: 12, fontSize: 14, border: '1px solid #E8DCC8', cursor: 'pointer' }}>
+              <button onClick={() => { setStep('type'); setSelectedType(''); setTitle(''); setDescription(''); resetAllTypeFields(); }} style={{ background: 'var(--card)', color: '#666', padding: '12px 24px', borderRadius: 12, fontSize: 14, border: '1px solid var(--border)', cursor: 'pointer' }}>
                 Add Another
               </button>
             </div>
