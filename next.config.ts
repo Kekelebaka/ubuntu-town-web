@@ -2,9 +2,6 @@ import { NextConfig } from "next";
 
 const config: NextConfig = {
   cacheComponents: false,
-  typescript: {
-    ignoreBuildErrors: true, // Pre-existing auth template type errors (not Ubuntu Town code)
-  },
   images: {
     remotePatterns: [
       {
