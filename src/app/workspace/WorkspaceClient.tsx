@@ -145,8 +145,8 @@ export default function WorkspacePage() {
         .on('presence', { event: 'sync' }, () => {
           const state = chan.presenceState();
           const list: PresenceUser[] = [];
-          Object.values(state).forEach(presences => {
-            presences.forEach(p => {
+          Object.values(state).forEach((presences) => {
+            (presences as any[]).forEach((p: any) => {
               const data = p as any;
               if (data.user_id !== u.id && data.user_id && data.name) {
                 list.push({ user_id: data.user_id, name: data.name });

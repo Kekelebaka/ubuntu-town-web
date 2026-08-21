@@ -163,11 +163,8 @@ export function SignUp({ next }: SignUpProps) {
                     providers={['google', 'github', 'twitter']}
                     isLoading={providerStatus === 'executing'}
                     onProviderLoginRequested={(
-                      provider: Extract<
-                        AuthProvider,
-                        'google' | 'github' | 'twitter'
-                      >
-                    ) => executeProvider({ provider, next })}
+                      provider: AuthProvider
+                    ) => executeProvider({ provider: provider as 'google' | 'github' | 'twitter', next })}
                   />
                 </CardContent>
               </Card>

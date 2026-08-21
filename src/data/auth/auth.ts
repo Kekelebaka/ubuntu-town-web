@@ -7,6 +7,7 @@ import { z } from 'zod';
 const signUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
+  next: z.string().optional(),
 });
 
 /**

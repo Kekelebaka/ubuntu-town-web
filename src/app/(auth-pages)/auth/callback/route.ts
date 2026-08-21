@@ -50,8 +50,13 @@ export async function GET(request: Request) {
   let redirectTo = new URL('/workspace', requestUrl.origin);
   if (next) {
     const decodedNext = decodeURIComponent(next);
-    if (decodedNext.startsWith('/')) {
-      redirectTo = new URL(decodedNext, requestUrl.origin);
+    if (decodedNext.startsWith('/') && !decodedNext.startsWith('//')) {
+      // Only accept internal relative paths. Reject // (protocol-relative)
+      // which would resolve to an external hostname via new URL().
+      const resolved = new URL(decodedNext, requestUrl.origin);
+      if (resolved.hostname === requestUrl.hostname) {
+        redirectTo = resolved;
+      }
     }
   }
 

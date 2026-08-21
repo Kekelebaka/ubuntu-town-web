@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { signInWithMagicLinkAction, signInWithProviderAction, signInWithPasswordAction, verifyEmailOtpAction } from '@/data/auth/auth';
 import type { AuthProvider } from '@/types';
 
-interface LoginProps { next?: string; }
+interface LoginProps { next?: string; nextActionType?: string; }
 
 export function Login({ next }: LoginProps) {
   const router = useRouter();

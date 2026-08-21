@@ -73,10 +73,10 @@ export default function WorkDetailClient({ id }: { id: string }) {
           .eq('town_id', work.town_id)
           .in('role_key', ['coordinator', 'deputy', 'admin', 'ops']);
         if (data) {
-          const mapped = data.map(r => ({
-            id: r.coordinator_id,
+          const mapped = data.map((r: any) => ({
+            id: r.user_id,
             user_id: r.user_id,
-            display_name: r.coordinator?.display_name || 'Unknown'
+            display_name: r.coordinator?.[0]?.display_name || r.coordinator?.display_name || 'Unknown'
           }));
           // Deduplicate by user_id
           const unique = Array.from(new Map(mapped.map(c => [c.user_id, c])).values());

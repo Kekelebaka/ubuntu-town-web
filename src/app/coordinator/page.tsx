@@ -54,7 +54,7 @@ export default function CoordinatorDashboard() {
     async function init() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { setAuthState('not_logged_in'); return; }
-      setUserEmail(user.email);
+      setUserEmail(user.email ?? '');
 
       // The user↔town link lives in role_assignments — the coordinators table has
       // no user_id/email column, so the old `coordinators.eq('id', user.id)` lookup

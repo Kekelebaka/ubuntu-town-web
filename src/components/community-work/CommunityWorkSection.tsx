@@ -11,7 +11,7 @@ interface CommunityWorkItem {
   description: string | null;
   visibility: string;
   published_at: string | null;
-  detail: Record<string, unknown> | null;
+  detail?: Record<string, unknown> | null;
 }
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {

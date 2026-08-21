@@ -14,7 +14,7 @@ interface Town {
   hero_image?: string; coordinator_name?: string;
   youth_mapped?: number; active_signals?: number; open_opportunities?: number;
   population_estimate?: number; archetype?: string; cv_count?: number;
-  opportunities?: { id: string; title: string; type: string; source: string; deadline_date?: string; metadata?: any }[];
+  opportunities?: { id: string; title: string; type: string; source: string; deadline_date?: string | null; metadata?: any }[];
   signals?: { id: string; title: string; category: string; status: string }[];
   stories?: { id: string; title: string; content: string; author_name: string }[];
   businesses?: { id: string; name: string; category: string; is_verified: boolean }[];

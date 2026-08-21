@@ -13,7 +13,7 @@ export default async function AdminPage() {
   if (!user) redirect('/workspace');
 
   // Gate 2: must be HQ (admin/ops with null town_id)
-  const { data: isHq, error } = await supabase.rpc('is_hq');
+  const { data: isHq, error } = await (supabase as any).rpc('is_hq');
   if (error || !isHq) redirect('/workspace');
 
   return <AdminDashboard />;

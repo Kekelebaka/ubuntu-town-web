@@ -7,6 +7,7 @@ export interface TownPhoto {
   license: string;
   caption: string;
   article?: string;
+  query?: string;
 }
 
 export const townPhotos: Record<string, TownPhoto> = {
