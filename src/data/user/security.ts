@@ -4,7 +4,7 @@ import { createSupabaseClient } from '@/supabase-clients/server';
 import { z } from 'zod';
 
 const updatePasswordSchema = z.object({
-  password: z.string().min(4),
+  password: z.string().min(8),
 });
 
 export const updatePasswordAction = authActionClient

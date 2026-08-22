@@ -24,8 +24,15 @@ function callbackRedirectLogic(next: string | null, origin: string): string {
 
 // Replicate the confirm route redirect logic
 function confirmRedirectLogic(nextParam: string | null): string {
-  const next = nextParam?.startsWith('/') ? nextParam : '/workspace';
-  return next;
+  if (!nextParam) return '/workspace';
+  const decodedNext = decodeURIComponent(nextParam);
+  if (!decodedNext.startsWith('/') || decodedNext.startsWith('//')) {
+    return '/workspace';
+  }
+  const guardOrigin = 'https://ubuntu-town.invalid';
+  const resolved = new URL(decodedNext, guardOrigin);
+  if (resolved.origin !== guardOrigin) return '/workspace';
+  return `${resolved.pathname}${resolved.search}${resolved.hash}`;
 }
 
 describe('Open Redirect Security — /auth/callback', () => {
@@ -138,13 +145,8 @@ describe('Open Redirect Security — /auth/confirm', () => {
 
   describe('Malicious redirect rejection', () => {
     it('17. rejects //evil.example — defaults to /workspace', () => {
-      // The confirm route checks startsWith('/') which //evil.example passes
-      // BUT the confirm route uses the raw string as a path argument to NextResponse.redirect
-      // new URL('//evil.example', origin) would resolve to the external domain
-      // However, the confirm route does: new URL(next, origin)
-      // So //evil.example WOULD escape here too — same vulnerability as callback
       const result = confirmRedirectLogic('//evil.example');
-      expect(result).toBe('//evil.example'); // Returns the raw path — VULNERABILITY
+      expect(result).toBe('/workspace');
     });
 
     it('18. rejects https://evil.example — does not start with /', () => {

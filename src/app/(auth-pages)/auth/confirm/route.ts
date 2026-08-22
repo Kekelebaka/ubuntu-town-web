@@ -2,6 +2,7 @@ export const runtime = 'edge';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { sanitizeAuthNextPath } from '@/utils/auth-recovery';
 import type { EmailOtpType } from '@supabase/supabase-js';
 
 // Verifies an email `token_hash` (magic link, signup confirmation, password
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
   const type = (searchParams.get('type') as EmailOtpType | null) ?? 'email';
   const nextParam = searchParams.get('next') ?? '/workspace';
   // Only allow same-origin relative paths as the post-verify destination.
-  const next = nextParam.startsWith('/') ? nextParam : '/workspace';
+  const next = sanitizeAuthNextPath(nextParam, '/workspace');
 
   if (token_hash) {
     const cookieStore = await cookies();

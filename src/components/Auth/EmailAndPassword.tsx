@@ -82,6 +82,7 @@ export const EmailAndPassword = ({
                 autoComplete={
                   view === 'sign-in' ? 'current-password' : 'new-password'
                 }
+                minLength={view === 'sign-up' ? 8 : undefined}
                 required
               />
             </InputGroup>

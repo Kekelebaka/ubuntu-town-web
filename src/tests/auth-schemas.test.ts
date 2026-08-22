@@ -40,7 +40,7 @@ const resetPasswordSchema = z.object({
 });
 
 const updatePasswordSchema = z.object({
-  password: z.string().min(4),
+  password: z.string().min(8),
 });
 
 describe('Auth Schema Validation', () => {
@@ -172,16 +172,16 @@ describe('Auth Schema Validation', () => {
   });
 
   describe('Password Update', () => {
-    it('16. accepts password >= 4 chars', () => {
+    it('16. accepts password >= 8 chars', () => {
       const result = updatePasswordSchema.safeParse({
-        password: 'pass',
+        password: 'passWORD',
       });
       expect(result.success).toBe(true);
     });
 
-    it('17. rejects password < 4 chars', () => {
+    it('17. rejects password < 8 chars', () => {
       const result = updatePasswordSchema.safeParse({
-        password: 'ab',
+        password: 'pass',
       });
       expect(result.success).toBe(false);
     });

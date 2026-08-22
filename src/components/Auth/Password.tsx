@@ -47,7 +47,8 @@ export const Password = ({
               value={password}
               disabled={isLoading}
               onChange={(event) => setPassword(event.target.value)}
-              autoComplete="current-password"
+              autoComplete="new-password"
+              minLength={8}
               required
             />
           </div>

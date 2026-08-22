@@ -1,7 +1,8 @@
 'use server';
 import { actionClient } from '@/lib/safe-action';
 import { createSupabaseClient } from '@/supabase-clients/server';
-import { toSiteURL } from '@/utils/helpers';
+import { buildRecoveryRedirectTo } from '@/utils/auth-recovery';
+import { getURL, toSiteURL } from '@/utils/helpers';
 import { z } from 'zod';
 
 const signUpSchema = z.object({
@@ -156,20 +157,26 @@ const resetPasswordSchema = z.object({
 /**
  * Initiates the password reset process for a user.
  *
- * Sends the recovery email to /auth/confirm (token_hash flow) so the reset
- * link works cross-device, then on to /update-password. Requires the "Reset
- * Password" email template to use the /auth/confirm?token_hash=... pattern
- * (see AUTH-RUNBOOK.md).
+ * Sends the recovery email to /auth/recover (non-consuming handoff page) so
+ * email security scanners cannot consume the recovery token with a GET before
+ * the human opens it. The handoff page verifies token_hash only after a human
+ * tap, then sends the user to /update-password. Requires the "Reset Password"
+ * email template to use the /auth/recover?token_hash=... pattern (see
+ * AUTH-RUNBOOK.md).
  */
 export const resetPasswordAction = actionClient
   .schema(resetPasswordSchema)
   .action(async ({ parsedInput: { email } }) => {
     const supabase = await createSupabaseClient();
-    const redirectToURL = new URL(toSiteURL('/auth/confirm'));
-    redirectToURL.searchParams.set('next', '/update-password');
+    const redirectToURL = buildRecoveryRedirectTo(getURL(), '/update-password');
+
+    console.info('auth_recovery_event', {
+      state: 'REQUESTED',
+      redirectPath: '/auth/recover',
+    });
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: redirectToURL.toString(),
+      redirectTo: redirectToURL,
     });
 
     if (error) {

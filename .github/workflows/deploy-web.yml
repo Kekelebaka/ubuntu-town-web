@@ -39,8 +39,21 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test
+
       - name: Build (next + next-on-pages edge)
         run: npm run build:edge
+        env:
+          NEXT_PUBLIC_GIT_SHA: ${{ github.sha }}
+          NEXT_PUBLIC_GIT_BRANCH: ${{ github.ref_name }}
+          NEXT_PUBLIC_RELEASE_SOURCE: github-actions
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
@@ -48,4 +61,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: npm
-          command: pages deploy .vercel/output/static --project-name=ubuntu-town-web-git --branch=main --commit-dirty=true
+          command: pages deploy .vercel/output/static --project-name=ubuntu-town-web-git --branch=main --commit-dirty=true --commit-hash=${{ github.sha }}
