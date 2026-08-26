@@ -32,6 +32,10 @@ const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['500', '600'], var
 const caveat = Caveat({ subsets: ['latin'], variable: '--font-caveat', display: 'swap' });
 
 export const metadata = {
+  // Without metadataBase, Next resolves relative og/twitter image paths against the
+  // request origin, which on the Cloudflare edge runtime resolved to http://localhost:3000
+  // and broke every social share preview.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://enter.ubuntutown.co.za'),
   title: {
     default: 'Ubuntu Town — 1 Million CVs. 1 Million Opportunities.',
     template: '%s | Ubuntu Town',

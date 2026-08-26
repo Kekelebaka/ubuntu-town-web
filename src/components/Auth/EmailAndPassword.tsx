@@ -112,17 +112,11 @@ export const EmailAndPassword = ({
               <span>{view === 'sign-in' ? 'Login' : 'Sign up'}</span>
             )}
           </Button>
-          <div className="w-full text-center">
-            {view === 'sign-in' ? (
-              <div className="text-sm">
-                <Link
-                  href="/sign-up"
-                  className="font-medium text-muted-foreground hover:text-foreground"
-                >
-                  Don't have an account? Sign up
-                </Link>
-              </div>
-            ) : (
+          {/* The sign-in page already renders its own branded "Sign up" link below the
+              card, so rendering one here duplicated it. Only the sign-up view needs a
+              link back to login. */}
+          {view === 'sign-up' && (
+            <div className="w-full text-center">
               <div className="text-sm">
                 <Link
                   href="/login"
@@ -131,8 +125,8 @@ export const EmailAndPassword = ({
                   Already have an account? Log in
                 </Link>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </form>

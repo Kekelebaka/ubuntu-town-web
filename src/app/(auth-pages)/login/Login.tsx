@@ -56,7 +56,14 @@ export function Login({ next }: LoginProps) {
     <div className="min-h-screen bg-ubuntu-cream flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-ubuntu-gold/15 flex items-center justify-center mx-auto mb-4 text-2xl">📍</div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/assets/logo-login.png"
+            alt="Ubuntu Town"
+            width={56}
+            height={56}
+            className="w-14 h-14 rounded-2xl object-contain mx-auto mb-4"
+          />
           <h1 className="text-2xl font-bold text-ubuntu-text">Sign in to Ubuntu Town</h1>
           <p className="text-sm text-ubuntu-text-muted mt-1">Access your coordinator dashboard, CV builder, and town services.</p>
         </div>
