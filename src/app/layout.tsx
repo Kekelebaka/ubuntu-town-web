@@ -83,9 +83,9 @@ export const metadata = {
       'Ubuntu Town OS builds community opportunity infrastructure for South African towns. Connecting communities with verified opportunities, CV creation, and coordinator networks.',
     images: [
       {
-        url: '/og/og-default.png',
-        width: 1200,
-        height: 630,
+        url: 'https://www.ubuntutown.co.za/ubuntu-town-logo-512.png',
+        width: 512,
+        height: 512,
         alt: 'Ubuntu Town — 1 Million CVs. 1 Million Opportunities.',
       },
     ],
@@ -95,7 +95,7 @@ export const metadata = {
     title: 'Ubuntu Town — 1 Million CVs. 1 Million Opportunities.',
     description:
       'Community opportunity infrastructure for South African towns. Connecting communities with verified opportunities, CV creation, and coordinator networks.',
-    images: ['/og/og-default.png'],
+    images: ['https://www.ubuntutown.co.za/ubuntu-town-logo-512.png'],
     creator: '@kekelebaka',
   },
   alternates: {

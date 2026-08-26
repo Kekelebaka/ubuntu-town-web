@@ -58,7 +58,7 @@ export function Login({ next }: LoginProps) {
         <div className="text-center mb-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/assets/ubuntu-town-mark.png"
+            src="/assets/ubuntu-town-mark.svg"
             alt="Ubuntu Town"
             width={56}
             height={56}
