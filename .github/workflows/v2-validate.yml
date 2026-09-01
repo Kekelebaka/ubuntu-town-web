@@ -1,0 +1,31 @@
+name: Validate V2 without deployment
+on:
+  push:
+    branches: ['workspace-v2/**']
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      LIVING_TOWN_ENABLED: 'true'
+      LIVING_TOWN_MODE: fixture
+      LIVING_TOWN_OUTBOUND: disabled
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: placeholder-key
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run check:v2-env
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build:edge
+      # No deployment, production environment, write permission, or secret input.

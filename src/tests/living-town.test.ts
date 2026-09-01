@@ -12,7 +12,8 @@ describe('Living Town environment boundary', () => {
     expect(canUseStaging({ enabled: 'true', mode: 'staging', url: 'https://example.supabase.co' })).toBe(false);
     expect(canUseStaging({ enabled: 'true', mode: 'unknown' })).toBe(false);
     expect(canUseStaging({ enabled: 'true', mode: 'fixture' })).toBe(true);
-    expect(canUseStaging({ enabled: 'true', mode: 'staging', url: 'https://example.supabase.co', key: 'publishable' })).toBe(true);
+    expect(canUseStaging({ enabled: 'true', mode: 'staging', url: 'https://example.supabase.co', key: 'publishable' })).toBe(false);
+    expect(canUseStaging({ enabled: 'true', mode: 'staging', url: 'https://abcdefghijklmnopqrst.supabase.co', key: 'publishable', stagingRef: 'abcdefghijklmnopqrst', stagingOrigin: 'https://qa-example.pages.dev', siteUrl: 'https://qa-example.pages.dev', outbound: 'disabled' })).toBe(true);
   });
 });
 describe('Truthful next action', () => {

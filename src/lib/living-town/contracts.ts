@@ -18,9 +18,11 @@ export function nextMove(data: TodayData): { title: string; reason: string; href
   const mission = data.missions.data[0];
   return mission ? { title: mission.title, reason: 'A mission to explore for your town. Read the requirements first.', href: `/living-town/mission?id=${encodeURIComponent(mission.id)}${data.town ? `&town=${encodeURIComponent(data.town.id)}` : ''}`, kind: mission.work_type || 'Local mission' } : null;
 }
-export function canUseStaging(env: { enabled?: string; mode?: string; url?: string; key?: string }): boolean {
+export function canUseStaging(env: { enabled?: string; mode?: string; url?: string; key?: string; stagingRef?: string; stagingOrigin?: string; siteUrl?: string; outbound?: string }): boolean {
   if (env.enabled !== 'true') return false;
   if (env.mode === 'fixture') return true;
-  if (env.mode !== 'staging' || !env.key || !env.url) return false;
+  if (env.mode !== 'staging' || !env.key || !env.url || env.outbound !== 'disabled') return false;
+  if (!env.stagingRef || !/^[a-z]{20}$/.test(env.stagingRef) || env.url !== `https://${env.stagingRef}.supabase.co`) return false;
+  try { const origin = new URL(env.stagingOrigin || ''); if (origin.protocol !== 'https:' || origin.origin !== env.stagingOrigin || origin.username || origin.password || env.siteUrl !== env.stagingOrigin || /(^|\.)ubuntutown\.co\.za$|(^|\.)ubuntu-town-web(-git)?\.pages\.dev$/.test(origin.hostname)) return false; } catch { return false; }
   try { const u = new URL(env.url); return u.protocol === 'https:' && u.hostname.endsWith('.supabase.co') && u.hostname !== 'afiokbhuxfdacbsipoqk.supabase.co'; } catch { return false; }
 }

@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const hostname = request.headers.get('host') || '';
   if (pathname === '/living-town' || pathname.startsWith('/living-town/')) {
-    if (!canUseStaging({ enabled: process.env.LIVING_TOWN_ENABLED, mode: process.env.LIVING_TOWN_MODE, url: process.env.NEXT_PUBLIC_SUPABASE_URL, key: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY })) return new NextResponse('Not found', { status: 404 });
+    if (!canUseStaging({ enabled: process.env.LIVING_TOWN_ENABLED, mode: process.env.LIVING_TOWN_MODE, url: process.env.NEXT_PUBLIC_SUPABASE_URL, key: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, stagingRef: process.env.LIVING_TOWN_STAGING_SUPABASE_REF, stagingOrigin: process.env.LIVING_TOWN_STAGING_ORIGIN, siteUrl: process.env.NEXT_PUBLIC_SITE_URL, outbound: process.env.LIVING_TOWN_OUTBOUND })) return new NextResponse('Not found', { status: 404 });
     const response = process.env.LIVING_TOWN_MODE === 'fixture' ? NextResponse.next() : await updateSession(request);
     response.headers.set('Cache-Control', 'private, no-store, max-age=0');
     response.headers.set('X-Robots-Tag', 'noindex, nofollow');
