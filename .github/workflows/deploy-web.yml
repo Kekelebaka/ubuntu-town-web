@@ -21,6 +21,8 @@ concurrency:
 
 jobs:
   build-deploy:
+    # V2 branch safety: this copy must never publish, including manual dispatch.
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

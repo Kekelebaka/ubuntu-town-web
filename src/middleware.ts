@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { match } from 'path-to-regexp';
+import { canUseStaging } from './lib/living-town/contracts';
 import { updateSession } from './supabase-clients/middleware';
 
 export const runtime = 'experimental-edge';
@@ -10,6 +11,13 @@ const RESERVED_SUBDOMAINS = ['enter', 'www', 'api', 'admin', 'mail', 'ftp'];
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const hostname = request.headers.get('host') || '';
+  if (pathname === '/living-town' || pathname.startsWith('/living-town/')) {
+    if (!canUseStaging({ enabled: process.env.LIVING_TOWN_ENABLED, mode: process.env.LIVING_TOWN_MODE, url: process.env.NEXT_PUBLIC_SUPABASE_URL, key: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY })) return new NextResponse('Not found', { status: 404 });
+    const response = process.env.LIVING_TOWN_MODE === 'fixture' ? NextResponse.next() : await updateSession(request);
+    response.headers.set('Cache-Control', 'private, no-store, max-age=0');
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    return response;
+  }
 
   if (apiRoutes.some((route) => match(route)(pathname))) {
     return null;

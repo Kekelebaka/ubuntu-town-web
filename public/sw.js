@@ -34,6 +34,8 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   // Never intercept auth/data traffic — Supabase, APIs, cross-origin.
   if (url.origin !== self.location.origin) return;
+  // V2 is read-only and must never persist authenticated page responses.
+  if (url.pathname === '/living-town' || url.pathname.startsWith('/living-town/')) return;
   if (url.pathname.startsWith('/api') || url.hostname.includes('supabase')) return;
 
   // Navigations: network-first, fall back to cached shell when offline.

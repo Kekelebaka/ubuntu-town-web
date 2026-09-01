@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 export default function ServiceWorkerRegister() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (window.location.pathname.startsWith('/living-town')) return;
     if (!('serviceWorker' in navigator)) return;
     const onLoad = () => {
       navigator.serviceWorker.register('/sw.js').catch(() => {
