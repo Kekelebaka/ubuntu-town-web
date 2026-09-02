@@ -1,0 +1,128 @@
+name: H-02R Staging Control Deploy
+
+on:
+  push:
+    branches:
+      - h-02r-staging-control
+  workflow_dispatch: {}
+
+concurrency:
+  group: h-02r-staging-control
+  cancel-in-progress: true
+
+jobs:
+  build-deploy-staging-control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      BASELINE_SHA: 947f78b745f9e4c5cdecaf32e9e1f7442335423f
+      CF_ACCOUNT_ID_EXPECTED: c63d3d6d8c17db7487ab40b81d5e29d1
+      CF_PAGES_PROJECT_EXPECTED: ubuntu-town-workspace-v2-staging
+      CF_PAGES_PROJECT_ID_EXPECTED: a5028470-be7b-4049-9246-6d572348b79f
+      NEXT_PUBLIC_SITE_URL: https://ubuntu-town-workspace-v2-staging.pages.dev
+      NEXT_PUBLIC_RELEASE_SOURCE: h-02r-staging-control
+      NEXT_PUBLIC_GIT_BRANCH: staging-control
+      NEXT_PUBLIC_GIT_SHA: 947f78b745f9e4c5cdecaf32e9e1f7442335423f
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.STAGING_NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+    steps:
+      - name: Checkout exact unchanged baseline source
+        uses: actions/checkout@v4
+        with:
+          ref: 947f78b745f9e4c5cdecaf32e9e1f7442335423f
+          fetch-depth: 1
+
+      - name: Guard exact source and target configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$BASELINE_SHA"
+          test "$CF_PAGES_PROJECT_EXPECTED" = "ubuntu-town-workspace-v2-staging"
+          test "$CF_PAGES_PROJECT_ID_EXPECTED" = "a5028470-be7b-4049-9246-6d572348b79f"
+          test "$NEXT_PUBLIC_SUPABASE_URL" = "https://lgbkfthojyxhwemgkpgo.supabase.co"
+          test -n "$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+          cat > .env.local <<EOF
+          NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+          NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+          NEXT_PUBLIC_GIT_SHA=$NEXT_PUBLIC_GIT_SHA
+          NEXT_PUBLIC_GIT_BRANCH=$NEXT_PUBLIC_GIT_BRANCH
+          NEXT_PUBLIC_RELEASE_SOURCE=$NEXT_PUBLIC_RELEASE_SOURCE
+          EOF
+          if grep -R "ubuntu-town-web-git\|--branch=main\|enter.ubuntutown.co.za\|afiokbhuxfdacbsipoqk" .env.local 2>/dev/null; then
+            echo "Unsafe production/stale target marker found in generated staging env" >&2
+            exit 10
+          fi
+
+      - name: Verify Cloudflare Pages staging project identity before write
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test "$CLOUDFLARE_ACCOUNT_ID" = "$CF_ACCOUNT_ID_EXPECTED"
+          python - <<'PY'
+          import json, os, urllib.request, sys
+          account=os.environ['CLOUDFLARE_ACCOUNT_ID']
+          token=os.environ['CLOUDFLARE_API_TOKEN']
+          project=os.environ['CF_PAGES_PROJECT_EXPECTED']
+          url=f"https://api.cloudflare.com/client/v4/accounts/{account}/pages/projects/{project}"
+          req=urllib.request.Request(url, headers={'Authorization':f'Bearer {token}'})
+          data=json.load(urllib.request.urlopen(req, timeout=30))
+          if not data.get('success'):
+              print(json.dumps(data, indent=2)); sys.exit(2)
+          r=data['result']
+          print('PROJECT_ID=' + str(r.get('id')))
+          print('PROJECT_NAME=' + str(r.get('name')))
+          print('PROJECT_DOMAINS=' + ','.join(r.get('domains') or []))
+          print('PROJECT_SOURCE=' + json.dumps(r.get('source'), sort_keys=True))
+          if r.get('id') != os.environ['CF_PAGES_PROJECT_ID_EXPECTED'] or r.get('name') != project:
+              print('Cloudflare target identity mismatch', file=sys.stderr)
+              sys.exit(3)
+          PY
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install exact baseline dependencies
+        run: npm ci
+
+      - name: Build Cloudflare Pages artifact from exact baseline
+        run: npx @cloudflare/next-on-pages@1.13.16
+
+      - name: Validate Cloudflare Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$BASELINE_SHA"
+          test -f .vercel/output/config.json
+          test -d .vercel/output/static
+          test -f .vercel/output/static/_worker.js/index.js -o -f .vercel/output/static/_worker.js
+          python - <<'PY'
+          import pathlib, json
+          root=pathlib.Path('.vercel/output/static')
+          files=[p for p in root.rglob('*') if p.is_file()]
+          print('ARTIFACT_FILE_COUNT=' + str(len(files)))
+          print('ARTIFACT_HAS_WORKER=' + str((root/'_worker.js').exists()))
+          print('CONFIG=' + json.dumps(json.load(open('.vercel/output/config.json')), sort_keys=True))
+          assert len(files) > 0
+          PY
+
+      - name: Deploy only to Cloudflare Pages staging project
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: c63d3d6d8c17db7487ab40b81d5e29d1
+          packageManager: npm
+          command: >-
+            pages deploy .vercel/output/static
+            --project-name=ubuntu-town-workspace-v2-staging
+            --branch=staging-control
+            --commit-hash=947f78b745f9e4c5cdecaf32e9e1f7442335423f
+            --commit-message="H-02 unchanged staging control"
+            --commit-dirty=false
