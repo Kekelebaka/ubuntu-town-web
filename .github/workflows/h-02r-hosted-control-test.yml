@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      CONTROL_URL: https://075d3ae9.ubuntu-town-workspace-v2-staging.pages.dev
+      CONTROL_URL: https://ubuntu-town-workspace-v2-staging.pages.dev
       BUILDER_EMAIL: ${{ secrets.H02R_BUILDER_EMAIL }}
       BUILDER_PASSWORD: ${{ secrets.H02R_BUILDER_PASSWORD }}
     steps:
