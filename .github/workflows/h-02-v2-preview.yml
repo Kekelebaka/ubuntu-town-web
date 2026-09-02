@@ -1,6 +1,11 @@
 name: H-02 Living Town V2 Preview
 
 on:
+  push:
+    branches:
+      - h-02-v2-preview-source
+    paths:
+      - '.github/workflows/h-02-v2-preview.yml'
   workflow_dispatch: {}
 
 permissions:
