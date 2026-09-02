@@ -1,0 +1,60 @@
+name: H-02R Keke Staging Admin Provision
+
+on:
+  push:
+    branches:
+      - h-02r-staging-control
+    paths:
+      - '.github/workflows/h-02r-keke-staging-admin.yml'
+  workflow_dispatch: {}
+
+jobs:
+  provision-keke-staging-admin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      STAGING_PROJECT_REF: lgbkfthojyxhwemgkpgo
+      FORBIDDEN_PRODUCTION_REF: afiokbhuxfdacbsipoqk
+      TARGET_EMAIL: keke.lebaka+staging@ubuntutown.co.za
+      TARGET_UUID: e5f6b58a-6080-47e2-b9a8-776584426bc9
+      PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Guard staging-only target
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$STAGING_PROJECT_REF" = "lgbkfthojyxhwemgkpgo"
+          test "$FORBIDDEN_PRODUCTION_REF" = "afiokbhuxfdacbsipoqk"
+          test "$TARGET_EMAIL" = "keke.lebaka+staging@ubuntutown.co.za"
+          test "$TARGET_UUID" = "e5f6b58a-6080-47e2-b9a8-776584426bc9"
+          test -n "$PGPASSWORD"
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update -y >/dev/null
+          sudo apt-get install -y postgresql-client >/dev/null
+      - name: Upsert uto user and admin role in staging only
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/keke-staging-admin.sql <<SQL
+          begin;
+          insert into uto.users (id, email, primary_role)
+          values ('$TARGET_UUID'::uuid, '$TARGET_EMAIL', 'admin'::uto.role_key)
+          on conflict (id) do update set email = excluded.email, primary_role = 'admin'::uto.role_key;
+
+          insert into uto.role_assignments (user_id, role_key, town_id, granted_by)
+          select '$TARGET_UUID'::uuid, 'admin'::uto.role_key, null::uuid, null::uuid
+          where not exists (
+            select 1 from uto.role_assignments
+            where user_id = '$TARGET_UUID'::uuid and role_key = 'admin'::uto.role_key and town_id is null
+          );
+          commit;
+
+          select 'USER', id::text, email, primary_role::text from uto.users where id = '$TARGET_UUID'::uuid;
+          select 'ROLE', user_id::text, role_key::text, coalesce(town_id::text, 'NULL')
+          from uto.role_assignments
+          where user_id = '$TARGET_UUID'::uuid and role_key = 'admin'::uto.role_key and town_id is null;
+          SQL
+          psql "host=db.lgbkfthojyxhwemgkpgo.supabase.co port=6543 dbname=postgres user=postgres" \
+            -v ON_ERROR_STOP=1 -t -A -F $'\t' -f /tmp/keke-staging-admin.sql
