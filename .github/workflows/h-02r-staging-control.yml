@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - h-02r-staging-control
+    paths:
+      - '.github/workflows/h-02r-staging-control.yml'
   workflow_dispatch: {}
 
 concurrency:

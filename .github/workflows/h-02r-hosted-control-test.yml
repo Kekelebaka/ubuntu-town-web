@@ -1,0 +1,95 @@
+name: H-02R Hosted Control Test
+
+on:
+  push:
+    branches:
+      - h-02r-staging-control
+    paths:
+      - '.github/workflows/h-02r-hosted-control-test.yml'
+  workflow_dispatch: {}
+
+jobs:
+  hosted-control-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CONTROL_URL: https://075d3ae9.ubuntu-town-workspace-v2-staging.pages.dev
+      BUILDER_EMAIL: ${{ secrets.H02R_BUILDER_EMAIL }}
+      BUILDER_PASSWORD: ${{ secrets.H02R_BUILDER_PASSWORD }}
+    steps:
+      - name: Checkout workflow branch only
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install Playwright Chromium
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null
+          npm install playwright@1.56.1 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Hosted HTTP and synthetic Builder login control
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$BUILDER_EMAIL"
+          test -n "$BUILDER_PASSWORD"
+          node <<'JS'
+          const { chromium } = require('playwright');
+          const base = process.env.CONTROL_URL;
+          const email = process.env.BUILDER_EMAIL;
+          const password = process.env.BUILDER_PASSWORD;
+          const routes = ['/', '/login', '/workspace', '/workspace/today', '/workspace/town', '/workspace/people'];
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 390, height: 844 }, userAgent: 'H-02R-control/1.0 mobile' });
+            const consoleErrors = [];
+            page.on('console', msg => { if (msg.type() === 'error') consoleErrors.push(msg.text()); });
+            for (const route of routes) {
+              const res = await page.goto(base + route, { waitUntil: 'domcontentloaded', timeout: 45000 });
+              console.log(`HTTP ${route} ${res && res.status()} ${page.url()}`);
+              if (!res || res.status() >= 500) throw new Error(`HTTP failure ${route}: ${res && res.status()}`);
+            }
+            await page.goto(base + '/login', { waitUntil: 'networkidle', timeout: 45000 });
+            await page.fill('input[name="email"]', email);
+            await page.fill('input[name="password"]', password);
+            await Promise.all([
+              page.waitForURL(url => url.pathname.startsWith('/workspace'), { timeout: 45000 }),
+              page.click('form[data-testid="password-form"] button[type="submit"]')
+            ]);
+            console.log('LOGIN_RESULT=PASS');
+            console.log('LOGIN_URL=' + page.url());
+            for (const route of ['/workspace', '/workspace/today', '/workspace/town', '/workspace/people']) {
+              const res = await page.goto(base + route, { waitUntil: 'networkidle', timeout: 45000 });
+              console.log(`AUTH_ROUTE ${route} ${res && res.status()} ${page.url()}`);
+              if (!res || res.status() >= 500) throw new Error(`Authenticated route HTTP failure ${route}: ${res && res.status()}`);
+              const body = await page.locator('body').innerText({ timeout: 10000 });
+              if (/sign in to ubuntu town/i.test(body)) throw new Error(`Authenticated route rendered login screen: ${route}`);
+            }
+            await page.evaluate(async () => {
+              const mod = await import('/_next/static/chunks/src_supabase-clients_client_ts.js').catch(() => null);
+              return true;
+            }).catch(() => {});
+            await page.goto(base + '/workspace', { waitUntil: 'networkidle', timeout: 45000 });
+            const logout = page.getByText(/logout|log out|sign out/i).first();
+            if (await logout.count()) {
+              await Promise.all([
+                page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {}),
+                logout.click()
+              ]);
+              console.log('LOGOUT_CLICKED=true');
+            } else {
+              await page.context().clearCookies();
+              await page.evaluate(() => localStorage.clear());
+              console.log('LOGOUT_CLICKED=false; cleared session storage/cookies for post-logout check');
+            }
+            const res = await page.goto(base + '/private-items', { waitUntil: 'networkidle', timeout: 45000 });
+            console.log(`POST_LOGOUT_PRIVATE /private-items ${res && res.status()} ${page.url()}`);
+            if (!page.url().includes('/login')) throw new Error('Private route after logout did not redirect to login');
+            if (consoleErrors.length) console.log('CONSOLE_ERRORS=' + JSON.stringify(consoleErrors.slice(0, 10)));
+            await browser.close();
+          })().catch(async e => { console.error('HOSTED_CONTROL_TEST_ERROR=' + e.stack); process.exit(1); });
+          JS
