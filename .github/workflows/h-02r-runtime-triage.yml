@@ -47,77 +47,64 @@ jobs:
           function redactUrl(raw) {
             try {
               const u = new URL(raw);
-              for (const k of [...u.searchParams.keys()]) {
-                if (/apikey|key|token|jwt|password|authorization|access_token|refresh_token/i.test(k)) u.searchParams.set(k, '[REDACTED]');
-              }
+              for (const k of [...u.searchParams.keys()]) if (/apikey|key|token|jwt|password|authorization|access_token|refresh_token/i.test(k)) u.searchParams.set(k, '[REDACTED]');
               return u.toString();
             } catch { return raw.replace(/(apikey|token|jwt|password|authorization)=([^&\s]+)/ig, '$1=[REDACTED]'); }
           }
-          function safeHeaders(headers) {
-            const out = {};
-            for (const [k,v] of Object.entries(headers || {})) {
-              if (/authorization|apikey|cookie|token/i.test(k)) out[k] = '[REDACTED]'; else out[k] = v;
-            }
-            return out;
+          function keyFor(url) {
+            try { const u = new URL(url); return `${u.hostname}${u.pathname}?${u.searchParams.get('select') || ''}`; } catch { return url.slice(0,140); }
           }
           (async () => {
             const browser = await chromium.launch({ headless: true });
-            const page = await browser.newPage({ viewport: { width: 390, height: 844 }, userAgent: 'H-02R-runtime-triage/1.0 mobile' });
+            const page = await browser.newPage({ viewport: { width: 390, height: 844 }, userAgent: 'H-02R-runtime-triage/1.1 mobile' });
             const events = [];
+            const supabaseRequests = [];
             let currentRoute = 'prelogin';
             page.on('console', msg => {
               const text = msg.text();
-              if (/failed to fetch|supabase|error|cors/i.test(text)) {
-                events.push({kind:'console', pageRoute: currentRoute, type: msg.type(), text: text.slice(0,1200)});
-              }
+              if (/failed to fetch|supabase|error|cors/i.test(text)) events.push({kind:'console', pageRoute: currentRoute, type: msg.type(), text: text.slice(0,500)});
+            });
+            page.on('request', req => {
+              const url = req.url();
+              if (/supabase\.co|auth\/v1|rest\/v1|storage\/v1/i.test(url)) supabaseRequests.push({pageRoute: currentRoute, url:redactUrl(url), method:req.method(), resourceType:req.resourceType()});
             });
             page.on('requestfailed', req => {
               const url = req.url();
-              if (/supabase\.co|auth\/v1|rest\/v1|storage\/v1/i.test(url)) {
-                events.push({kind:'requestfailed', pageRoute: currentRoute, url:redactUrl(url), method:req.method(), resourceType:req.resourceType(), failure:req.failure()?.errorText || 'unknown', headers:safeHeaders(req.headers())});
-              }
+              if (/supabase\.co|auth\/v1|rest\/v1|storage\/v1/i.test(url)) events.push({kind:'requestfailed', pageRoute: currentRoute, url:redactUrl(url), method:req.method(), resourceType:req.resourceType(), failure:req.failure()?.errorText || 'unknown'});
             });
             page.on('response', async res => {
               const url = res.url();
               if (/supabase\.co|auth\/v1|rest\/v1|storage\/v1/i.test(url) && res.status() >= 400) {
-                let body='';
-                try { body = (await res.text()).slice(0,1000); } catch {}
+                let body=''; try { body=(await res.text()).slice(0,300); } catch {}
                 events.push({kind:'badresponse', pageRoute: currentRoute, url:redactUrl(url), method:res.request().method(), resourceType:res.request().resourceType(), status:res.status(), statusText:res.statusText(), body:body.replace(/eyJ[a-zA-Z0-9_.-]+/g,'[JWT_REDACTED]')});
               }
             });
             await page.goto(base + '/login', { waitUntil:'networkidle', timeout:45000 });
             await page.fill('input[name="email"]', email);
             await page.fill('input[name="password"]', password);
-            await Promise.all([
-              page.waitForURL(url => url.pathname.startsWith('/workspace'), { timeout:45000 }),
-              page.click('form[data-testid="password-form"] button[type="submit"]')
-            ]);
-            const configProbe = await page.evaluate(() => {
-              const scripts = [...document.scripts].map(s => s.src || '').filter(Boolean);
-              const html = document.documentElement.innerHTML;
-              return { location: location.href, scriptCount: scripts.length, htmlHasStaging: html.includes('lgbkfthojyxhwemgkpgo'), htmlHasForbidden: html.includes('afiokbhuxfdacbsipoqk') };
-            });
+            await Promise.all([page.waitForURL(url => url.pathname.startsWith('/workspace'), { timeout:45000 }), page.click('form[data-testid="password-form"] button[type="submit"]')]);
             const routeResults = [];
             for (const route of routes) {
               currentRoute = route;
+              const before = events.length;
               const res = await page.goto(base + route, { waitUntil:'networkidle', timeout:45000 });
               const body = await page.locator('body').innerText({ timeout:10000 });
-              const title = await page.title().catch(()=>'');
-              const bodyCompact = body.replace(/\s+/g,' ').slice(0,1200);
-              routeResults.push({route, status:res && res.status(), finalUrl:page.url(), title, bodyHash:crypto.createHash('sha256').update(body).digest('hex').slice(0,16), bodyExcerpt:bodyCompact, assertions:{hasSignIn:/sign in to ubuntu town/i.test(body), hasSyntheticTownA:/Synthetic Town A/i.test(body), hasWorkspace:/workspace|mission|today|town|people|proof|work/i.test(body), hasBuilderEmail: body.includes(email)}});
+              routeResults.push({route, status:res && res.status(), finalUrl:page.url(), title:await page.title().catch(()=>''), bodyHash:crypto.createHash('sha256').update(body).digest('hex').slice(0,16), bodyExcerpt:body.replace(/\s+/g,' ').slice(0,700), eventCount:events.length-before, assertions:{hasSignIn:/sign in to ubuntu town/i.test(body), hasSyntheticTownA:/Synthetic Town A/i.test(body), hasWorkspace:/workspace|mission|today|town|people|proof|work/i.test(body), hasExpectedPeople:/Builder A Town A|Town Operator Town A|2 people in Synthetic Town A/i.test(body), hasToday:/Good morning|RECENT ACTIVITY|TOWN PULSE/i.test(body)}});
             }
-            const allRequests = await page.evaluate(() => performance.getEntriesByType('resource').map(e => e.name).filter(n => /supabase\.co|auth\/v1|rest\/v1|storage\/v1/i.test(n)).map(n => n.replace(/(apikey|token|jwt|password|authorization)=([^&\s]+)/ig,'$1=[REDACTED]')));
-            const hostRefs = [...new Set(allRequests.map(x => { try { return new URL(x).hostname.split('.')[0] } catch { return null } }).filter(Boolean))];
-            const summary = {base, stagingRef, forbiddenRef, configProbe, hostRefs, allSupabaseRequests: allRequests, events, routeResults};
+            const refs = [...new Set(supabaseRequests.map(r => { try { return new URL(r.url).hostname.split('.')[0]; } catch { return null; } }).filter(Boolean))];
+            const failedSummary = {};
+            for (const e of events.filter(e => e.kind === 'requestfailed' || e.kind === 'badresponse')) {
+              const k = `${e.pageRoute}|${e.kind}|${e.method}|${e.failure || e.status}|${keyFor(e.url)}`;
+              failedSummary[k] ??= {...e, count:0}; failedSummary[k].count++;
+            }
+            const output = {base, stagingOnly:{observedRefs:refs, hasStaging:refs.includes(stagingRef), hasForbidden:refs.includes(forbiddenRef)}, supabaseRequestCount:supabaseRequests.length, failedRequests:Object.values(failedSummary), consoleEvents:events.filter(e=>e.kind==='console'), routeResults};
             console.log('H02R_RUNTIME_TRIAGE_JSON_START');
-            console.log(JSON.stringify(summary, null, 2));
+            console.log(JSON.stringify(output, null, 2));
             console.log('H02R_RUNTIME_TRIAGE_JSON_END');
-            if (hostRefs.includes(forbiddenRef) || JSON.stringify(summary).includes(forbiddenRef)) throw new Error('Forbidden production Supabase ref observed in browser runtime');
-            if (!hostRefs.includes(stagingRef) && !JSON.stringify(summary).includes(stagingRef)) throw new Error('Staging Supabase ref not observed in browser runtime');
-            for (const r of routeResults) {
-              if (!r.status || r.status >= 500) throw new Error('Route HTTP failure '+r.route);
-              if (r.assertions.hasSignIn) throw new Error('Authenticated route rendered sign-in page '+r.route);
-            }
+            let hardFail = false;
+            if (output.stagingOnly.hasForbidden || !output.stagingOnly.hasStaging) hardFail = true;
+            for (const r of routeResults) if (!r.status || r.status >= 500 || r.assertions.hasSignIn) hardFail = true;
             await browser.close();
+            if (hardFail) process.exit(2);
           })().catch(e => { console.error('RUNTIME_TRIAGE_ERROR=' + e.stack); process.exit(1); });
           JS
