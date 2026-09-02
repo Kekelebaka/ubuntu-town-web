@@ -1,0 +1,192 @@
+name: H-02 Living Town V2 Preview
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-02-living-town-v2-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy-v2-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      V2_SHA: 996f4cfb7aa68e3ee882aed8140a495498703e78
+
+      CF_ACCOUNT_ID_EXPECTED: c63d3d6d8c17db7487ab40b81d5e29d1
+      CF_PROJECT_EXPECTED: ubuntu-town-workspace-v2-staging
+
+      LIVING_TOWN_ENABLED: 'true'
+      LIVING_TOWN_MODE: staging
+      LIVING_TOWN_OUTBOUND: disabled
+
+      LIVING_TOWN_STAGING_SUPABASE_REF: lgbkfthojyxhwemgkpgo
+      LIVING_TOWN_STAGING_ORIGIN: https://ubuntu-town-workspace-v2-staging.pages.dev
+
+      NEXT_PUBLIC_SITE_URL: https://ubuntu-town-workspace-v2-staging.pages.dev
+      NEXT_PUBLIC_SUPABASE_URL: https://lgbkfthojyxhwemgkpgo.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+
+      NEXT_PUBLIC_GIT_SHA: 996f4cfb7aa68e3ee882aed8140a495498703e78
+      NEXT_PUBLIC_GIT_BRANCH: staging-control
+      NEXT_PUBLIC_RELEASE_SOURCE: h-02-v2-preview
+
+    steps:
+
+      - name: Checkout exact V2
+        uses: actions/checkout@v4
+        with:
+          ref: 996f4cfb7aa68e3ee882aed8140a495498703e78
+          fetch-depth: 1
+
+      - name: Verify exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ACTUAL="$(git rev-parse HEAD)"
+
+          echo "EXPECTED=$V2_SHA"
+          echo "ACTUAL=$ACTUAL"
+
+          test "$ACTUAL" = "$V2_SHA"
+
+      - name: Guard staging environment
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test "$CF_PROJECT_EXPECTED" = "ubuntu-town-workspace-v2-staging"
+          test "$LIVING_TOWN_STAGING_SUPABASE_REF" = "lgbkfthojyxhwemgkpgo"
+
+          test "$NEXT_PUBLIC_SUPABASE_URL" = \
+            "https://lgbkfthojyxhwemgkpgo.supabase.co"
+
+          test "$NEXT_PUBLIC_SITE_URL" = \
+            "https://ubuntu-town-workspace-v2-staging.pages.dev"
+
+          test -n "$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+
+          if printf '%s\n' \
+            "$NEXT_PUBLIC_SUPABASE_URL" \
+            "$NEXT_PUBLIC_SITE_URL" \
+            | grep -E \
+            'afiokbhuxfdacbsipoqk|enter\.ubuntutown\.co\.za|ubuntu-town-web-git'
+          then
+            echo "PRODUCTION TARGET DETECTED"
+            exit 40
+          fi
+
+      - name: Create build environment
+        shell: bash
+        run: |
+          cat > .env.local <<EOF
+          LIVING_TOWN_ENABLED=true
+          LIVING_TOWN_MODE=staging
+          LIVING_TOWN_OUTBOUND=disabled
+          LIVING_TOWN_STAGING_SUPABASE_REF=lgbkfthojyxhwemgkpgo
+          LIVING_TOWN_STAGING_ORIGIN=https://ubuntu-town-workspace-v2-staging.pages.dev
+          NEXT_PUBLIC_SITE_URL=https://ubuntu-town-workspace-v2-staging.pages.dev
+          NEXT_PUBLIC_SUPABASE_URL=https://lgbkfthojyxhwemgkpgo.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+          NEXT_PUBLIC_GIT_SHA=$V2_SHA
+          NEXT_PUBLIC_GIT_BRANCH=staging-control
+          NEXT_PUBLIC_RELEASE_SOURCE=h-02-v2-preview
+          EOF
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Validate V2 environment
+        run: npm run check:v2-env
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build Cloudflare edge artifact
+        run: npm run build:edge
+
+      - name: Verify build artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test "$(git rev-parse HEAD)" = "$V2_SHA"
+          test -f .vercel/output/config.json
+          test -d .vercel/output/static
+
+          echo "V2_ARTIFACT=PASS"
+
+      - name: Verify Cloudflare staging target
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+
+          test "$CLOUDFLARE_ACCOUNT_ID" = "$CF_ACCOUNT_ID_EXPECTED"
+
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          account = os.environ["CLOUDFLARE_ACCOUNT_ID"]
+          token = os.environ["CLOUDFLARE_API_TOKEN"]
+          project = os.environ["CF_PROJECT_EXPECTED"]
+
+          url = (
+              f"https://api.cloudflare.com/client/v4/accounts/"
+              f"{account}/pages/projects/{project}"
+          )
+
+          req = urllib.request.Request(
+              url,
+              headers={"Authorization": f"Bearer {token}"}
+          )
+
+          data = json.load(
+              urllib.request.urlopen(req, timeout=30)
+          )
+
+          assert data["success"]
+
+          result = data["result"]
+
+          print("PROJECT=" + result["name"])
+          print("DOMAINS=" + ",".join(result.get("domains") or []))
+
+          assert result["name"] == "ubuntu-town-workspace-v2-staging"
+
+          domains = result.get("domains") or []
+
+          assert "enter.ubuntutown.co.za" not in domains
+          PY
+
+      - name: Deploy exact V2 to staging
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: c63d3d6d8c17db7487ab40b81d5e29d1
+          packageManager: npm
+          command: >-
+            pages deploy .vercel/output/static
+            --project-name=ubuntu-town-workspace-v2-staging
+            --branch=staging-control
+            --commit-hash=996f4cfb7aa68e3ee882aed8140a495498703e78
+            --commit-message="H-02 First Living Town Preview"
+            --commit-dirty=false
