@@ -1,0 +1,123 @@
+name: H-02R Supabase Runtime Triage
+
+on:
+  push:
+    branches:
+      - h-02r-staging-control
+    paths:
+      - '.github/workflows/h-02r-runtime-triage.yml'
+  workflow_dispatch: {}
+
+jobs:
+  runtime-triage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CONTROL_URL: https://ubuntu-town-workspace-v2-staging.pages.dev
+      STAGING_SUPABASE_REF: lgbkfthojyxhwemgkpgo
+      FORBIDDEN_SUPABASE_REF: afiokbhuxfdacbsipoqk
+      BUILDER_EMAIL: ${{ secrets.H02R_BUILDER_EMAIL }}
+      BUILDER_PASSWORD: ${{ secrets.H02R_BUILDER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install Playwright Chromium
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null
+          npm install playwright@1.56.1 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Capture Supabase failed requests and rendered data
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$BUILDER_EMAIL"
+          test -n "$BUILDER_PASSWORD"
+          node <<'JS'
+          const { chromium } = require('playwright');
+          const crypto = require('crypto');
+          const base = process.env.CONTROL_URL;
+          const stagingRef = process.env.STAGING_SUPABASE_REF;
+          const forbiddenRef = process.env.FORBIDDEN_SUPABASE_REF;
+          const email = process.env.BUILDER_EMAIL;
+          const password = process.env.BUILDER_PASSWORD;
+          const routes = ['/workspace','/workspace/today','/workspace/town','/workspace/people'];
+          function redactUrl(raw) {
+            try {
+              const u = new URL(raw);
+              for (const k of [...u.searchParams.keys()]) {
+                if (/apikey|key|token|jwt|password|authorization|access_token|refresh_token/i.test(k)) u.searchParams.set(k, '[REDACTED]');
+              }
+              return u.toString();
+            } catch { return raw.replace(/(apikey|token|jwt|password|authorization)=([^&\s]+)/ig, '$1=[REDACTED]'); }
+          }
+          function safeHeaders(headers) {
+            const out = {};
+            for (const [k,v] of Object.entries(headers || {})) {
+              if (/authorization|apikey|cookie|token/i.test(k)) out[k] = '[REDACTED]'; else out[k] = v;
+            }
+            return out;
+          }
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 390, height: 844 }, userAgent: 'H-02R-runtime-triage/1.0 mobile' });
+            const events = [];
+            let currentRoute = 'prelogin';
+            page.on('console', msg => {
+              const text = msg.text();
+              if (/failed to fetch|supabase|error|cors/i.test(text)) {
+                events.push({kind:'console', pageRoute: currentRoute, type: msg.type(), text: text.slice(0,1200)});
+              }
+            });
+            page.on('requestfailed', req => {
+              const url = req.url();
+              if (/supabase\.co|auth\/v1|rest\/v1|storage\/v1/i.test(url)) {
+                events.push({kind:'requestfailed', pageRoute: currentRoute, url:redactUrl(url), method:req.method(), resourceType:req.resourceType(), failure:req.failure()?.errorText || 'unknown', headers:safeHeaders(req.headers())});
+              }
+            });
+            page.on('response', async res => {
+              const url = res.url();
+              if (/supabase\.co|auth\/v1|rest\/v1|storage\/v1/i.test(url) && res.status() >= 400) {
+                let body='';
+                try { body = (await res.text()).slice(0,1000); } catch {}
+                events.push({kind:'badresponse', pageRoute: currentRoute, url:redactUrl(url), method:res.request().method(), resourceType:res.request().resourceType(), status:res.status(), statusText:res.statusText(), body:body.replace(/eyJ[a-zA-Z0-9_.-]+/g,'[JWT_REDACTED]')});
+              }
+            });
+            await page.goto(base + '/login', { waitUntil:'networkidle', timeout:45000 });
+            await page.fill('input[name="email"]', email);
+            await page.fill('input[name="password"]', password);
+            await Promise.all([
+              page.waitForURL(url => url.pathname.startsWith('/workspace'), { timeout:45000 }),
+              page.click('form[data-testid="password-form"] button[type="submit"]')
+            ]);
+            const configProbe = await page.evaluate(() => {
+              const scripts = [...document.scripts].map(s => s.src || '').filter(Boolean);
+              const html = document.documentElement.innerHTML;
+              return { location: location.href, scriptCount: scripts.length, htmlHasStaging: html.includes('lgbkfthojyxhwemgkpgo'), htmlHasForbidden: html.includes('afiokbhuxfdacbsipoqk') };
+            });
+            const routeResults = [];
+            for (const route of routes) {
+              currentRoute = route;
+              const res = await page.goto(base + route, { waitUntil:'networkidle', timeout:45000 });
+              const body = await page.locator('body').innerText({ timeout:10000 });
+              const title = await page.title().catch(()=>'');
+              const bodyCompact = body.replace(/\s+/g,' ').slice(0,1200);
+              routeResults.push({route, status:res && res.status(), finalUrl:page.url(), title, bodyHash:crypto.createHash('sha256').update(body).digest('hex').slice(0,16), bodyExcerpt:bodyCompact, assertions:{hasSignIn:/sign in to ubuntu town/i.test(body), hasSyntheticTownA:/Synthetic Town A/i.test(body), hasWorkspace:/workspace|mission|today|town|people|proof|work/i.test(body), hasBuilderEmail: body.includes(email)}});
+            }
+            const allRequests = await page.evaluate(() => performance.getEntriesByType('resource').map(e => e.name).filter(n => /supabase\.co|auth\/v1|rest\/v1|storage\/v1/i.test(n)).map(n => n.replace(/(apikey|token|jwt|password|authorization)=([^&\s]+)/ig,'$1=[REDACTED]')));
+            const hostRefs = [...new Set(allRequests.map(x => { try { return new URL(x).hostname.split('.')[0] } catch { return null } }).filter(Boolean))];
+            const summary = {base, stagingRef, forbiddenRef, configProbe, hostRefs, allSupabaseRequests: allRequests, events, routeResults};
+            console.log('H02R_RUNTIME_TRIAGE_JSON_START');
+            console.log(JSON.stringify(summary, null, 2));
+            console.log('H02R_RUNTIME_TRIAGE_JSON_END');
+            if (hostRefs.includes(forbiddenRef) || JSON.stringify(summary).includes(forbiddenRef)) throw new Error('Forbidden production Supabase ref observed in browser runtime');
+            if (!hostRefs.includes(stagingRef) && !JSON.stringify(summary).includes(stagingRef)) throw new Error('Staging Supabase ref not observed in browser runtime');
+            for (const r of routeResults) {
+              if (!r.status || r.status >= 500) throw new Error('Route HTTP failure '+r.route);
+              if (r.assertions.hasSignIn) throw new Error('Authenticated route rendered sign-in page '+r.route);
+            }
+            await browser.close();
+          })().catch(e => { console.error('RUNTIME_TRIAGE_ERROR=' + e.stack); process.exit(1); });
+          JS
