@@ -23,9 +23,12 @@ export async function loadToday(client: SupabaseClient, userId: string, name: st
   const base = { name: person?.display_name || name, town, towns: allowedTowns };
   if (!town) return { ...base, work: unavailable, missions: unavailable, signals: unavailable, people: unavailable, recordedWork: unavailable };
   // Every local query has an explicit town predicate AND the viewer's cookie/RLS context.
+  const { data: assignedRows } = await db.from('work_assignments').select('work_id').eq('assignee_id', userId);
+  const assignedIds = (assignedRows ?? []).map((row: { work_id: string }) => row.work_id);
+  const ownershipFilter = assignedIds.length ? `created_by.eq.${userId},id.in.(${assignedIds.join(',')})` : `created_by.eq.${userId}`;
   const [work, missions, signals, people, count] = await Promise.all([
-    db.from('community_work').select('id,title,status,type,initiative,created_at').eq('town_id', town.id).eq('created_by', userId).is('deleted_at', null).order('created_at', { ascending: false }).limit(20),
-    db.from('missions').select('id,title,description,work_type,cadence').or(`town_id.eq.${town.id},town_id.is.null`).eq('active', true).order('title').limit(6),
+    db.from('community_work').select('id,title,status,type,initiative,created_at').eq('town_id', town.id).or(ownershipFilter).is('deleted_at', null).order('created_at', { ascending: false }).limit(20),
+    db.from('missions').select('id,title,description,work_type,cadence').or(`town_id.eq.${town.id},town_id.is.null`).eq('active', true).not('work_type', 'is', null).order('title').limit(6),
     db.from('signals').select('id,title,category').eq('town_id', town.id).eq('status', 'new').order('created_at', { ascending: false }).limit(4),
     db.from('coordinators').select('id,display_name').eq('town_id', town.id).order('display_name').limit(6),
     db.from('community_work').select('id', { count: 'exact', head: true }).eq('town_id', town.id).is('deleted_at', null),
