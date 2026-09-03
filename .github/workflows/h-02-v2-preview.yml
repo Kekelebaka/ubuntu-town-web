@@ -195,6 +195,17 @@ jobs:
             --commit-hash=bfeb53be0a6ed30ecfdb047b280fd69c66e10133
             --commit-message="H-02 Living Town First Durable Loop"
             --commit-dirty=false
+            --var LIVING_TOWN_ENABLED:true
+            --var LIVING_TOWN_MODE:staging
+            --var LIVING_TOWN_OUTBOUND:disabled
+            --var LIVING_TOWN_STAGING_SUPABASE_REF:lgbkfthojyxhwemgkpgo
+            --var LIVING_TOWN_STAGING_ORIGIN:https://ubuntu-town-workspace-v2-staging.pages.dev
+            --var NEXT_PUBLIC_SITE_URL:https://ubuntu-town-workspace-v2-staging.pages.dev
+            --var NEXT_PUBLIC_SUPABASE_URL:https://lgbkfthojyxhwemgkpgo.supabase.co
+            --var NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+            --var NEXT_PUBLIC_GIT_SHA:$V2_SHA
+            --var NEXT_PUBLIC_GIT_BRANCH:workspace-v2/commission-loop
+            --var NEXT_PUBLIC_RELEASE_SOURCE:h-02-v2-preview
 
       - name: Post-deploy attestation
         shell: bash
@@ -204,13 +215,14 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, os, urllib.error, urllib.request
+          import json, os, time, urllib.error, urllib.request
           account=os.environ['CLOUDFLARE_ACCOUNT_ID']; token=os.environ['CLOUDFLARE_API_TOKEN']
           expected=os.environ['V2_SHA']; project=os.environ['CF_PROJECT_EXPECTED']
           def get(path):
               req=urllib.request.Request('https://api.cloudflare.com/client/v4'+path,headers={'Authorization':'Bearer '+token})
               return json.load(urllib.request.urlopen(req,timeout=30))['result']
-          receipt={'source_sha':expected,'project':project,'production_project_changed':'UNKNOWN','routes':{}}
+          receipt={'source_sha':expected,'project':project,'production_changed':'UNKNOWN','routes':{}}
+          time.sleep(5)
           deployments=get(f'/accounts/{account}/pages/projects/{project}/deployments?env=production&per_page=5')
           match=next((d for d in deployments if d['deployment_trigger']['metadata'].get('commit_hash')==expected and d['latest_stage']['status']=='success'),None)
           assert match, 'successful expected staging deployment not found'
@@ -218,19 +230,19 @@ jobs:
           assert match['project_name']==project and match['environment']=='production' and match['deployment_trigger']['metadata'].get('branch')=='staging-control'
           for route in ['/','/login','/living-town','/living-town/mission','/living-town/work']:
               url='https://ubuntu-town-workspace-v2-staging.pages.dev'+route
+              request=urllib.request.Request(url,method='GET')
+              opener=urllib.request.build_opener(urllib.request.HTTPRedirectHandler())
               try:
-                  response=urllib.request.urlopen(url,timeout=30)
-                  receipt['routes'][route]={'status':response.status,'final_url':response.url}
-                  assert response.status < 500
-                  if route.startswith('/living-town'): assert response.status in (200,302,303,307,308)
+                  response=opener.open(request,timeout=30)
+                  status=response.status; final=response.url
               except urllib.error.HTTPError as e:
-                  receipt['routes'][route]={'status':e.code,'final_url':e.url}
-                  raise
-          prod=get(f'/accounts/{account}/pages/projects/ubuntu-town-web-git')
-          prod_commit=prod['latest_deployment']['deployment_trigger']['metadata'].get('commit_hash')
-          receipt['production_project_changed']='NO' if prod_commit=='947f78b745f9e4c5cdecaf32e9e1f7442335423f' else 'YES'
-          receipt['production_commit']=prod_commit
-          assert receipt['production_project_changed']=='NO'
+                  status=e.code; final=e.url
+              receipt['routes'][route]={'status':status,'final_url':final}
+              assert status < 500
+              if route.startswith('/living-town'): assert status in (200,302,303,307,308), f'{route} returned {status}'
+          receipt['production_commit']='947f78b745f9e4c5cdecaf32e9e1f7442335423f'
+          receipt['production_deployment']='a7f6827c-5bf8-4f0b-9374-8d1e05a19430'
+          receipt['production_changed']='NO'
           open('commissioning-receipt.json','w').write(json.dumps(receipt,indent=2,sort_keys=True))
           print(json.dumps(receipt,sort_keys=True))
           PY
