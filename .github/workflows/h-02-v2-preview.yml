@@ -21,7 +21,7 @@ jobs:
     timeout-minutes: 20
 
     env:
-      V2_SHA: 996f4cfb7aa68e3ee882aed8140a495498703e78
+      V2_SHA: bfeb53be0a6ed30ecfdb047b280fd69c66e10133
 
       CF_ACCOUNT_ID_EXPECTED: c63d3d6d8c17db7487ab40b81d5e29d1
       CF_PROJECT_EXPECTED: ubuntu-town-workspace-v2-staging
@@ -37,8 +37,8 @@ jobs:
       NEXT_PUBLIC_SUPABASE_URL: https://lgbkfthojyxhwemgkpgo.supabase.co
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
 
-      NEXT_PUBLIC_GIT_SHA: 996f4cfb7aa68e3ee882aed8140a495498703e78
-      NEXT_PUBLIC_GIT_BRANCH: staging-control
+      NEXT_PUBLIC_GIT_SHA: bfeb53be0a6ed30ecfdb047b280fd69c66e10133
+      NEXT_PUBLIC_GIT_BRANCH: workspace-v2/commission-loop
       NEXT_PUBLIC_RELEASE_SOURCE: h-02-v2-preview
 
     steps:
@@ -46,7 +46,7 @@ jobs:
       - name: Checkout exact V2
         uses: actions/checkout@v4
         with:
-          ref: 996f4cfb7aa68e3ee882aed8140a495498703e78
+          ref: bfeb53be0a6ed30ecfdb047b280fd69c66e10133
           fetch-depth: 1
 
       - name: Verify exact source
@@ -100,7 +100,7 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL=https://lgbkfthojyxhwemgkpgo.supabase.co
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
           NEXT_PUBLIC_GIT_SHA=$V2_SHA
-          NEXT_PUBLIC_GIT_BRANCH=staging-control
+          NEXT_PUBLIC_GIT_BRANCH=workspace-v2/commission-loop
           NEXT_PUBLIC_RELEASE_SOURCE=h-02-v2-preview
           EOF
 
@@ -192,6 +192,51 @@ jobs:
             pages deploy .vercel/output/static
             --project-name=ubuntu-town-workspace-v2-staging
             --branch=staging-control
-            --commit-hash=996f4cfb7aa68e3ee882aed8140a495498703e78
-            --commit-message="H-02 First Living Town Preview"
+            --commit-hash=bfeb53be0a6ed30ecfdb047b280fd69c66e10133
+            --commit-message="H-02 Living Town First Durable Loop"
             --commit-dirty=false
+
+      - name: Post-deploy attestation
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.error, urllib.request
+          account=os.environ['CLOUDFLARE_ACCOUNT_ID']; token=os.environ['CLOUDFLARE_API_TOKEN']
+          expected=os.environ['V2_SHA']; project=os.environ['CF_PROJECT_EXPECTED']
+          def get(path):
+              req=urllib.request.Request('https://api.cloudflare.com/client/v4'+path,headers={'Authorization':'Bearer '+token})
+              return json.load(urllib.request.urlopen(req,timeout=30))['result']
+          receipt={'source_sha':expected,'project':project,'production_project_changed':'UNKNOWN','routes':{}}
+          deployments=get(f'/accounts/{account}/pages/projects/{project}/deployments?env=production&per_page=5')
+          match=next((d for d in deployments if d['deployment_trigger']['metadata'].get('commit_hash')==expected and d['latest_stage']['status']=='success'),None)
+          assert match, 'successful expected staging deployment not found'
+          receipt.update(deployment_id=match['id'],deployment_url=match['url'],branch=match['deployment_trigger']['metadata'].get('branch'),environment=match['environment'])
+          assert match['project_name']==project and match['environment']=='production' and match['deployment_trigger']['metadata'].get('branch')=='staging-control'
+          for route in ['/','/login','/living-town','/living-town/mission','/living-town/work']:
+              url='https://ubuntu-town-workspace-v2-staging.pages.dev'+route
+              try:
+                  response=urllib.request.urlopen(url,timeout=30)
+                  receipt['routes'][route]={'status':response.status,'final_url':response.url}
+                  assert response.status < 500
+                  if route.startswith('/living-town'): assert response.status in (200,302,303,307,308)
+              except urllib.error.HTTPError as e:
+                  receipt['routes'][route]={'status':e.code,'final_url':e.url}
+                  raise
+          prod=get(f'/accounts/{account}/pages/projects/ubuntu-town-web-git')
+          prod_commit=prod['latest_deployment']['deployment_trigger']['metadata'].get('commit_hash')
+          receipt['production_project_changed']='NO' if prod_commit=='947f78b745f9e4c5cdecaf32e9e1f7442335423f' else 'YES'
+          receipt['production_commit']=prod_commit
+          assert receipt['production_project_changed']=='NO'
+          open('commissioning-receipt.json','w').write(json.dumps(receipt,indent=2,sort_keys=True))
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+
+      - name: Upload commissioning receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-02-commissioning-receipt
+          path: commissioning-receipt.json
