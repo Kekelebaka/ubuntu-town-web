@@ -47,7 +47,7 @@
    Tailwind theme mapping. `inline` => utilities reference the CSS vars, so the
    :root / .dark overrides above re-theme everything at runtime.
 --------------------------------------------------------------------------- */
-/@theme inline {
+@theme inline {
   --color-background: var(--ut-cream);
   --color-foreground: var(--ut-ink);
   --color-card: var(--ut-surface);
