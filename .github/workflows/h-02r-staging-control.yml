@@ -3,13 +3,13 @@ name: H-02R Staging Control Deploy
 on:
   push:
     branches:
-      - h-02r-staging-control
+      - workspace-v2/build-02-work-engine
     paths:
-      - '.github/workflows/h-02r-staging-control.yml'
+      - '.github/workflows/workspace-v2/build-02-work-engine.yml'
   workflow_dispatch: {}
 
 concurrency:
-  group: h-02r-staging-control
+  group: workspace-v2/build-02-work-engine
   cancel-in-progress: true
 
 jobs:
@@ -19,21 +19,21 @@ jobs:
     permissions:
       contents: read
     env:
-      BASELINE_SHA: 947f78b745f9e4c5cdecaf32e9e1f7442335423f
+      BASELINE_SHA: 2bf7f90802e8f5b7387e08ca2c1ed6efbfbe6855
       CF_ACCOUNT_ID_EXPECTED: c63d3d6d8c17db7487ab40b81d5e29d1
       CF_PAGES_PROJECT_EXPECTED: ubuntu-town-workspace-v2-staging
       CF_PAGES_PROJECT_ID_EXPECTED: a5028470-be7b-4049-9246-6d572348b79f
       NEXT_PUBLIC_SITE_URL: https://ubuntu-town-workspace-v2-staging.pages.dev
-      NEXT_PUBLIC_RELEASE_SOURCE: h-02r-staging-control
+      NEXT_PUBLIC_RELEASE_SOURCE: workspace-v2/build-02-work-engine
       NEXT_PUBLIC_GIT_BRANCH: staging-control
-      NEXT_PUBLIC_GIT_SHA: 947f78b745f9e4c5cdecaf32e9e1f7442335423f
+      NEXT_PUBLIC_GIT_SHA: 2bf7f90802e8f5b7387e08ca2c1ed6efbfbe6855
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.STAGING_NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
     steps:
       - name: Checkout exact unchanged baseline source
         uses: actions/checkout@v4
         with:
-          ref: 947f78b745f9e4c5cdecaf32e9e1f7442335423f
+          ref: 2bf7f90802e8f5b7387e08ca2c1ed6efbfbe6855
           fetch-depth: 1
 
       - name: Guard exact source and target configuration
@@ -125,6 +125,6 @@ jobs:
             pages deploy .vercel/output/static
             --project-name=ubuntu-town-workspace-v2-staging
             --branch=staging-control
-            --commit-hash=947f78b745f9e4c5cdecaf32e9e1f7442335423f
-            --commit-message="H-02 unchanged staging control"
+            --commit-hash=2bf7f90802e8f5b7387e08ca2c1ed6efbfbe6855
+            --commit-message="Build 02 mission work engine commissioning"
             --commit-dirty=false
