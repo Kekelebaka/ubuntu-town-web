@@ -4,108 +4,79 @@
 @custom-variant dark (&:where(.dark, [data-theme="dark"], .dark *, [data-theme="dark"] *));
 
 /* ---------------------------------------------------------------------------
-   Semantic tokens — LIGHT (default). Ubuntu Town OS CI.
-   Token NAMES are unchanged from the previous theme so existing shadcn
-   components keep working; only the VALUES are reskinned + a dark variant added.
+   Semantic tokens — LIGHT (default). Ubuntu Town OS Living Town CI.
+   Token NAMES are semantic (--ut-...) so existing shadcn components keep working;
+   only the VALUES are reskinned + a dark variant added.
 --------------------------------------------------------------------------- */
+/* BASE: Warm cream / ivory / off-white — NOT sterile SaaS white */
 :root {
-  --background:#FBF7F2;
-  --foreground:#1F1329;
-  --card:#FFFFFF;
-  --card-foreground:#1F1329;
-  --popover:#FFFFFF;
-  --popover-foreground:#1F1329;
-  --primary:#6B1F66;              /* Ubuntu Purple — primary action */
-  --primary-foreground:#FFFFFF;
-  --secondary:#F1E9DD;
-  --secondary-foreground:#1F1329;
-  --muted:#F1E9DD;
-  --muted-foreground:#6E6560;
-  --accent:#EBE0D0;              /* soft sand for hovers/highlights */
-  --accent-foreground:#1F1329;
-  --destructive:#C0392B;
-  --destructive-foreground:#FFFFFF;
-  --border:#E7DFD2;
-  --input:#E7DFD2;
-  --ring:#6B1F66;
-  --sidebar:#F6F0E8;
-  --sidebar-foreground:#1F1329;
-  --sidebar-primary:#6B1F66;
-  --sidebar-primary-foreground:#FFFFFF;
-  --sidebar-accent:#EBE0D0;
-  --sidebar-accent-foreground:#1F1329;
-  --sidebar-border:#E7DFD2;
-  --sidebar-ring:#6B1F66;
-  --radius:0.75rem;
+  --ut-cream:#FBF7F2;
+  --ut-ink:#1F1329;
+  --ut-muted:#6E6560;
+  --ut-surface:#FFFFFF;
+  --ut-border:#E7DFD2;
 }
 
-/* ---------------------------------------------------------------------------
-   Semantic tokens — DARK
---------------------------------------------------------------------------- */
+/* PRIMARY: Deep Ubuntu purple / aubergine */
+--ut-aubergine:#6B1F66;
+--ut-aubergine-deep:#521350;
+
+/* ACCENT: Strong warm orange */
+--ut-orange:#F79412;
+
+/* SUPPORT: Muted greens, charcoal, subtle warm grey */
+--ut-success:#4F9E1E;
+--ut-warning:#E5548A;
+--ut-border-warm:#E7DFD2;
+
+/* DARK VARIANT */
 .dark, [data-theme="dark"] {
-  --background:#150F1F;
-  --foreground:#F4EFEA;
-  --card:#211830;
-  --card-foreground:#F4EFEA;
-  --popover:#211830;
-  --popover-foreground:#F4EFEA;
-  --primary:#C879BC;
-  --primary-foreground:#150F1F;
-  --secondary:#241B33;
-  --secondary-foreground:#F4EFEA;
-  --muted:#241B33;
-  --muted-foreground:#B4A9C0;
-  --accent:#2C2140;
-  --accent-foreground:#F4EFEA;
-  --destructive:#E5533D;
-  --destructive-foreground:#150F1F;
-  --border:#352A46;
-  --input:#352A46;
-  --ring:#C879BC;
-  --sidebar:#0E0916;
-  --sidebar-foreground:#F4EFEA;
-  --sidebar-primary:#C879BC;
-  --sidebar-primary-foreground:#150F1F;
-  --sidebar-accent:#2C2140;
-  --sidebar-accent-foreground:#F4EFEA;
-  --sidebar-border:#352A46;
-  --sidebar-ring:#C879BC;
+  --ut-cream:#150F1F;
+  --ut-ink:#F4EFEA;
+  --ut-muted:#B4A9C0;
+  --ut-surface:#211830;
+  --ut-border:#352A46;
+  --ut-aubergine:#C879BC;
+  --ut-aubergine-deep:#521350;
+  --ut-orange:#F79412;
+  --ut-success:#4F9E1E;
+  --ut-warning:#E5548A;
 }
 
 /* ---------------------------------------------------------------------------
    Tailwind theme mapping. `inline` => utilities reference the CSS vars, so the
    :root / .dark overrides above re-theme everything at runtime.
 --------------------------------------------------------------------------- */
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+/@theme inline {
+  --color-background: var(--ut-cream);
+  --color-foreground: var(--ut-ink);
+  --color-card: var(--ut-surface);
+  --color-card-foreground: var(--ut-ink);
+  --color-popover: var(--ut-surface);
+  --color-popover-foreground: var(--ut-ink);
+  --color-primary: var(--ut-aubergine);
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: var(--ut-cream);
+  --color-secondary-foreground: var(--ut-ink);
+  --color-muted: var(--ut-muted);
+  --color-muted-foreground: var(--ut-muted);
+  --color-accent: var(--ut-orange);
+  --color-accent-foreground: var(--ut-ink);
+  --color-destructive:#C0392B;
+  --color-destructive-foreground:#FFFFFF;
+  --color-border: var(--ut-border);
+  --color-input: var(--ut-border);
+  --color-ring: var(--ut-aubergine);
+  --color-sidebar: var(--ut-cream);
+  --color-sidebar-foreground: var(--ut-ink);
+  --color-sidebar-primary: var(--ut-aubergine);
+  --color-sidebar-primary-foreground: #FFFFFF;
+  --color-sidebar-accent: var(--ut-orange);
+  --color-sidebar-accent-foreground: var(--ut-ink);
+  --color-sidebar-border: var(--ut-border);
+  --color-sidebar-ring: var(--ut-aubergine);
 
-  /* Ubuntu Town OS brand palette (static across light/dark) */
+  /* Ubuntu Town Living Town brand palette (static across light/dark) */
   --color-ubuntu-purple:#6B1F66;
   --color-ubuntu-purple-deep:#521350;
   --color-ubuntu-purple-soft:#B266A8;
@@ -156,6 +127,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* Override Tailwind's default color names to our semantic tokens */
 @layer base {
   * { @apply border-border; }
   body {
@@ -165,4 +137,141 @@
     text-rendering: optimizeLegibility;
   }
   h1,h2,h3,h4,h5,h6 { font-family: var(--font-display); letter-spacing: -0.01em; }
+}
+
+/* ---------------------------------------------------------------------------
+   Component-level colour overrides for Ubuntu Town Living Town
+--------------------------------------------------------------------------- */
+/* Sidebar - deep aubergine vertical rail */
+.sidebar-ut {
+  background: var(--ut-aubergine);
+  color: var(--ut-cream);
+}
+
+/* Sidebar text */
+.sidebar-ut .sidebar-link {
+  color: var(--ut-cream);
+}
+
+/* Sidebar active item */
+.sidebar-ut .sidebar-link.active {
+  background: var(--ut-aubergine-deep);
+}
+
+/* Top bar - cream background */
+.topbar-ut {
+  background: var(--ut-cream);
+  border-color: var(--ut-border);
+}
+
+/* Primary action button */
+.btn-ut-primary {
+  background: var(--ut-aubergine);
+  color: #FFFFFF;
+}
+
+/* Primary action button hover */
+.btn-ut-primary:hover {
+  background: var(--ut-aubergine-deep);
+}
+
+/• Opportunity card */
+.card-ut {
+  background: var(--ut-surface);
+  border: 1px solid var(--ut-border);
+  color: var(--ut-ink);
+}
+
+/* Metric number */
+.metric-ut {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--ut-aubergine);
+}
+
+/* Section heading */
+.heading-ut {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ut-aubergine);
+}
+
+/* Body text */
+.body-ut {
+  color: var(--ut-ink);
+}
+
+/* Muted text */
+.muted-ut {
+  color: var(--ut-muted);
+}
+
+/* Avatar */
+.avatar-ut {
+  background: var(--ut-orange);
+  color: var(--ut-cream);
+}
+
+/* Town pulse metrics */
+.townpulse-ut {
+  background: var(--ut-surface);
+  border: 1px solid var(--ut-border);
+}
+
+/* Next move card */
+.nextmove-ut {
+  background: var(--ut-cream);
+  border: 1px solid var(--ut-orange);
+  color: var(--ut-aubergine);
+}
+
+/* Progress meter */
+.progress-ut {
+  background: var(--ut-cream);
+}
+
+/* Kopano panel */
+.kopano-ut {
+  background: var(--ut-cream);
+  border-color: var(--ut-border);
+}
+
+/* Quick actions */
+.quickaction-ut {
+  background: var(--ut-surface);
+  border: 1px solid var(--ut-border);
+}
+
+/* Mobile nav */
+.navmobile-ut {
+  background: var(--ut-cream);
+  border-top: 1px solid var(--ut-border);
+}
+
+/* Bottom nav active */
+.navbottom-ut .nav-item.active {
+  color: var(--ut-aubergine);
+  border-bottom: 2px solid var(--ut-orange);
+}
+
+/* States */
+.empty-ut {
+  color: var(--ut-muted);
+  background: var(--ut-cream);
+}
+
+.loading-ut {
+  background: var(--ut-cream);
+  border: 1px solid var(--ut-border);
+}
+
+.error-ut {
+  background: #FEE2E2;
+  color: #C0392B;
+}
+
+/* Focus visible */
+.focus-ut:focus-visible {
+  outline: 2px solid var(--ut-orange);
+  outline-offset: 2px;
 }

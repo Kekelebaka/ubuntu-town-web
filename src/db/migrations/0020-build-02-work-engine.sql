@@ -1,0 +1,12 @@
+-- DEPRECATED: This scratch migration has been superseded by the canonical
+-- supabase/migrations/0022_build02_mission_work_engine.sql
+--
+-- DO NOT RUN THIS FILE. It contains known P0 defects:
+--   1. Invalid PL/pgSQL: `get last id` (line 362)
+--   2. verify_proof checks assigned_to instead of coordinator role (line 521)
+--   3. mission_memory_events has WITH CHECK (true) — no authorization
+--   4. Tables in public schema instead of uto
+--   5. RPCs accept p_actor_id from client instead of using auth.uid()
+--
+-- The canonical replacement fixes all of these.
+-- This file is retained only for historical reference and will be removed.

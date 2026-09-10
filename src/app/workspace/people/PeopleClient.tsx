@@ -18,6 +18,8 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase-client';
 import { useActor } from '@/lib/capabilities/useActor';
+import GuidanceCard, { ActionableEmptyState } from '@/components/operating-system/GuidanceCard';
+import { KopanoEntry } from '@/components/operating-system/Kopano';
 import { Users, Phone, UserPlus, ShieldCheck } from 'lucide-react';
 
 interface Person {
@@ -96,6 +98,17 @@ export default function PeopleClient() {
         </p>
       </div>
 
+      <GuidanceCard
+        eyebrow="What is People?"
+        title="Your accountable town team"
+        body="This list is built from coordinator records and role assignments the database allows you to read. It is not yet proof that a person is confirmed, onboarded, trained or active."
+        next="Confirm the person and town pairing before granting more access"
+        tone="explain"
+      />
+      <div style={{ height: 12 }} />
+      <KopanoEntry context="People copilot" prompt="Who needs attention, and what is missing before this town is ready?" />
+      <div style={{ height: 12 }} />
+
       {/* Filter chips */}
       {filters.length > 1 && (
         <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 12, marginBottom: 4 }}>
@@ -114,11 +127,13 @@ export default function PeopleClient() {
       {loading ? (
         <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14, padding: 20, color: 'var(--muted-foreground)', fontSize: 14 }}>Loading…</div>
       ) : shown.length === 0 ? (
-        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 14, padding: 32, textAlign: 'center' }}>
-          <Users size={30} color="var(--muted-foreground)" />
-          <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--foreground)', margin: '12px 0 4px' }}>No people yet</p>
-          <p style={{ fontSize: 13, color: 'var(--muted-foreground)', margin: 0 }}>Invite your first team member to get started.</p>
-        </div>
+        <ActionableEmptyState
+          icon={<Users size={30} color="var(--muted-foreground)" />}
+          title="No people visible yet"
+          body="This usually means no coordinator/person record is attached to your active town, or RLS is correctly hiding records outside your scope. Start by capturing/confirming the accountable person."
+          action="Record new work or signal"
+          href="/workspace/new"
+        />
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {shown.map(p => (

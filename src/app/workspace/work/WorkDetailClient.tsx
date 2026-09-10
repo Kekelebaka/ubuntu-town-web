@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase-client';
 import { ArrowLeft, MessageCircle, CheckCircle, Shield, Camera, MapPin as MapPinIcon, UserPlus, Check, X, Send } from 'lucide-react';
 import { CommentThread } from '../CommentThread';
 import EvidencePanel from '@/components/community-work/EvidencePanel';
+import GuidanceCard from '@/components/operating-system/GuidanceCard';
+import { KopanoEntry } from '@/components/operating-system/Kopano';
 import { friendlyWorkError, STATUS_LABEL, STATUS_COLOR } from '@/lib/work-errors';
 
 interface WorkRow {
@@ -231,6 +233,14 @@ export default function WorkDetailClient({ id }: { id: string }) {
       </div>
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <GuidanceCard
+          eyebrow="What is this work?"
+          title="A work item is a signal turned into accountable execution"
+          body="Status, assignments and evidence explain where this work sits in the loop: ACT -> PROVE -> VERIFY -> UPDATE TWIN. Approval remains a backend decision, not a button-only decision."
+          next="Strengthen weak evidence before review"
+          tone="explain"
+        />
+        <KopanoEntry context="Work copilot" prompt="What evidence is weak, who should act next, and what should be assigned?" />
         <div style={{ background: 'var(--card)', borderRadius: 14, padding: 20, border: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <span style={{ fontSize: 13, fontWeight: 600, background: 'var(--color-ubuntu-orange)22', padding: '4px 10px', borderRadius: 8 }}>{work.type}</span>

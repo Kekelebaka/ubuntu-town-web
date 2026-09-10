@@ -33,8 +33,8 @@ export default function AppShell({ title, backHref, chromeless, right, children 
   const { actor, town, displayName, loading, signedIn } = useActor();
 
   return (
-    <div className="min-h-dvh bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur">
+    <div className="min-h-dvh bg-[var(--ut-cream)] text-[var(--ut-ink)] bg-background text-foreground">
+      <header className="sticky top-0 z-30 border-b border-[var(--ut-border)] bg-[var(--ut-cream)]/95 backdrop-blur">
         <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
           {backHref ? (
             <Link href={backHref} aria-label="Back" className="-ml-2 rounded-full p-2 text-muted-foreground">

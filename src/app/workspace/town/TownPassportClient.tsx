@@ -11,11 +11,14 @@
  * later gate, so they render informationally today.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase-client';
 import { useActor } from '@/lib/capabilities/useActor';
 import { INITIATIVES, TIER_LABEL } from '@/config/initiatives';
+import { buildTownTwin, explainTownReadiness, answerKopanoQuestion } from '@/lib/digital-twin';
+import GuidanceCard from '@/components/operating-system/GuidanceCard';
+import { KopanoAnswerCard, KopanoEntry, TownFlightDeck } from '@/components/operating-system/Kopano';
 import {
   Users, TrendingUp, Building2, Target, Boxes, ShieldCheck, MapPin,
   ChevronRight, Baby, ShoppingBag, Camera, Newspaper, Wrench, Home, Cpu,
@@ -42,19 +45,25 @@ export default function TownPassportClient() {
   const [opportunities, setOpportunities] = useState(0);
   const [published, setPublished] = useState(0);
   const [proofs, setProofs] = useState(0);
+  const [workTotal, setWorkTotal] = useState(0);
+  const [assignments, setAssignments] = useState(0);
+  const [memories, setMemories] = useState(0);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     if (!townId) { setLoading(false); return; }
     const cnt = async (q: PromiseLike<{ count: number | null }>) => { try { const { count } = await q; return count ?? 0; } catch { return 0; } };
-    const [p, b, o, pub] = await Promise.all([
+    const [p, b, o, pub, totalWork, assignmentCount, memoryCount] = await Promise.all([
       cnt(supabase.from('coordinators').select('id', { count: 'exact', head: true }).eq('town_id', townId)),
       cnt(supabase.from('businesses').select('id', { count: 'exact', head: true }).eq('town_id', townId)),
       cnt(supabase.from('opportunity_points').select('id', { count: 'exact', head: true }).eq('town_id', townId)),
       cnt(supabase.from('community_work').select('id', { count: 'exact', head: true }).eq('town_id', townId).eq('status', 'published').is('deleted_at', null)),
+      cnt(supabase.from('community_work').select('id', { count: 'exact', head: true }).eq('town_id', townId).is('deleted_at', null)),
+      cnt(supabase.from('work_assignments').select('id', { count: 'exact', head: true }).eq('status', 'open')),
+      cnt(supabase.from('memories').select('id', { count: 'exact', head: true }).eq('town_id', townId)),
     ]);
-    setPeople(p); setBusinesses(b); setOpportunities(o); setPublished(pub);
+    setPeople(p); setBusinesses(b); setOpportunities(o); setPublished(pub); setWorkTotal(totalWork); setAssignments(assignmentCount); setMemories(memoryCount);
     try {
       const { data } = await supabase.from('town_profiles')
         .select('economy_summary,key_industries,tourism_assets,top_opportunities,schools_note,clinics_hospitals,taxi_ranks,shopping_centres,population_estimate,municipality')
@@ -99,6 +108,24 @@ export default function TownPassportClient() {
     );
   };
 
+  const readinessExplanation = explainTownReadiness({
+    people,
+    opportunities,
+    publishedWork: published,
+    proofCount: proofs,
+    activeAssignments: assignments,
+    memories,
+  });
+
+  const twin = useMemo(() => buildTownTwin({
+    town: { id: townId ?? 'unknown', name: town?.name ?? 'This town', province: null },
+    counts: { people, work: workTotal, proofs, opportunities, initiatives: INITIATIVES.length, openReviews: 0, assignments, memories },
+    readiness: { launch_readiness_pct: readinessExplanation.score, coordinator_status: people > 0 ? 'pending' : 'vacant', applicant_count: people },
+    recentProofTitles: [],
+  }), [assignments, memories, opportunities, people, proofs, readinessExplanation.score, town?.name, townId, workTotal]);
+
+  const kopanoAnswer = answerKopanoQuestion(`What is happening in ${town?.name ?? 'this town'}, what is stopping progress, and what should we do tomorrow?`, twin);
+
   return (
     <div>
       <div style={{ padding: '6px 2px 16px' }}>
@@ -109,6 +136,20 @@ export default function TownPassportClient() {
           {loading ? 'Loading your town…' : profile?.municipality ? `${profile.municipality}${profile.population_estimate ? ` · ~${profile.population_estimate.toLocaleString('en-ZA')} people` : ''}` : 'What we establish in every town'}
         </p>
       </div>
+
+      <GuidanceCard
+        eyebrow="Why this matters"
+        title="The Town Passport is the town twin input sheet"
+        body="Every number below should explain what the OS knows, what is missing, and which action would improve the town state. Missing data is shown as missing rather than invented."
+        next="Use the Flight Deck before deciding what to do"
+        tone="explain"
+      />
+      <div style={{ height: 12 }} />
+      <TownFlightDeck twin={twin} />
+      <KopanoAnswerCard answer={kopanoAnswer} />
+      <div style={{ height: 12 }} />
+      <KopanoEntry context="Town-state copilot" prompt={`What is happening in ${town?.name ?? 'this town'} and what should we do tomorrow?`} />
+      <div style={{ height: 16 }} />
 
       {/* Six facets */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 22 }}>

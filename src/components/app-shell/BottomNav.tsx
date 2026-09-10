@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Ubuntu Town bottom navigation — TODAY · TOWN · (+) · WORK · MORE
+ * Ubuntu Town bottom navigation — V2: TODAY · TOWN · (+) · DO · GROW · MORE
  *
  * The centre (+) is a universal ACTION, not a destination. It opens a sheet of
  * the things this person can actually do right now, composed from the
@@ -14,7 +14,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, MapPin, Briefcase, LayoutGrid, Plus, X } from 'lucide-react';
+import { Home, MapPin, Briefcase, TrendingUp, LayoutGrid, Plus, X } from 'lucide-react';
 import { capabilitiesForSurface } from '@/lib/capabilities/resolve';
 import type { ActorContext } from '@/lib/capabilities/resolve';
 import type { Capability } from '@/config/capabilities';
@@ -22,7 +22,8 @@ import type { Capability } from '@/config/capabilities';
 const TABS = [
   { key: 'today', label: 'Today', href: '/workspace/today', icon: Home, match: (p: string) => p === '/workspace/today' || p === '/workspace' },
   { key: 'town', label: 'Town', href: '/workspace/town', icon: MapPin, match: (p: string) => p.startsWith('/workspace/town') },
-  { key: 'work', label: 'Work', href: '/workspace/review', icon: Briefcase, match: (p: string) => p.startsWith('/workspace/work') || p.startsWith('/workspace/review') || p.startsWith('/workspace/new') },
+  { key: 'do', label: 'Do', href: '/workspace/missions', icon: Briefcase, match: (p: string) => p.startsWith('/workspace/missions') || p.startsWith('/workspace/work') || p.startsWith('/workspace/review') || p.startsWith('/workspace/new') },
+  { key: 'grow', label: 'Grow', href: '/workspace/grow', icon: TrendingUp, match: (p: string) => p.startsWith('/workspace/grow') },
   { key: 'more', label: 'More', href: '#more', icon: LayoutGrid, match: () => false },
 ];
 
@@ -44,7 +45,7 @@ export default function BottomNav({ actor }: { actor: ActorContext }) {
     <>
       <nav
         aria-label="Primary"
-        className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card/95 backdrop-blur
+        className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--ut-border)] bg-[var(--ut-cream)]/95 backdrop-blur
                    pb-[env(safe-area-inset-bottom)] md:hidden"
       >
         <ul className="mx-auto flex max-w-2xl items-stretch justify-between px-2">
@@ -94,7 +95,7 @@ function Tab({
   const active = tab.match(pathname);
   const Icon = tab.icon;
   const cls = `flex min-h-[56px] w-full flex-col items-center justify-center gap-1 px-2 py-2 text-[11px] font-semibold
-               ${active ? 'text-ubuntu-purple' : 'text-muted-foreground'}`;
+               ${active ? 'text-[var(--ut-aubergine)]' : 'text-[var(--ut-muted)]'}`;
 
   if (tab.key === 'more') {
     return (

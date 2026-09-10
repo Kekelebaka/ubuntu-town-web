@@ -1,7 +1,7 @@
-'use client';
+'use client'
+
 import Link from 'next/link';
 import { TownRef, PersonaLens } from '@/lib/ubuntu-town-types';
-import { getStatusSkin, hashToHue } from '@/lib/render-state';
 import { PERSONAS } from '@/lib/persona-lens';
 
 interface TownCardProps {
@@ -20,21 +20,22 @@ const COORD_ICONS: Record<string, string> = {
 };
 
 export default function TownCard({ town, lens = 'investor' }: TownCardProps) {
-  const hue = hashToHue(town.slug);
-  const skin = getStatusSkin(town.status, town.render_pct, hue);
-  const statusStyle = STATUS_LABELS[town.status];
   const persona = PERSONAS[lens];
 
   return (
     <Link href={town.route + '?lens=' + lens} style={{ textDecoration: 'none' }}>
       <div
         style={{
-          background: skin.bg,
-          border: `1px ${skin.borderStyle} ${skin.border}`,
-          borderRadius: '18px', padding: '20px',
-          boxShadow: skin.glow === 'none' ? '0 1px 2px rgba(21,16,21,.04), 0 8px 30px rgba(21,16,21,.06)' : skin.glow,
-          transition: 'all 0.2s ease', cursor: 'pointer', position: 'relative', overflow: 'hidden',
-          minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+          background: 'var(--ut-surface)',
+          border: '1px solid var(--ut-border)',
+          borderRadius: '18px',
+          padding: '20px',
+          boxShadow: '0 1px 2px rgba(21,16,21,.04), 0 8px 30px rgba(21,16,21,.06)',
+          transition: 'all 0.2s ease',
+          cursor: 'pointer',
+          position: 'relative', overflow: 'hidden',
+          minHeight: '180px',
+          display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
         }}
         onMouseEnter={e => { (e.currentTarget).style.transform = 'translateY(-2px)'; }}
         onMouseLeave={e => { (e.currentTarget).style.transform = 'translateY(0)'; }}
@@ -44,11 +45,11 @@ export default function TownCard({ town, lens = 'investor' }: TownCardProps) {
             display: 'inline-flex', alignItems: 'center', gap: '5px',
             padding: '3px 10px', borderRadius: '999px', fontSize: '10px', fontWeight: 700,
             textTransform: 'uppercase', letterSpacing: '0.05em',
-            background: statusStyle.bg, color: statusStyle.color,
-            border: `1px solid ${statusStyle.border}`,
+            background: STATUS_LABELS[town.status]?.bg, color: STATUS_LABELS[town.status]?.color,
+            border: `1px solid ${STATUS_LABELS[town.status]?.border}`,
           }}>
-            <span style={{ width: 5, height: 5, borderRadius: '50%', background: statusStyle.color, opacity: town.status === 'building' ? 0.7 : 1 }} />
-            {statusStyle.label}
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: STATUS_LABELS[town.status]?.color, opacity: town.status === 'building' ? 0.7 : 1 }} />
+            {STATUS_LABELS[town.status]?.label}
           </span>
           {town.illustrative && (
             <span style={{ fontSize: '9px', color: '#6B5E4B', fontStyle: 'italic' }}>illustrative</span>
@@ -83,8 +84,7 @@ export default function TownCard({ town, lens = 'investor' }: TownCardProps) {
           <span style={{
             fontSize: '11px', fontWeight: 700, color: persona.accent,
             padding: '2px 8px', borderRadius: '999px', background: persona.accent + '15',
-          }}>
-            {town.opportunity_potential}% potential
+          }}>{town.opportunity_potential}% potential
           </span>
         </div>
 

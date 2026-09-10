@@ -18,14 +18,14 @@ export function NodeCard({
   tagline,
   href = '#',
   Icon,
-  accentVar = 'var(--color-ubuntu-purple)',
+  accentVar = 'var(--ut-aubergine)',
   className,
 }: NodeCardProps) {
   return (
     <Link
       href={href}
       className={cn(
-        'group relative flex flex-col gap-3 rounded-xl border border-border bg-card p-5',
+        'group relative flex flex-col gap-3 rounded-xl border border-[var(--ut-border)] bg-[var(--ut-surface)] p-5',
         'transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         className,
       )}
