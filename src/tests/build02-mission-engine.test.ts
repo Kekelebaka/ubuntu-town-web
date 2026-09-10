@@ -117,13 +117,13 @@ describe('Authorization patterns', () => {
     // The canonical migration defines RPCs without p_actor_id
     // This is a structural assertion verified by code review
     const RPC_SIGNATURES = [
-      { name: 'publish_mission', params: ['_mission_id uuid'] },
-      { name: 'accept_mission', params: ['_mission_id uuid'] },
-      { name: 'start_mission', params: ['_mission_id uuid'] },
-      { name: 'submit_proof', params: ['_mission_id', '_business_name', '_business_category', '_location', '_observation', '_photo_path'] },
-      { name: 'request_changes', params: ['_mission_id', '_reviewer_note'] },
-      { name: 'verify_proof', params: ['_mission_id uuid'] },
-      { name: 'reject_proof', params: ['_mission_id', '_reviewer_note'] },
+      { name: 'publish_work_mission', params: ['_mission_id uuid'] },
+      { name: 'accept_work_mission', params: ['_mission_id uuid'] },
+      { name: 'start_work_mission', params: ['_mission_id uuid'] },
+      { name: 'submit_work_proof', params: ['_mission_id', '_business_name', '_business_category', '_location', '_observation', '_photo_path'] },
+      { name: 'request_work_changes', params: ['_mission_id', '_reviewer_note'] },
+      { name: 'verify_work_proof', params: ['_mission_id uuid'] },
+      { name: 'reject_work_proof', params: ['_mission_id', '_reviewer_note'] },
     ];
 
     for (const rpc of RPC_SIGNATURES) {
@@ -191,10 +191,10 @@ describe('Proof versioning', () => {
 describe('Schema consistency', () => {
   it('all Build 02 tables use uto schema', () => {
     const BUILD02_TABLES = [
-      'uto.missions',
-      'uto.mission_proofs',
-      'uto.mission_proof_versions',
-      'uto.mission_memory_events',
+      'uto.work_missions',
+      'uto.work_mission_proofs',
+      'uto.work_mission_proof_versions',
+      'uto.work_mission_memory_events',
       'uto.capabilities_evidence',
     ];
     // All tables are in uto schema, matching the browser client default
@@ -205,14 +205,14 @@ describe('Schema consistency', () => {
 
   it('all RPCs are in uto schema (callable from browser client)', () => {
     const RPCS = [
-      'uto.publish_mission',
-      'uto.accept_mission',
-      'uto.start_mission',
-      'uto.submit_proof',
-      'uto.request_changes',
-      'uto.verify_proof',
-      'uto.reject_proof',
-      'uto.get_my_mission',
+      'uto.publish_work_mission',
+      'uto.accept_work_mission',
+      'uto.start_work_mission',
+      'uto.submit_work_proof',
+      'uto.request_work_changes',
+      'uto.verify_work_proof',
+      'uto.reject_work_proof',
+      'uto.get_my_work_mission',
       'uto.get_my_capabilities',
     ];
     for (const rpc of RPCS) {

@@ -83,7 +83,7 @@ export default function VerifyLocalBusinessMission() {
   const loadMissions = useCallback(async () => {
     if (!actor.userId || !townId) return;
     const { data } = await supabase
-      .from('missions')
+      .from('work_missions')
       .select('*')
       .eq('town_id', townId)
       .eq('mission_type', 'verify_local_business')
@@ -94,7 +94,7 @@ export default function VerifyLocalBusinessMission() {
 
   // Load active mission details + proof
   const loadMissionDetail = useCallback(async (missionId: string) => {
-    const { data, error: rpcError } = await supabase.rpc('get_my_mission', { _mission_id: missionId });
+    const { data, error: rpcError } = await supabase.rpc('get_my_work_mission', { _mission_id: missionId });
     if (rpcError) {
       console.error('Load mission detail error:', rpcError);
       return;
@@ -126,7 +126,7 @@ export default function VerifyLocalBusinessMission() {
   async function handleAccept(missionId: string) {
     setError(undefined);
     setNotice(undefined);
-    const { data, error: rpcError } = await supabase.rpc('accept_mission', { _mission_id: missionId });
+    const { data, error: rpcError } = await supabase.rpc('accept_work_mission', { _mission_id: missionId });
     if (rpcError || data?.error) {
       setError(rpcError?.message || data?.hint || data?.error || 'Failed to accept mission');
       return;
@@ -139,7 +139,7 @@ export default function VerifyLocalBusinessMission() {
   async function handleStart(missionId: string) {
     setError(undefined);
     setNotice(undefined);
-    const { data, error: rpcError } = await supabase.rpc('start_mission', { _mission_id: missionId });
+    const { data, error: rpcError } = await supabase.rpc('start_work_mission', { _mission_id: missionId });
     if (rpcError || data?.error) {
       setError(rpcError?.message || data?.hint || data?.error || 'Failed to start mission');
       return;
@@ -172,7 +172,7 @@ export default function VerifyLocalBusinessMission() {
       photoPath = key;
     }
 
-    const { data, error: rpcError } = await supabase.rpc('submit_proof', {
+    const { data, error: rpcError } = await supabase.rpc('submit_work_proof', {
       _mission_id: activeMission.id,
       _business_name: business.name.trim(),
       _business_category: business.category.trim(),

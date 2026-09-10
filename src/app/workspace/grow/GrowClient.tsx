@@ -33,7 +33,7 @@ export default function GrowClient() {
     setCapabilities((caps as Capability[]) ?? []);
 
     const { count } = await supabase
-      .from('missions')
+      .from('work_missions')
       .select('id', { count: 'exact', head: true })
       .eq('assigned_to', actor.userId)
       .eq('status', 'verified');

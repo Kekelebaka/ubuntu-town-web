@@ -76,7 +76,7 @@ export default function TodayClient() {
       // Coordinator: mission proofs awaiting review
       if (isCoordinator && townId) {
         missionProofsPending = await cnt(
-          supabase.from('missions').select('id', { count: 'exact', head: true })
+          supabase.from('work_missions').select('id', { count: 'exact', head: true })
             .eq('town_id', townId).eq('status', 'proof_submitted')
         );
       }
@@ -84,20 +84,20 @@ export default function TodayClient() {
       // Builder: open missions in town
       if (townId) {
         missionsAvailable = await cnt(
-          supabase.from('missions').select('id', { count: 'exact', head: true })
+          supabase.from('work_missions').select('id', { count: 'exact', head: true })
             .eq('town_id', townId).eq('status', 'open')
         );
       }
 
       // Builder: my missions with changes requested
       missionsChangesRequested = await cnt(
-        supabase.from('missions').select('id', { count: 'exact', head: true })
+        supabase.from('work_missions').select('id', { count: 'exact', head: true })
           .eq('assigned_to', actor.userId).eq('status', 'changes_requested')
       );
 
       // Builder: my active missions (in_progress)
       myActiveMissions = await cnt(
-        supabase.from('missions').select('id', { count: 'exact', head: true })
+        supabase.from('work_missions').select('id', { count: 'exact', head: true })
           .eq('assigned_to', actor.userId).eq('status', 'in_progress')
       );
     } catch {

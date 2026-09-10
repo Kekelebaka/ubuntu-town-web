@@ -42,7 +42,7 @@ export default function PersonalPassportClient() {
 
     // Load verified missions assigned to this user
     const { data: missions } = await supabase
-      .from('missions')
+      .from('work_missions')
       .select('id, title, completed_at')
       .eq('assigned_to', actor.userId)
       .eq('status', 'verified')

@@ -103,7 +103,7 @@ export default function ReviewQueueClient() {
     // Load mission proofs awaiting review
     try {
       const { data: missions } = await supabase
-        .from('missions')
+        .from('work_missions')
         .select('id,title,status,town_id,assigned_to,created_at')
         .in('status', MISSION_TAB_STATUSES)
         .order('created_at', { ascending: true });

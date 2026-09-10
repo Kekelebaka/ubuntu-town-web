@@ -68,7 +68,7 @@ export default function MissionProofReview({
     setLoading(true);
     setError(undefined);
 
-    const { data, error: rpcError } = await supabase.rpc('get_my_mission', { _mission_id: missionId });
+    const { data, error: rpcError } = await supabase.rpc('get_my_work_mission', { _mission_id: missionId });
     if (rpcError || data?.error) {
       setError(rpcError?.message || data?.error || 'Failed to load mission');
       setLoading(false);
@@ -102,7 +102,7 @@ export default function MissionProofReview({
     setError(undefined);
     setNotice(undefined);
 
-    const { data, error: rpcError } = await supabase.rpc('verify_proof', { _mission_id: missionId });
+    const { data, error: rpcError } = await supabase.rpc('verify_work_proof', { _mission_id: missionId });
     if (rpcError || data?.error) {
       setError(rpcError?.message || data?.hint || data?.error || 'Verification failed');
       setActionLoading(false);
@@ -120,7 +120,7 @@ export default function MissionProofReview({
     setError(undefined);
     setNotice(undefined);
 
-    const { data, error: rpcError } = await supabase.rpc('request_changes', {
+    const { data, error: rpcError } = await supabase.rpc('request_work_changes', {
       _mission_id: missionId,
       _reviewer_note: changesNote.trim(),
     });
@@ -143,7 +143,7 @@ export default function MissionProofReview({
     setError(undefined);
     setNotice(undefined);
 
-    const { data, error: rpcError } = await supabase.rpc('reject_proof', {
+    const { data, error: rpcError } = await supabase.rpc('reject_work_proof', {
       _mission_id: missionId,
       _reviewer_note: rejectNote.trim(),
     });

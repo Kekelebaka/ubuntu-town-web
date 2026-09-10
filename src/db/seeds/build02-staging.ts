@@ -126,7 +126,7 @@ async function seed() {
   console.log('');
   console.log('4️⃣  Publishing mission...');
   const { data: mission, error: missionError } = await supabase
-    .from('missions')
+    .from('work_missions')
     .insert({
       town_id: testTown.id,
       mission_type: 'verify_local_business',
@@ -150,7 +150,7 @@ async function seed() {
   // Since we're using service-role, we bypass auth.uid() checks
   // So we update directly for the seed
   const { error: publishError } = await supabase
-    .from('missions')
+    .from('work_missions')
     .update({ status: 'open', published_at: new Date().toISOString() })
     .eq('id', mission.id)
     .eq('status', 'draft');
@@ -165,7 +165,7 @@ async function seed() {
   console.log('');
   console.log('5️⃣  Builder Alpha accepts mission...');
   const { error: acceptError } = await supabase
-    .from('missions')
+    .from('work_missions')
     .update({ status: 'accepted', assigned_to: builderAlphaId, accepted_at: new Date().toISOString() })
     .eq('id', mission.id)
     .eq('status', 'open')
@@ -181,7 +181,7 @@ async function seed() {
   console.log('');
   console.log('6️⃣  Starting mission...');
   const { error: startError } = await supabase
-    .from('missions')
+    .from('work_missions')
     .update({ status: 'in_progress', started_at: new Date().toISOString() })
     .eq('id', mission.id)
     .eq('status', 'accepted');
@@ -196,7 +196,7 @@ async function seed() {
   console.log('');
   console.log('7️⃣  Submitting proof...');
   const { data: proof, error: proofError } = await supabase
-    .from('mission_proofs')
+    .from('work_mission_proofs')
     .insert({
       mission_id: mission.id,
       submitted_by: builderAlphaId,
@@ -213,7 +213,7 @@ async function seed() {
 
   // Create proof version
   const { error: versionError } = await supabase
-    .from('mission_proof_versions')
+    .from('work_mission_proof_versions')
     .insert({
       proof_id: proof.id,
       version_number: 1,
@@ -230,7 +230,7 @@ async function seed() {
   }
 
   // Update mission status
-  await supabase.from('missions')
+  await supabase.from('work_missions')
     .update({ status: 'proof_submitted' })
     .eq('id', mission.id);
 
@@ -241,7 +241,7 @@ async function seed() {
   console.log('8️⃣  Coordinator verifying proof...');
 
   // Update proof
-  await supabase.from('mission_proofs')
+  await supabase.from('work_mission_proofs')
     .update({
       status: 'verified',
       verified_by: coordinatorAlphaId,
@@ -251,7 +251,7 @@ async function seed() {
     .eq('id', proof.id);
 
   // Update mission
-  await supabase.from('missions')
+  await supabase.from('work_missions')
     .update({ status: 'verified', completed_at: new Date().toISOString() })
     .eq('id', mission.id);
 
@@ -273,7 +273,7 @@ async function seed() {
   }
 
   // Create memory event
-  await supabase.from('mission_memory_events').insert({
+  await supabase.from('work_mission_memory_events').insert({
     mission_id: mission.id,
     event_type: 'proof_verified',
     actor_id: coordinatorAlphaId,
