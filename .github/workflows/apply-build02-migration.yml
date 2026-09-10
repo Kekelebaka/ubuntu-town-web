@@ -1,0 +1,84 @@
+name: Apply Build 02 Migration to Staging
+
+# Runs the canonical Build 02 migration against the staging Supabase database.
+# Uses direct PostgreSQL connection with the staging DB password.
+# HARD REFUSES to run against production.
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: staging-migration
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      STAGING_REF: lgbkfthojyxhwemgkpgo
+      PRODUCTION_REF: afiokbhuxfdacbsipoqk
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: workspace-v2/build-02-work-engine
+          fetch-depth: 1
+
+      - name: Safety guard — refuse production
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "STAGING REF: $STAGING_REF"
+          echo "PRODUCTION REF: $PRODUCTION_REF (PROTECTED)"
+          if [ "$STAGING_REF" = "$PRODUCTION_REF" ]; then
+            echo "🚨 HARD ABORT: staging ref equals production ref"
+            exit 10
+          fi
+
+      - name: Apply migration to staging
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            -f supabase/migrations/0022_build02_mission_work_engine.sql \
+            --single-transaction \
+            --set ON_ERROR_STOP=1
+
+      - name: Verify tables exist
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          echo "=== Verifying Build 02 tables ==="
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            -c "SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema = 'uto' AND table_name IN ('missions','mission_proofs','mission_proof_versions','mission_memory_events','capabilities_evidence') ORDER BY table_name;"
+
+      - name: Verify RPCs exist
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          echo "=== Verifying Build 02 RPCs ==="
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            -c "SELECT routine_schema, routine_name FROM information_schema.routines WHERE routine_schema = 'uto' AND routine_name IN ('publish_mission','accept_mission','start_mission','submit_proof','request_changes','verify_proof','reject_proof','get_my_mission','get_my_capabilities') ORDER BY routine_name;"
+
+      - name: Verify storage bucket
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          echo "=== Verifying storage bucket ==="
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            -c "SELECT id, name, public, file_size_limit FROM storage.buckets WHERE id = 'mission-proofs';"
