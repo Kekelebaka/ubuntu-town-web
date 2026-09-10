@@ -89,7 +89,7 @@ create table if not exists uto.work_missions (
   mission_type      uto.mission_type not null default 'verify_local_business',
   title             text not null,
   description       text not null,
-  initiative_id     uuid references uto.initiatives(id),
+  initiative_id     uuid references public.initiatives(id),
   status            uto.mission_status not null default 'draft',
   created_by        uuid not null references auth.users(id) on delete cascade,
   assigned_to       uuid references auth.users(id) on delete set null,
@@ -293,7 +293,7 @@ create policy work_mission_builder_read on uto.work_missions for select using (
   -- Open missions in towns where the builder has any role assignment
   (status = 'open' and exists (
     select 1 from uto.role_assignments ra
-    where ra.user_id = auth.uid() and ra.town_id = missions.town_id
+    where ra.user_id = auth.uid() and ra.town_id = work_missions.town_id
   ))
   or
   -- Missions assigned to the current user
@@ -315,13 +315,13 @@ create policy work_proof_admin_all on uto.work_mission_proofs for all
 create policy work_proof_coordinator_rw on uto.work_mission_proofs for all using (
   exists (
     select 1 from uto.work_missions m
-    where m.id = mission_proofs.mission_id
+    where m.id = work_mission_proofs.mission_id
       and app.is_mission_coordinator(m.town_id)
   )
 ) with check (
   exists (
     select 1 from uto.work_missions m
-    where m.id = mission_proofs.mission_id
+    where m.id = work_mission_proofs.mission_id
       and app.is_mission_coordinator(m.town_id)
   )
 );
@@ -331,7 +331,7 @@ create policy work_proof_builder_read on uto.work_mission_proofs for select usin
   submitted_by = auth.uid()
   or exists (
     select 1 from uto.work_missions m
-    where m.id = mission_proofs.mission_id and m.assigned_to = auth.uid()
+    where m.id = work_mission_proofs.mission_id and m.assigned_to = auth.uid()
   )
 );
 
@@ -352,7 +352,7 @@ create policy work_proof_version_coordinator_read on uto.work_mission_proof_vers
   exists (
     select 1 from uto.work_mission_proofs p
     join uto.work_missions m on m.id = p.mission_id
-    where p.id = mission_proof_versions.proof_id
+    where p.id = work_mission_proof_versions.proof_id
       and app.is_mission_coordinator(m.town_id)
   )
 );
@@ -381,7 +381,7 @@ create policy work_memory_read on uto.work_mission_memory_events for select usin
   exists (
     select 1 from uto.role_assignments ra
     where ra.user_id = auth.uid()
-      and (ra.town_id = mission_memory_events.town_id or ra.town_id is null)
+      and (ra.town_id = work_mission_memory_events.town_id or ra.town_id is null)
   )
 );
 
