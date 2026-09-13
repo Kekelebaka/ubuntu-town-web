@@ -15,19 +15,16 @@
   --ut-muted:#6E6560;
   --ut-surface:#FFFFFF;
   --ut-border:#E7DFD2;
+  /* PRIMARY: Deep Ubuntu purple / aubergine */
+  --ut-aubergine:#6B1F66;
+  --ut-aubergine-deep:#521350;
+  /* ACCENT: Strong warm orange */
+  --ut-orange:#F79412;
+  /* SUPPORT: Muted greens, charcoal, subtle warm grey */
+  --ut-success:#4F9E1E;
+  --ut-warning:#E5548A;
+  --ut-border-warm:#E7DFD2;
 }
-
-/* PRIMARY: Deep Ubuntu purple / aubergine */
---ut-aubergine:#6B1F66;
---ut-aubergine-deep:#521350;
-
-/* ACCENT: Strong warm orange */
---ut-orange:#F79412;
-
-/* SUPPORT: Muted greens, charcoal, subtle warm grey */
---ut-success:#4F9E1E;
---ut-warning:#E5548A;
---ut-border-warm:#E7DFD2;
 
 /* DARK VARIANT */
 .dark, [data-theme="dark"] {

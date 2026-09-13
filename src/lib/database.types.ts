@@ -603,6 +603,385 @@ export type Database = {
       [_ in never]: never
     }
   }
+  uto: {
+    Tables: {
+      work_missions: {
+        Row: {
+          id: string
+          town_id: string
+          mission_type: 'verify_local_business'
+          title: string
+          description: string
+          initiative_id: string | null
+          status: 'draft' | 'open' | 'accepted' | 'in_progress' | 'proof_submitted' | 'under_review' | 'changes_requested' | 'verified' | 'rejected'
+          created_by: string
+          assigned_to: string | null
+          created_at: string
+          published_at: string | null
+          accepted_at: string | null
+          started_at: string | null
+          completed_at: string | null
+          estimated_minutes: number | null
+          location_context: string | null
+          capability_target: string | null
+          due_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          town_id: string
+          mission_type?: 'verify_local_business'
+          title: string
+          description: string
+          initiative_id?: string | null
+          status?: 'draft' | 'open' | 'accepted' | 'in_progress' | 'proof_submitted' | 'under_review' | 'changes_requested' | 'verified' | 'rejected'
+          created_by: string
+          assigned_to?: string | null
+          created_at?: string
+          published_at?: string | null
+          accepted_at?: string | null
+          started_at?: string | null
+          completed_at?: string | null
+          estimated_minutes?: number | null
+          location_context?: string | null
+          capability_target?: string | null
+          due_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          town_id?: string
+          mission_type?: 'verify_local_business'
+          title?: string
+          description?: string
+          initiative_id?: string | null
+          status?: 'draft' | 'open' | 'accepted' | 'in_progress' | 'proof_submitted' | 'under_review' | 'changes_requested' | 'verified' | 'rejected'
+          created_by?: string
+          assigned_to?: string | null
+          created_at?: string
+          published_at?: string | null
+          accepted_at?: string | null
+          started_at?: string | null
+          completed_at?: string | null
+          estimated_minutes?: number | null
+          location_context?: string | null
+          capability_target?: string | null
+          due_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_missions_town_id_fkey"
+            columns: ["town_id"]
+            isOneToOne: false
+            referencedRelation: "towns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_mission_proofs: {
+        Row: {
+          id: string
+          mission_id: string
+          current_version: number
+          status: 'pending' | 'changes_requested' | 'verified' | 'rejected'
+          submitted_by: string
+          verified_by: string | null
+          verified_at: string | null
+          reviewer_note: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          mission_id: string
+          current_version?: number
+          status?: 'pending' | 'changes_requested' | 'verified' | 'rejected'
+          submitted_by: string
+          verified_by?: string | null
+          verified_at?: string | null
+          reviewer_note?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          mission_id?: string
+          current_version?: number
+          status?: 'pending' | 'changes_requested' | 'verified' | 'rejected'
+          submitted_by?: string
+          verified_by?: string | null
+          verified_at?: string | null
+          reviewer_note?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_mission_proofs_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: true
+            referencedRelation: "work_missions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_mission_proof_versions: {
+        Row: {
+          id: string
+          proof_id: string
+          version_number: number
+          business_name: string
+          business_category: string
+          location: string | null
+          observation: string
+          photo_path: string | null
+          submitted_by: string
+          submitted_at: string
+        }
+        Insert: {
+          id?: string
+          proof_id: string
+          version_number: number
+          business_name: string
+          business_category: string
+          location?: string | null
+          observation: string
+          photo_path?: string | null
+          submitted_by: string
+          submitted_at?: string
+        }
+        Update: {
+          id?: string
+          proof_id?: string
+          version_number?: number
+          business_name?: string
+          business_category?: string
+          location?: string | null
+          observation?: string
+          photo_path?: string | null
+          submitted_by?: string
+          submitted_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_mission_proof_versions_proof_id_fkey"
+            columns: ["proof_id"]
+            isOneToOne: false
+            referencedRelation: "work_mission_proofs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_mission_memory_events: {
+        Row: {
+          id: string
+          mission_id: string
+          event_type: 'mission_published' | 'mission_accepted' | 'mission_started' | 'proof_submitted' | 'proof_changes_requested' | 'proof_resubmitted' | 'proof_verified' | 'proof_rejected'
+          actor_id: string
+          town_id: string
+          proof_id: string | null
+          note: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          mission_id: string
+          event_type: 'mission_published' | 'mission_accepted' | 'mission_started' | 'proof_submitted' | 'proof_changes_requested' | 'proof_resubmitted' | 'proof_verified' | 'proof_rejected'
+          actor_id: string
+          town_id: string
+          proof_id?: string | null
+          note?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          mission_id?: string
+          event_type?: 'mission_published' | 'mission_accepted' | 'mission_started' | 'proof_submitted' | 'proof_changes_requested' | 'proof_resubmitted' | 'proof_verified' | 'proof_rejected'
+          actor_id?: string
+          town_id?: string
+          proof_id?: string | null
+          note?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_mission_memory_events_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "work_missions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      capabilities_evidence: {
+        Row: {
+          id: string
+          mission_id: string
+          builder_id: string
+          capability: 'local_intelligence'
+          evidence_level: 'foundation' | 'L1' | 'L2'
+          proof_id: string | null
+          verified_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          mission_id: string
+          builder_id: string
+          capability: 'local_intelligence'
+          evidence_level: 'foundation' | 'L1' | 'L2'
+          proof_id?: string | null
+          verified_at?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          mission_id?: string
+          builder_id?: string
+          capability?: 'local_intelligence'
+          evidence_level?: 'foundation' | 'L1' | 'L2'
+          proof_id?: string | null
+          verified_at?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_capabilities_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "work_missions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_work: {
+        Row: {
+          id: string
+          type: string
+          town_id: string
+          title: string
+          description: string | null
+          visibility: string
+          status: string
+          created_by: string
+          created_at: string
+          updated_at: string
+          [key: string]: unknown
+        }
+        Insert: {
+          id?: string
+          type?: string
+          town_id: string
+          title: string
+          description?: string | null
+          visibility?: string
+          status?: string
+          created_by: string
+          created_at?: string
+          updated_at?: string
+          [key: string]: unknown
+        }
+        Update: {
+          id?: string
+          type?: string
+          town_id?: string
+          title?: string
+          description?: string | null
+          visibility?: string
+          status?: string
+          created_by?: string
+          created_at?: string
+          updated_at?: string
+          [key: string]: unknown
+        }
+        Relationships: []
+      }
+      role_assignments: {
+        Row: {
+          id: string
+          user_id: string
+          town_id: string | null
+          role_key: string
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          town_id?: string | null
+          role_key: string
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          town_id?: string | null
+          role_key?: string
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      publish_work_mission: {
+        Args: { _mission_id: string }
+        Returns: Json
+      }
+      accept_work_mission: {
+        Args: { _mission_id: string }
+        Returns: Json
+      }
+      start_work_mission: {
+        Args: { _mission_id: string }
+        Returns: Json
+      }
+      submit_work_proof: {
+        Args: {
+          _mission_id: string
+          _business_name: string
+          _business_category: string
+          _location: string
+          _observation: string
+          _photo_path?: string
+        }
+        Returns: Json
+      }
+      request_work_changes: {
+        Args: { _mission_id: string; _reviewer_note: string }
+        Returns: Json
+      }
+      verify_work_proof: {
+        Args: { _mission_id: string }
+        Returns: Json
+      }
+      reject_work_proof: {
+        Args: { _mission_id: string; _reviewer_note: string }
+        Returns: Json
+      }
+      get_my_work_mission: {
+        Args: { _mission_id: string }
+        Returns: Json
+      }
+      get_my_capabilities: {
+        Args: Record<string, never>
+        Returns: Json
+      }
+    }
+    Enums: {
+      mission_status: 'draft' | 'open' | 'accepted' | 'in_progress' | 'proof_submitted' | 'under_review' | 'changes_requested' | 'verified' | 'rejected'
+      mission_type: 'verify_local_business'
+      proof_review_status: 'pending' | 'changes_requested' | 'verified' | 'rejected'
+      mission_event_type: 'mission_published' | 'mission_accepted' | 'mission_started' | 'proof_submitted' | 'proof_changes_requested' | 'proof_resubmitted' | 'proof_verified' | 'proof_rejected'
+      capability_key: 'local_intelligence'
+      capability_level: 'foundation' | 'L1' | 'L2'
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
 }
 
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
@@ -725,5 +1104,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {},
+  },
+  uto: {
+    Enums: {
+      mission_status: ['draft', 'open', 'accepted', 'in_progress', 'proof_submitted', 'under_review', 'changes_requested', 'verified', 'rejected'] as const,
+      mission_type: ['verify_local_business'] as const,
+      proof_review_status: ['pending', 'changes_requested', 'verified', 'rejected'] as const,
+      mission_event_type: ['mission_published', 'mission_accepted', 'mission_started', 'proof_submitted', 'proof_changes_requested', 'proof_resubmitted', 'proof_verified', 'proof_rejected'] as const,
+      capability_key: ['local_intelligence'] as const,
+      capability_level: ['foundation', 'L1', 'L2'] as const,
+    },
   },
 } as const
