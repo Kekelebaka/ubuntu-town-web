@@ -13,6 +13,8 @@ on:
     paths-ignore:
       - 'workers/**'
       - '**.md'
+      - '.github/workflows/deploy-build02-staging.yml'
+      - '.github/workflows/deploy-web.yml'
   workflow_dispatch: {}          # lets you run it manually from the Actions tab
 
 concurrency:
