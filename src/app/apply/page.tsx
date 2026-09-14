@@ -13,7 +13,22 @@ export default function ApplyCoordinatorPage() {
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    supabase.from('towns').select('id,name,slug').order('name').then(({ data }) => { if (data) setTowns(data); });
+    // Surface load failures instead of silently rendering an empty dropdown.
+    // A missing GRANT on uto.towns for the `anon` role used to fail here with
+    // 42501 and leave "Select a town..." as the only option, making the
+    // required Town field impossible to satisfy.
+    supabase
+      .from('towns')
+      .select('id,name,slug')
+      .order('name')
+      .then(({ data, error }) => {
+        if (error) {
+          setErrorMsg(`Could not load towns: ${error.message}`);
+          setStatus('error');
+          return;
+        }
+        if (data) setTowns(data);
+      });
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,10 +36,23 @@ export default function ApplyCoordinatorPage() {
     if (!form.full_name || !form.email || !form.town_id) return;
     setStatus('submitting');
     const selectedTown = towns.find(t => t.id === form.town_id);
+    // Payload must match the live uto.applications shape:
+    //   • town_name_raw  (there is no `town_name` column)
+    //   • motivation / experience live inside the form_answers jsonb column
+    //   • status is the uto.application_status enum — 'received' is the initial
+    //     state ('pending' is not a member and raised 22P02)
     const { error } = await supabase.from('applications').insert({
-      full_name: form.full_name, email: form.email, phone: form.phone || null,
-      town_id: form.town_id, town_name: selectedTown?.name || '',
-      motivation: form.motivation || null, experience: form.experience || null, status: 'pending',
+      full_name: form.full_name,
+      email: form.email,
+      phone: form.phone || null,
+      town_id: form.town_id,
+      town_name_raw: selectedTown?.name || '',
+      status: 'received',
+      source: 'web_apply',
+      form_answers: {
+        motivation: form.motivation || null,
+        experience: form.experience || null,
+      },
     });
     if (error) { setStatus('error'); setErrorMsg(error.message); }
     else { setStatus('success'); }
@@ -75,7 +103,7 @@ export default function ApplyCoordinatorPage() {
             <div>
               <label className="block text-sm font-semibold mb-2">Town *</label>
               <select value={form.town_id} onChange={(e) => setForm({ ...form, town_id: e.target.value })} required className="w-full bg-ubuntu-cream border border-ubuntu-border rounded-xl px-4 py-3 focus:outline-none focus:border-ubuntu-gold">
-                <option value="">Select a town...</option>
+                <option value="">{towns.length ? 'Select a town...' : 'Loading towns...'}</option>
                 {towns.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
               </select>
             </div>
