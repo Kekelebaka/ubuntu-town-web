@@ -90,4 +90,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: npm
-          command: pages deploy .vercel/output/static --project-name=$CF_PAGES_PROJECT --branch=workspace-v2/build-02-work-engine --commit-dirty=true
+          command: pages deploy .vercel/output/static --project-name=ubuntu-town-workspace-v2-staging --branch=workspace-v2/build-02-work-engine --commit-dirty=true
