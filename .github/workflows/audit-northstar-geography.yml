@@ -2,10 +2,8 @@ name: Audit Northstar Geography (Read-Only)
 
 # READ-ONLY staging geography audit.
 # Schema-adaptive: discovers what exists before querying.
-# Missing tables/columns are reported as findings, not crashes.
+# Boolean outputs use unambiguous 'yes'/'no' (not PostgreSQL t/f).
 # Contains NO INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, TRUNCATE, GRANT or REVOKE.
-# Every psql connection inherits PGOPTIONS with default_transaction_read_only=on.
-# Every psql group proves SHOW transaction_read_only = on before querying.
 # HARD REFUSES to run against production.
 
 on:
@@ -18,19 +16,17 @@ concurrency:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     permissions:
       contents: read
     env:
       STAGING_REF: lgbkfthojyxhwemgkpgo
       PRODUCTION_REF: afiokbhuxfdacbsipoqk
-      # Authoritative Supabase Session pooler connection (non-secret)
       PGHOST: aws-1-eu-west-1.pooler.supabase.com
       PGPORT: "5432"
       PGDATABASE: postgres
       PGUSER: postgres.lgbkfthojyxhwemgkpgo
       PGSSLMODE: require
-      # Defence-in-depth: every psql process inherits these
       PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=15000 -c lock_timeout=5000"
     steps:
       # ============================================================
@@ -40,49 +36,31 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ -z "$STAGING_REF" ]; then
-            echo "FAIL CLOSED: STAGING_REF is empty"
-            exit 10
-          fi
-          if [ -z "$PRODUCTION_REF" ]; then
-            echo "FAIL CLOSED: PRODUCTION_REF is empty"
-            exit 10
-          fi
-          if [ "$STAGING_REF" = "$PRODUCTION_REF" ]; then
-            echo "FAIL CLOSED: target equals production"
-            exit 10
-          fi
-          if [ "$STAGING_REF" != "lgbkfthojyxhwemgkpgo" ]; then
-            echo "FAIL CLOSED: STAGING_REF does not match expected value"
-            exit 10
-          fi
-          if [ "$PGHOST" != "aws-1-eu-west-1.pooler.supabase.com" ]; then
-            echo "FAIL CLOSED: PGHOST does not match expected value"
-            exit 10
-          fi
+          if [ -z "$STAGING_REF" ]; then echo "FAIL CLOSED: STAGING_REF empty"; exit 10; fi
+          if [ -z "$PRODUCTION_REF" ]; then echo "FAIL CLOSED: PRODUCTION_REF empty"; exit 10; fi
+          if [ "$STAGING_REF" = "$PRODUCTION_REF" ]; then echo "FAIL CLOSED: target=production"; exit 10; fi
+          if [ "$STAGING_REF" != "lgbkfthojyxhwemgkpgo" ]; then echo "FAIL CLOSED: bad STAGING_REF"; exit 10; fi
+          if [ "$PGHOST" != "aws-1-eu-west-1.pooler.supabase.com" ]; then echo "FAIL CLOSED: bad PGHOST"; exit 10; fi
           echo "Target identity proven: staging ($STAGING_REF) via $PGHOST"
 
       # ============================================================
-      # STEP 2: CONNECTIVITY PROBE — minimal, read-only
+      # STEP 2: CONNECTIVITY PROBE
       # ============================================================
       - name: Connectivity probe
-        id: probe
         shell: bash
         env:
           PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
         run: |
           set -euo pipefail
-          echo "=== Proving read-only connection ==="
           psql --single-transaction --set ON_ERROR_STOP=1 -t -A <<'PROBE_SQL'
           SHOW transaction_read_only;
           SELECT current_database();
-          SELECT inet_server_addr() IS NOT NULL AS server_reached;
+          SELECT CASE WHEN inet_server_addr() IS NOT NULL THEN 'yes' ELSE 'no' END AS server_reached;
           PROBE_SQL
-          echo ""
           echo "Connectivity probe passed"
 
       # ============================================================
-      # STEP 3: DISCOVERY — what exists in the database?
+      # STEP 3: DISCOVERY
       # ============================================================
       - name: Discovery — schema and object existence
         id: discover
@@ -92,24 +70,19 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "=== Proving read-only transaction ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SHOW transaction_read_only;"
+          # Helper: EXISTS returning yes/no
+          yn() {
+            psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+              -c "SELECT CASE WHEN EXISTS($1) THEN 'yes' ELSE 'no' END;"
+          }
 
-          echo ""
-          echo "=== Database identity ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SELECT current_database(), inet_server_addr();"
-
-          echo ""
           echo "=== uto.towns existence ==="
-          TOWNS_EXISTS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
-            -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'uto' AND table_name = 'towns');")
+          TOWNS_EXISTS=$(yn "SELECT 1 FROM information_schema.tables WHERE table_schema='uto' AND table_name='towns'")
           echo "uto.towns exists: $TOWNS_EXISTS"
+          echo "towns_exists=$TOWNS_EXISTS" >> "$GITHUB_OUTPUT"
 
-          if [ "$TOWNS_EXISTS" != "t" ]; then
+          if [ "$TOWNS_EXISTS" != "yes" ]; then
             echo "GATE FAILED: uto.towns does not exist"
-            echo "towns_exists=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "towns_exists=true" >> "$GITHUB_OUTPUT"
           fi
 
           echo ""
@@ -117,243 +90,343 @@ jobs:
           psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT column_name, data_type, is_nullable
                 FROM information_schema.columns
-                WHERE table_schema = 'uto' AND table_name = 'towns'
+                WHERE table_schema='uto' AND table_name='towns'
                 ORDER BY ordinal_position;"
 
           echo ""
           echo "=== Optional column presence ==="
           for col in is_founding recruitment_status applicant_count; do
-            PRESENT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
-              -c "SELECT EXISTS(SELECT 1 FROM information_schema.columns WHERE table_schema = 'uto' AND table_name = 'towns' AND column_name = '$col');")
+            PRESENT=$(yn "SELECT 1 FROM information_schema.columns WHERE table_schema='uto' AND table_name='towns' AND column_name='$col'")
             echo "$col: $PRESENT"
             echo "col_${col}=$PRESENT" >> "$GITHUB_OUTPUT"
           done
 
           echo ""
           echo "=== uto.town_readiness existence ==="
-          TR_EXISTS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
-            -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'uto' AND table_name = 'town_readiness');")
+          TR_EXISTS=$(yn "SELECT 1 FROM information_schema.tables WHERE table_schema='uto' AND table_name='town_readiness'")
           echo "uto.town_readiness exists: $TR_EXISTS"
           echo "readiness_exists=$TR_EXISTS" >> "$GITHUB_OUTPUT"
 
           echo ""
-          echo "=== supabase_migrations.schema_migrations existence ==="
-          MIG_EXISTS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
-            -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'supabase_migrations' AND table_name = 'schema_migrations');")
+          echo "=== supabase_migrations existence ==="
+          MIG_EXISTS=$(yn "SELECT 1 FROM information_schema.tables WHERE table_schema='supabase_migrations' AND table_name='schema_migrations'")
           echo "schema_migrations exists: $MIG_EXISTS"
           echo "migrations_exists=$MIG_EXISTS" >> "$GITHUB_OUTPUT"
 
           echo ""
-          echo "=== Unique constraint on uto.towns ==="
+          echo "=== town_status enum values ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT e.enumlabel FROM pg_type t JOIN pg_enum e ON t.oid=e.enumtypid WHERE t.typname='town_status' ORDER BY e.enumsortorder;" 2>/dev/null || echo "(enum not found)"
+
+          echo ""
+          echo "=== Unique constraints on uto.towns ==="
           psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT tc.constraint_name, tc.constraint_type, kcu.column_name
                 FROM information_schema.table_constraints tc
                 JOIN information_schema.key_column_usage kcu
-                  ON tc.constraint_name = kcu.constraint_name
-                  AND tc.table_schema = kcu.table_schema
-                WHERE tc.table_schema = 'uto' AND tc.table_name = 'towns'
-                  AND tc.constraint_type IN ('UNIQUE', 'PRIMARY KEY')
+                  ON tc.constraint_name=kcu.constraint_name AND tc.table_schema=kcu.table_schema
+                WHERE tc.table_schema='uto' AND tc.table_name='towns'
+                  AND tc.constraint_type IN ('UNIQUE','PRIMARY KEY')
                 ORDER BY tc.constraint_name;"
 
           echo ""
           echo "=== Indexes on uto.towns ==="
           psql --single-transaction --set ON_ERROR_STOP=1 \
-            -c "SELECT indexname, indexdef
-                FROM pg_indexes
-                WHERE schemaname = 'uto' AND tablename = 'towns';"
+            -c "SELECT indexname, indexdef FROM pg_indexes WHERE schemaname='uto' AND tablename='towns';"
 
           echo ""
           echo "=== RLS state ==="
           psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT relname, relrowsecurity, relforcerowsecurity
                 FROM pg_class
-                WHERE relname IN ('towns', 'town_readiness')
-                  AND relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'uto');"
+                WHERE relname IN ('towns','town_readiness')
+                  AND relnamespace=(SELECT oid FROM pg_namespace WHERE nspname='uto');"
 
           echo ""
-          echo "=== Policies on uto.towns ==="
+          echo "=== Full policy expressions on uto.towns ==="
           psql --single-transaction --set ON_ERROR_STOP=1 \
-            -c "SELECT policyname, roles, cmd
+            -c "SELECT policyname, permissive, roles, cmd, qual, with_check
                 FROM pg_policies
-                WHERE schemaname = 'uto' AND tablename = 'towns';"
+                WHERE schemaname='uto' AND tablename='towns';"
+
+          echo ""
+          echo "=== Full policy expressions on uto.town_readiness ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT policyname, permissive, roles, cmd, qual, with_check
+                FROM pg_policies
+                WHERE schemaname='uto' AND tablename='town_readiness';"
 
           echo ""
           echo "=== Grants on uto.towns ==="
           psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT grantee, privilege_type
                 FROM information_schema.role_table_grants
-                WHERE table_schema = 'uto' AND table_name = 'towns'
+                WHERE table_schema='uto' AND table_name='towns'
                 ORDER BY grantee, privilege_type;"
-
-      # ============================================================
-      # STEP 4: CORE TOWN DATA — only baseline columns
-      # ============================================================
-      - name: Core town data (baseline columns)
-        if: steps.discover.outputs.towns_exists == 'true'
-        shell: bash
-        env:
-          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
-        run: |
-          set -euo pipefail
-
-          echo "=== Proving read-only transaction ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SHOW transaction_read_only;"
-
-          echo ""
-          echo "=== Total town count ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 -t -c "SELECT count(*) FROM uto.towns;"
-
-          echo ""
-          echo "=== Province distribution ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 \
-            -c "SELECT province, count(*) AS town_count
-                FROM uto.towns GROUP BY province ORDER BY province;"
-
-          echo ""
-          echo "=== Town register (baseline columns) ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 \
-            -c "SELECT name, slug, province FROM uto.towns ORDER BY province, name;"
-
-          echo ""
-          echo "=== Duplicate IDs ==="
-          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
-            -c "SELECT id, count(*) FROM uto.towns GROUP BY id HAVING count(*) > 1;")
-          echo "${RESULT:-none}"
-
-          echo ""
-          echo "=== Duplicate slugs ==="
-          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
-            -c "SELECT slug, count(*) FROM uto.towns GROUP BY slug HAVING count(*) > 1;")
-          echo "${RESULT:-none}"
-
-          echo ""
-          echo "=== Duplicate normalised names ==="
-          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
-            -c "SELECT lower(replace(name, ' ', '')), count(*), array_agg(name)
-                FROM uto.towns
-                GROUP BY lower(replace(name, ' ', ''))
-                HAVING count(*) > 1;")
-          echo "${RESULT:-none}"
-
-      # ============================================================
-      # STEP 5: OPTIONAL COLUMNS — only if they exist
-      # ============================================================
-      - name: Optional column data (is_founding, recruitment_status, applicant_count)
-        if: steps.discover.outputs.col_is_founding == 'true'
-        shell: bash
-        env:
-          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
-        run: |
-          set -euo pipefail
-
-          echo "=== Proving read-only transaction ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SHOW transaction_read_only;"
-
-          echo ""
-          echo "=== Founding flag distribution ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 \
-            -c "SELECT
-                  CASE WHEN is_founding THEN 'founding' ELSE 'non-founding' END AS type,
-                  count(*)
-                FROM uto.towns GROUP BY is_founding;"
-
-          echo ""
-          echo "=== Town register (with founding flag) ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 \
-            -c "SELECT name, slug, province, is_founding
-                FROM uto.towns ORDER BY province, name;"
-
-      - name: Optional column data (skipped — columns absent)
-        if: steps.discover.outputs.col_is_founding != 'true' && steps.discover.outputs.towns_exists == 'true'
-        shell: bash
-        run: |
-          echo "is_founding column: ABSENT"
-          echo "recruitment_status column: ABSENT (not checked separately)"
-          echo "applicant_count column: ABSENT (not checked separately)"
-          echo "These columns have not been added by any applied migration."
-
-      # ============================================================
-      # STEP 6: TOWN_READINESS — only if it exists
-      # ============================================================
-      - name: town_readiness data
-        if: steps.discover.outputs.readiness_exists == 'true'
-        shell: bash
-        env:
-          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
-        run: |
-          set -euo pipefail
-
-          echo "=== Proving read-only transaction ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SHOW transaction_read_only;"
-
-          echo ""
-          echo "=== town_readiness row count ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 -t -c "SELECT count(*) FROM uto.town_readiness;"
-
-          echo ""
-          echo "=== Orphaned town_readiness references ==="
-          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
-            -c "SELECT tr.town_id
-                FROM uto.town_readiness tr
-                LEFT JOIN uto.towns t ON t.id = tr.town_id
-                WHERE t.id IS NULL;")
-          echo "${RESULT:-none}"
 
           echo ""
           echo "=== Grants on uto.town_readiness ==="
           psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT grantee, privilege_type
                 FROM information_schema.role_table_grants
-                WHERE table_schema = 'uto' AND table_name = 'town_readiness'
+                WHERE table_schema='uto' AND table_name='town_readiness'
                 ORDER BY grantee, privilege_type;"
 
           echo ""
-          echo "=== Policies on uto.town_readiness ==="
+          echo "=== Foreign keys referencing uto.towns(id) ==="
           psql --single-transaction --set ON_ERROR_STOP=1 \
-            -c "SELECT policyname, roles, cmd
-                FROM pg_policies
-                WHERE schemaname = 'uto' AND tablename = 'town_readiness';"
+            -c "SELECT
+                  nsp.nspname AS schema_name,
+                  cls.relname AS table_name,
+                  con.conname AS fk_name,
+                  pg_get_constraintdef(con.oid) AS fk_def
+                FROM pg_constraint con
+                JOIN pg_class cls ON con.conrelid=cls.oid
+                JOIN pg_namespace nsp ON cls.relnamespace=nsp.oid
+                WHERE con.contype='f'
+                  AND con.confrelid='uto.towns'::regclass
+                ORDER BY nsp.nspname, cls.relname;"
 
-      - name: town_readiness (absent)
-        if: steps.discover.outputs.readiness_exists != 'true'
-        shell: bash
-        run: |
-          echo "uto.town_readiness: DOES NOT EXIST"
-          echo "table_exists = false"
+          echo ""
+          echo "=== FK consumers of uto.towns(id) in uto schema ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT cls.relname AS table_name, att.attname AS column_name
+                FROM pg_constraint con
+                JOIN pg_class cls ON con.conrelid=cls.oid
+                JOIN pg_namespace nsp ON cls.relnamespace=nsp.oid
+                JOIN pg_attribute att ON att.attrelid=cls.oid AND att.attnum=ANY(con.conkey)
+                WHERE con.contype='f'
+                  AND con.confrelid='uto.towns'::regclass
+                  AND nsp.nspname='uto'
+                ORDER BY cls.relname;"
 
       # ============================================================
-      # STEP 7: MIGRATION HISTORY — only if schema exists
+      # STEP 4: CORE TOWN DATA
       # ============================================================
-      - name: Migration history
-        if: steps.discover.outputs.migrations_exists == 'true'
+      - name: Core town data
+        if: steps.discover.outputs.towns_exists == 'yes'
         shell: bash
         env:
           PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
         run: |
           set -euo pipefail
 
-          echo "=== Proving read-only transaction ==="
-          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SHOW transaction_read_only;"
+          echo "=== Total town count ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -c "SELECT count(*) FROM uto.towns;"
 
           echo ""
-          echo "=== Recent migrations ==="
+          echo "=== Province distribution ==="
           psql --single-transaction --set ON_ERROR_STOP=1 \
-            -c "SELECT version, name
-                FROM supabase_migrations.schema_migrations
-                ORDER BY version DESC
-                LIMIT 20;"
+            -c "SELECT province, count(*) AS town_count FROM uto.towns GROUP BY province ORDER BY province;"
 
           echo ""
-          echo "=== Founding/northstar migrations ==="
+          echo "=== Town register (all columns) ==="
           psql --single-transaction --set ON_ERROR_STOP=1 \
-            -c "SELECT version, name
-                FROM supabase_migrations.schema_migrations
-                WHERE name LIKE '%founding%' OR name LIKE '%northstar%' OR name LIKE '%0023%'
-                ORDER BY version DESC;"
+            -c "SELECT name, slug, province, is_founding, status, recruitment_status, applicant_count
+                FROM uto.towns ORDER BY province, name;"
+
+          echo ""
+          echo "=== Duplicate IDs ==="
+          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
+            -c "SELECT id, count(*) FROM uto.towns GROUP BY id HAVING count(*)>1;")
+          echo "${RESULT:-none}"
+
+          echo ""
+          echo "=== Duplicate slugs ==="
+          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
+            -c "SELECT slug, count(*) FROM uto.towns GROUP BY slug HAVING count(*)>1;")
+          echo "${RESULT:-none}"
+
+          echo ""
+          echo "=== Duplicate normalised names ==="
+          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
+            -c "SELECT lower(replace(name,' ','')), count(*), array_agg(name)
+                FROM uto.towns GROUP BY lower(replace(name,' ','')) HAVING count(*)>1;")
+          echo "${RESULT:-none}"
+
+      # ============================================================
+      # STEP 5: TOWN_READINESS DETAIL
+      # ============================================================
+      - name: town_readiness detail
+        if: steps.discover.outputs.readiness_exists == 'yes'
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          echo "=== town_readiness row count ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -c "SELECT count(*) FROM uto.town_readiness;"
+
+          echo ""
+          echo "=== town_readiness town IDs ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT tr.town_id, t.name, t.slug
+                FROM uto.town_readiness tr
+                LEFT JOIN uto.towns t ON t.id=tr.town_id
+                ORDER BY t.name;"
+
+          echo ""
+          echo "=== Orphaned town_readiness references ==="
+          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
+            -c "SELECT tr.town_id FROM uto.town_readiness tr
+                LEFT JOIN uto.towns t ON t.id=tr.town_id WHERE t.id IS NULL;")
+          echo "${RESULT:-none}"
+
+          echo ""
+          echo "=== town_readiness constraints ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT tc.constraint_name, tc.constraint_type, kcu.column_name
+                FROM information_schema.table_constraints tc
+                JOIN information_schema.key_column_usage kcu
+                  ON tc.constraint_name=kcu.constraint_name AND tc.table_schema=kcu.table_schema
+                WHERE tc.table_schema='uto' AND tc.table_name='town_readiness'
+                ORDER BY tc.constraint_name;"
+
+          echo ""
+          echo "=== town_readiness indexes ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT indexname, indexdef FROM pg_indexes WHERE schemaname='uto' AND tablename='town_readiness';"
+
+          echo ""
+          echo "=== town_readiness RLS detail ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT relrowsecurity, relforcerowsecurity
+                FROM pg_class
+                WHERE relname='town_readiness'
+                  AND relnamespace=(SELECT oid FROM pg_namespace WHERE nspname='uto');"
+
+          echo ""
+          echo "=== town_readiness full policies ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT policyname, permissive, roles, cmd, qual, with_check
+                FROM pg_policies
+                WHERE schemaname='uto' AND tablename='town_readiness';"
+
+          echo ""
+          echo "=== town_readiness grants ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT grantee, privilege_type
+                FROM information_schema.role_table_grants
+                WHERE table_schema='uto' AND table_name='town_readiness'
+                ORDER BY grantee, privilege_type;"
+
+      - name: town_readiness (absent)
+        if: steps.discover.outputs.readiness_exists != 'yes'
+        shell: bash
+        run: |
+          echo "uto.town_readiness: DOES NOT EXIST"
+          echo "table_exists = false"
+
+      # ============================================================
+      # STEP 6: REFERENCE COUNTS PER TOWN
+      # ============================================================
+      - name: Reference counts per town
+        if: steps.discover.outputs.towns_exists == 'yes'
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          echo "=== Reference counts per town (FK consumers in uto schema) ==="
+          # Dynamically count references from each FK consumer table
+          psql --single-transaction --set ON_ERROR_STOP=1 <<'REF_SQL'
+          DO $$
+          DECLARE
+            r RECORD;
+            sql_text TEXT;
+          BEGIN
+            FOR r IN
+              SELECT cls.relname AS tbl, att.attname AS col
+              FROM pg_constraint con
+              JOIN pg_class cls ON con.conrelid=cls.oid
+              JOIN pg_namespace nsp ON cls.relnamespace=nsp.oid
+              JOIN pg_attribute att ON att.attrelid=cls.oid AND att.attnum=ANY(con.conkey)
+              WHERE con.contype='f'
+                AND con.confrelid='uto.towns'::regclass
+                AND nsp.nspname='uto'
+              ORDER BY cls.relname
+            LOOP
+              sql_text := format(
+                'SELECT %L AS ref_table, t.name, t.slug, count(r.%I) AS ref_count
+                 FROM uto.towns t
+                 LEFT JOIN uto.%I r ON r.%I = t.id
+                 GROUP BY t.name, t.slug
+                 ORDER BY ref_count DESC, t.name',
+                r.tbl, r.col, r.tbl, r.col
+              );
+              RAISE NOTICE 'TABLE: %', r.tbl;
+              -- We can't return results from DO, so use a temp approach
+            END LOOP;
+          END $$;
+          REF_SQL
+
+          # Actually run per-table counts for known consumers
+          for tbl_col in "people:town_id" "profiles:town_id" "role_assignments:town_id" "coordinators:town_id" "coordinator_assignments:town_id" "signals:town_id" "community_work:town_id" "missions:town_id" "work_assignments:town_id" "opportunities:town_id" "opportunity_points:town_id" "work_missions:town_id" "town_readiness:town_id"; do
+            tbl="${tbl_col%%:*}"
+            col="${tbl_col##*:}"
+            echo ""
+            echo "--- $tbl.$col ---"
+            # Check if table exists first
+            EXISTS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+              -c "SELECT CASE WHEN EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema='uto' AND table_name='$tbl') THEN 'yes' ELSE 'no' END;")
+            if [ "$EXISTS" = "yes" ]; then
+              # Check if column exists
+              COL_EXISTS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+                -c "SELECT CASE WHEN EXISTS(SELECT 1 FROM information_schema.columns WHERE table_schema='uto' AND table_name='$tbl' AND column_name='$col') THEN 'yes' ELSE 'no' END;")
+              if [ "$COL_EXISTS" = "yes" ]; then
+                psql --single-transaction --set ON_ERROR_STOP=1 \
+                  -c "SELECT t.name, t.slug, count(r.$col) AS ref_count
+                      FROM uto.towns t
+                      LEFT JOIN uto.$tbl r ON r.$col = t.id
+                      GROUP BY t.name, t.slug
+                      ORDER BY ref_count DESC, t.name;"
+              else
+                echo "(column $col not found)"
+              fi
+            else
+              echo "(table not found)"
+            fi
+          done
+
+      # ============================================================
+      # STEP 7: MIGRATION HISTORY
+      # ============================================================
+      - name: Migration history
+        if: steps.discover.outputs.migrations_exists == 'yes'
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          echo "=== All migrations ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version;"
+
+          echo ""
+          echo "=== Founding/seeding migrations ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT version, name FROM supabase_migrations.schema_migrations
+                WHERE name LIKE '%founding%'
+                   OR name LIKE '%seed%'
+                   OR name LIKE '%town%'
+                   OR name LIKE '%0023%'
+                ORDER BY version;"
+
+          echo ""
+          echo "=== Build 01 / Build 02 migrations ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT version, name FROM supabase_migrations.schema_migrations
+                WHERE name LIKE '%build01%'
+                   OR name LIKE '%build02%'
+                   OR name LIKE '%mission%'
+                   OR name LIKE '%work_engine%'
+                ORDER BY version;"
 
       - name: Migration history (absent)
-        if: steps.discover.outputs.migrations_exists != 'true'
+        if: steps.discover.outputs.migrations_exists != 'yes'
         shell: bash
         run: |
           echo "supabase_migrations.schema_migrations: DOES NOT EXIST"
-          echo "Migration history unavailable."
