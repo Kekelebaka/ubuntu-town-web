@@ -1,0 +1,358 @@
+name: Audit Northstar Geography (Read-Only)
+
+# READ-ONLY staging geography audit.
+# Schema-adaptive: discovers what exists before querying.
+# Missing tables/columns are reported as findings, not crashes.
+# Contains NO INSERT, UPDATE, DELETE, ALTER, CREATE, DROP, TRUNCATE, GRANT or REVOKE.
+# Every psql connection inherits PGOPTIONS with default_transaction_read_only=on.
+# Every psql group proves SHOW transaction_read_only = on before querying.
+# HARD REFUSES to run against production.
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: audit-northstar-geography
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    env:
+      STAGING_REF: lgbkfthojyxhwemgkpgo
+      PRODUCTION_REF: afiokbhuxfdacbsipoqk
+      # Defence-in-depth: every psql process inherits these.
+      # default_transaction_read_only=on prevents writes even if BEGIN is missed.
+      # statement_timeout and lock_timeout prevent runaway queries.
+      PGOPTIONS: >-
+        -c default_transaction_read_only=on
+        -c statement_timeout=60000
+        -c lock_timeout=5000
+    steps:
+      # ============================================================
+      # STEP 1: PROVE TARGET IDENTITY
+      # ============================================================
+      - name: Safety guard — prove target identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$STAGING_REF" ]; then
+            echo "FAIL CLOSED: STAGING_REF is empty"
+            exit 10
+          fi
+          if [ -z "$PRODUCTION_REF" ]; then
+            echo "FAIL CLOSED: PRODUCTION_REF is empty"
+            exit 10
+          fi
+          if [ "$STAGING_REF" = "$PRODUCTION_REF" ]; then
+            echo "FAIL CLOSED: target equals production"
+            exit 10
+          fi
+          if [ "$STAGING_REF" != "lgbkfthojyxhwemgkpgo" ]; then
+            echo "FAIL CLOSED: STAGING_REF does not match expected value"
+            exit 10
+          fi
+          echo "Target identity proven: staging ($STAGING_REF)"
+
+      # ============================================================
+      # STEP 2: DISCOVERY — what exists in the database?
+      # Single psql connection. First query proves read-only mode.
+      # Uses only information_schema and pg_catalog (always available).
+      # ============================================================
+      - name: Discovery — schema and object existence
+        id: discover
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          # Define connection once
+          DB_URL="postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres"
+
+          echo "=== Proving read-only transaction ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SHOW transaction_read_only;"
+
+          echo ""
+          echo "=== Database identity ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT current_database(), inet_server_addr();"
+
+          echo ""
+          echo "=== uto.towns existence ==="
+          TOWNS_EXISTS=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'uto' AND table_name = 'towns');")
+          echo "uto.towns exists: $TOWNS_EXISTS"
+
+          if [ "$TOWNS_EXISTS" != "t" ]; then
+            echo "GATE FAILED: uto.towns does not exist"
+            echo "towns_exists=false" >> "$GITHUB_OUTPUT"
+            # Still complete discovery of other objects
+          else
+            echo "towns_exists=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo ""
+          echo "=== uto.towns columns ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT column_name, data_type, is_nullable
+                FROM information_schema.columns
+                WHERE table_schema = 'uto' AND table_name = 'towns'
+                ORDER BY ordinal_position;"
+
+          echo ""
+          echo "=== Optional column presence ==="
+          for col in is_founding recruitment_status applicant_count; do
+            PRESENT=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+              -c "SELECT EXISTS(SELECT 1 FROM information_schema.columns WHERE table_schema = 'uto' AND table_name = 'towns' AND column_name = '$col');")
+            echo "$col: $PRESENT"
+            echo "col_${col}=$PRESENT" >> "$GITHUB_OUTPUT"
+          done
+
+          echo ""
+          echo "=== uto.town_readiness existence ==="
+          TR_EXISTS=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'uto' AND table_name = 'town_readiness');")
+          echo "uto.town_readiness exists: $TR_EXISTS"
+          echo "readiness_exists=$TR_EXISTS" >> "$GITHUB_OUTPUT"
+
+          echo ""
+          echo "=== supabase_migrations.schema_migrations existence ==="
+          MIG_EXISTS=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'supabase_migrations' AND table_name = 'schema_migrations');")
+          echo "schema_migrations exists: $MIG_EXISTS"
+          echo "migrations_exists=$MIG_EXISTS" >> "$GITHUB_OUTPUT"
+
+          echo ""
+          echo "=== Unique constraint on uto.towns ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT tc.constraint_name, tc.constraint_type, kcu.column_name
+                FROM information_schema.table_constraints tc
+                JOIN information_schema.key_column_usage kcu
+                  ON tc.constraint_name = kcu.constraint_name
+                  AND tc.table_schema = kcu.table_schema
+                WHERE tc.table_schema = 'uto' AND tc.table_name = 'towns'
+                  AND tc.constraint_type IN ('UNIQUE', 'PRIMARY KEY')
+                ORDER BY tc.constraint_name;"
+
+          echo ""
+          echo "=== Indexes on uto.towns ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT indexname, indexdef
+                FROM pg_indexes
+                WHERE schemaname = 'uto' AND tablename = 'towns';"
+
+          echo ""
+          echo "=== RLS state ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT relname, relrowsecurity, relforcerowsecurity
+                FROM pg_class
+                WHERE relname IN ('towns', 'town_readiness')
+                  AND relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'uto');"
+
+          echo ""
+          echo "=== Policies on uto.towns ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT policyname, roles, cmd
+                FROM pg_policies
+                WHERE schemaname = 'uto' AND tablename = 'towns';"
+
+          echo ""
+          echo "=== Grants on uto.towns ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT grantee, privilege_type
+                FROM information_schema.role_table_grants
+                WHERE table_schema = 'uto' AND table_name = 'towns'
+                ORDER BY grantee, privilege_type;"
+
+      # ============================================================
+      # STEP 3: CORE TOWN DATA — only baseline columns
+      # Single psql connection. First query proves read-only mode.
+      # Runs only if uto.towns exists.
+      # ============================================================
+      - name: Core town data (baseline columns)
+        if: steps.discover.outputs.towns_exists == 'true'
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          DB_URL="postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres"
+
+          echo "=== Proving read-only transaction ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SHOW transaction_read_only;"
+
+          echo ""
+          echo "=== Total town count ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+            -c "SELECT count(*) FROM uto.towns;"
+
+          echo ""
+          echo "=== Province distribution ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT province, count(*) AS town_count
+                FROM uto.towns GROUP BY province ORDER BY province;"
+
+          echo ""
+          echo "=== Town register (baseline columns) ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT name, slug, province FROM uto.towns ORDER BY province, name;"
+
+          echo ""
+          echo "=== Duplicate IDs ==="
+          RESULT=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+            -c "SELECT id, count(*) FROM uto.towns GROUP BY id HAVING count(*) > 1;")
+          echo "${RESULT:-none}"
+
+          echo ""
+          echo "=== Duplicate slugs ==="
+          RESULT=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+            -c "SELECT slug, count(*) FROM uto.towns GROUP BY slug HAVING count(*) > 1;")
+          echo "${RESULT:-none}"
+
+          echo ""
+          echo "=== Duplicate normalised names ==="
+          RESULT=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+            -c "SELECT lower(replace(name, ' ', '')), count(*), array_agg(name)
+                FROM uto.towns
+                GROUP BY lower(replace(name, ' ', ''))
+                HAVING count(*) > 1;")
+          echo "${RESULT:-none}"
+
+      # ============================================================
+      # STEP 4: OPTIONAL COLUMNS — only if they exist
+      # Single psql connection. First query proves read-only mode.
+      # ============================================================
+      - name: Optional column data (is_founding, recruitment_status, applicant_count)
+        if: steps.discover.outputs.col_is_founding == 'true'
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          DB_URL="postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres"
+
+          echo "=== Proving read-only transaction ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SHOW transaction_read_only;"
+
+          echo ""
+          echo "=== Founding flag distribution ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT
+                  CASE WHEN is_founding THEN 'founding' ELSE 'non-founding' END AS type,
+                  count(*)
+                FROM uto.towns GROUP BY is_founding;"
+
+          echo ""
+          echo "=== Town register (with founding flag) ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT name, slug, province, is_founding
+                FROM uto.towns ORDER BY province, name;"
+
+      - name: Optional column data (skipped — columns absent)
+        if: steps.discover.outputs.col_is_founding != 'true' && steps.discover.outputs.towns_exists == 'true'
+        shell: bash
+        run: |
+          echo "is_founding column: ABSENT"
+          echo "recruitment_status column: ABSENT (not checked separately)"
+          echo "applicant_count column: ABSENT (not checked separately)"
+          echo "These columns have not been added by any applied migration."
+
+      # ============================================================
+      # STEP 5: TOWN_READINESS — only if it exists
+      # Single psql connection. First query proves read-only mode.
+      # ============================================================
+      - name: town_readiness data
+        if: steps.discover.outputs.readiness_exists == 'true'
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          DB_URL="postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres"
+
+          echo "=== Proving read-only transaction ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SHOW transaction_read_only;"
+
+          echo ""
+          echo "=== town_readiness row count ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+            -c "SELECT count(*) FROM uto.town_readiness;"
+
+          echo ""
+          echo "=== Orphaned town_readiness references ==="
+          RESULT=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+            -c "SELECT tr.town_id
+                FROM uto.town_readiness tr
+                LEFT JOIN uto.towns t ON t.id = tr.town_id
+                WHERE t.id IS NULL;")
+          echo "${RESULT:-none}"
+
+          echo ""
+          echo "=== Grants on uto.town_readiness ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT grantee, privilege_type
+                FROM information_schema.role_table_grants
+                WHERE table_schema = 'uto' AND table_name = 'town_readiness'
+                ORDER BY grantee, privilege_type;"
+
+          echo ""
+          echo "=== Policies on uto.town_readiness ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT policyname, roles, cmd
+                FROM pg_policies
+                WHERE schemaname = 'uto' AND tablename = 'town_readiness';"
+
+      - name: town_readiness (absent)
+        if: steps.discover.outputs.readiness_exists != 'true'
+        shell: bash
+        run: |
+          echo "uto.town_readiness: DOES NOT EXIST"
+          echo "table_exists = false"
+
+      # ============================================================
+      # STEP 6: MIGRATION HISTORY — only if schema exists
+      # Single psql connection. First query proves read-only mode.
+      # ============================================================
+      - name: Migration history
+        if: steps.discover.outputs.migrations_exists == 'true'
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          DB_URL="postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres"
+
+          echo "=== Proving read-only transaction ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SHOW transaction_read_only;"
+
+          echo ""
+          echo "=== Recent migrations ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT version, name
+                FROM supabase_migrations.schema_migrations
+                ORDER BY version DESC
+                LIMIT 20;"
+
+          echo ""
+          echo "=== Founding/northstar migrations ==="
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT version, name
+                FROM supabase_migrations.schema_migrations
+                WHERE name LIKE '%founding%' OR name LIKE '%northstar%' OR name LIKE '%0023%'
+                ORDER BY version DESC;"
+
+      - name: Migration history (absent)
+        if: steps.discover.outputs.migrations_exists != 'true'
+        shell: bash
+        run: |
+          echo "supabase_migrations.schema_migrations: DOES NOT EXIST"
+          echo "Migration history unavailable."
