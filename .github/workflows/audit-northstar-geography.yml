@@ -74,17 +74,17 @@ jobs:
           DB_URL="postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres"
 
           echo "=== Proving read-only transaction ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SHOW transaction_read_only;"
 
           echo ""
           echo "=== Database identity ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SELECT current_database(), inet_server_addr();"
 
           echo ""
           echo "=== uto.towns existence ==="
-          TOWNS_EXISTS=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          TOWNS_EXISTS=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'uto' AND table_name = 'towns');")
           echo "uto.towns exists: $TOWNS_EXISTS"
 
@@ -98,7 +98,7 @@ jobs:
 
           echo ""
           echo "=== uto.towns columns ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT column_name, data_type, is_nullable
                 FROM information_schema.columns
                 WHERE table_schema = 'uto' AND table_name = 'towns'
@@ -107,7 +107,7 @@ jobs:
           echo ""
           echo "=== Optional column presence ==="
           for col in is_founding recruitment_status applicant_count; do
-            PRESENT=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            PRESENT=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
               -c "SELECT EXISTS(SELECT 1 FROM information_schema.columns WHERE table_schema = 'uto' AND table_name = 'towns' AND column_name = '$col');")
             echo "$col: $PRESENT"
             echo "col_${col}=$PRESENT" >> "$GITHUB_OUTPUT"
@@ -115,21 +115,21 @@ jobs:
 
           echo ""
           echo "=== uto.town_readiness existence ==="
-          TR_EXISTS=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          TR_EXISTS=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'uto' AND table_name = 'town_readiness');")
           echo "uto.town_readiness exists: $TR_EXISTS"
           echo "readiness_exists=$TR_EXISTS" >> "$GITHUB_OUTPUT"
 
           echo ""
           echo "=== supabase_migrations.schema_migrations existence ==="
-          MIG_EXISTS=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          MIG_EXISTS=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'supabase_migrations' AND table_name = 'schema_migrations');")
           echo "schema_migrations exists: $MIG_EXISTS"
           echo "migrations_exists=$MIG_EXISTS" >> "$GITHUB_OUTPUT"
 
           echo ""
           echo "=== Unique constraint on uto.towns ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT tc.constraint_name, tc.constraint_type, kcu.column_name
                 FROM information_schema.table_constraints tc
                 JOIN information_schema.key_column_usage kcu
@@ -141,14 +141,14 @@ jobs:
 
           echo ""
           echo "=== Indexes on uto.towns ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT indexname, indexdef
                 FROM pg_indexes
                 WHERE schemaname = 'uto' AND tablename = 'towns';"
 
           echo ""
           echo "=== RLS state ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT relname, relrowsecurity, relforcerowsecurity
                 FROM pg_class
                 WHERE relname IN ('towns', 'town_readiness')
@@ -156,14 +156,14 @@ jobs:
 
           echo ""
           echo "=== Policies on uto.towns ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT policyname, roles, cmd
                 FROM pg_policies
                 WHERE schemaname = 'uto' AND tablename = 'towns';"
 
           echo ""
           echo "=== Grants on uto.towns ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT grantee, privilege_type
                 FROM information_schema.role_table_grants
                 WHERE table_schema = 'uto' AND table_name = 'towns'
@@ -184,40 +184,40 @@ jobs:
           DB_URL="postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres"
 
           echo "=== Proving read-only transaction ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SHOW transaction_read_only;"
 
           echo ""
           echo "=== Total town count ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
             -c "SELECT count(*) FROM uto.towns;"
 
           echo ""
           echo "=== Province distribution ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT province, count(*) AS town_count
                 FROM uto.towns GROUP BY province ORDER BY province;"
 
           echo ""
           echo "=== Town register (baseline columns) ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT name, slug, province FROM uto.towns ORDER BY province, name;"
 
           echo ""
           echo "=== Duplicate IDs ==="
-          RESULT=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+          RESULT=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
             -c "SELECT id, count(*) FROM uto.towns GROUP BY id HAVING count(*) > 1;")
           echo "${RESULT:-none}"
 
           echo ""
           echo "=== Duplicate slugs ==="
-          RESULT=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+          RESULT=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
             -c "SELECT slug, count(*) FROM uto.towns GROUP BY slug HAVING count(*) > 1;")
           echo "${RESULT:-none}"
 
           echo ""
           echo "=== Duplicate normalised names ==="
-          RESULT=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+          RESULT=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
             -c "SELECT lower(replace(name, ' ', '')), count(*), array_agg(name)
                 FROM uto.towns
                 GROUP BY lower(replace(name, ' ', ''))
@@ -238,12 +238,12 @@ jobs:
           DB_URL="postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres"
 
           echo "=== Proving read-only transaction ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SHOW transaction_read_only;"
 
           echo ""
           echo "=== Founding flag distribution ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT
                   CASE WHEN is_founding THEN 'founding' ELSE 'non-founding' END AS type,
                   count(*)
@@ -251,7 +251,7 @@ jobs:
 
           echo ""
           echo "=== Town register (with founding flag) ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT name, slug, province, is_founding
                 FROM uto.towns ORDER BY province, name;"
 
@@ -278,17 +278,17 @@ jobs:
           DB_URL="postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres"
 
           echo "=== Proving read-only transaction ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SHOW transaction_read_only;"
 
           echo ""
           echo "=== town_readiness row count ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
             -c "SELECT count(*) FROM uto.town_readiness;"
 
           echo ""
           echo "=== Orphaned town_readiness references ==="
-          RESULT=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+          RESULT=$(psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
             -c "SELECT tr.town_id
                 FROM uto.town_readiness tr
                 LEFT JOIN uto.towns t ON t.id = tr.town_id
@@ -297,7 +297,7 @@ jobs:
 
           echo ""
           echo "=== Grants on uto.town_readiness ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT grantee, privilege_type
                 FROM information_schema.role_table_grants
                 WHERE table_schema = 'uto' AND table_name = 'town_readiness'
@@ -305,7 +305,7 @@ jobs:
 
           echo ""
           echo "=== Policies on uto.town_readiness ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT policyname, roles, cmd
                 FROM pg_policies
                 WHERE schemaname = 'uto' AND tablename = 'town_readiness';"
@@ -331,12 +331,12 @@ jobs:
           DB_URL="postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres"
 
           echo "=== Proving read-only transaction ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SHOW transaction_read_only;"
 
           echo ""
           echo "=== Recent migrations ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT version, name
                 FROM supabase_migrations.schema_migrations
                 ORDER BY version DESC
@@ -344,7 +344,7 @@ jobs:
 
           echo ""
           echo "=== Founding/northstar migrations ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql -4 "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT version, name
                 FROM supabase_migrations.schema_migrations
                 WHERE name LIKE '%founding%' OR name LIKE '%northstar%' OR name LIKE '%0023%'
