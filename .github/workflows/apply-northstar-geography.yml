@@ -1,0 +1,79 @@
+name: Apply Northstar Founding Geography to Staging
+
+# Applies the Northstar founding geography migration to staging.
+# Uses direct PostgreSQL connection with the staging DB password.
+# HARD REFUSES to run against production.
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: staging-northstar-geography
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      STAGING_REF: lgbkfthojyxhwemgkpgo
+      PRODUCTION_REF: afiokbhuxfdacbsipoqk
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: northstar/actor-town-open-door
+          fetch-depth: 1
+
+      - name: Safety guard — refuse production
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "STAGING REF: $STAGING_REF"
+          echo "PRODUCTION REF: $PRODUCTION_REF (PROTECTED)"
+          if [ "$STAGING_REF" = "$PRODUCTION_REF" ]; then
+            echo "🚨 HARD ABORT: staging ref equals production ref"
+            exit 10
+          fi
+
+      - name: Apply founding geography migration
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            -f supabase/migrations/0023_northstar_founding_geography.sql \
+            --single-transaction \
+            --set ON_ERROR_STOP=1
+
+      - name: Verify town count
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          echo "=== Verifying founding geography ==="
+          echo "--- Total towns ---"
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            -t -c "SELECT count(*) FROM uto.towns;"
+          echo "--- Founding towns ---"
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            -t -c "SELECT count(*) FROM uto.towns WHERE is_founding = true;"
+          echo "--- Province breakdown ---"
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            -c "SELECT province, count(*) as towns FROM uto.towns GROUP BY province ORDER BY province;"
+          echo "--- Duplicate slugs ---"
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            -t -c "SELECT slug, count(*) FROM uto.towns GROUP BY slug HAVING count(*) > 1;"
+          echo "--- town_readiness ---"
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            -t -c "SELECT count(*) FROM uto.town_readiness;"
