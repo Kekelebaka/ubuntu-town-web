@@ -16,6 +16,7 @@ on:
       - '.github/workflows/deploy-build02-staging.yml'
       - '.github/workflows/deploy-web.yml'
       - '.github/workflows/audit-northstar-geography.yml'
+      - '.github/workflows/dry-run-founding-fifty.yml'
   workflow_dispatch: {}          # lets you run it manually from the Actions tab
 
 concurrency:
