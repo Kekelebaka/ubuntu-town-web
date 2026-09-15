@@ -1,0 +1,272 @@
+name: Dry Run — Northstar Founding Fifty Reconciliation
+
+# ROLLBACK-ONLY dry run of the founding fifty reconciliation.
+# Captures pre-migration receipt, runs migration in a transaction,
+# verifies invariants, then ROLLBACK and proves state restored.
+# NEVER commits. NEVER deploys. NEVER touches production.
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: dry-run-founding-fifty
+  cancel-in-progress: false
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: write
+    env:
+      STAGING_REF: lgbkfthojyxhwemgkpgo
+      PRODUCTION_REF: afiokbhuxfdacbsipoqk
+      PGHOST: aws-1-eu-west-1.pooler.supabase.com
+      PGPORT: "5432"
+      PGDATABASE: postgres
+      PGUSER: postgres.lgbkfthojyxhwemgkpgo
+      PGSSLMODE: require
+      PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=120000 -c lock_timeout=10000"
+    steps:
+      - name: Safety guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$STAGING_REF" ]; then echo "FAIL CLOSED"; exit 10; fi
+          if [ -z "$PRODUCTION_REF" ]; then echo "FAIL CLOSED"; exit 10; fi
+          if [ "$STAGING_REF" = "$PRODUCTION_REF" ]; then echo "FAIL CLOSED"; exit 10; fi
+          if [ "$STAGING_REF" != "lgbkfthojyxhwemgkpgo" ]; then echo "FAIL CLOSED"; exit 10; fi
+          if [ "$PGHOST" != "aws-1-eu-west-1.pooler.supabase.com" ]; then echo "FAIL CLOSED"; exit 10; fi
+          echo "Target identity proven: staging ($STAGING_REF) via $PGHOST"
+
+      - name: Capture pre-migration receipt
+        id: receipt
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          echo "=== Pre-migration receipt ==="
+
+          # Town receipt (non-sensitive geography only)
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT id, name, slug, province, is_founding, status, updated_at
+                FROM uto.towns ORDER BY slug;" > /tmp/pre_towns.txt
+
+          # Readiness receipt
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT town_id, applicant_count, coordinator_status, launch_readiness_pct
+                FROM uto.town_readiness ORDER BY town_id;" > /tmp/pre_readiness.txt
+
+          # Counts
+          TOTAL=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT count(*) FROM uto.towns;")
+          FOUNDING=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT count(*) FROM uto.towns WHERE is_founding = true;")
+          READINESS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT count(*) FROM uto.town_readiness;")
+
+          echo "Pre-migration state:"
+          echo "  Total towns: $TOTAL"
+          echo "  Founding: $FOUNDING"
+          echo "  Readiness rows: $READINESS"
+
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "founding=$FOUNDING" >> "$GITHUB_OUTPUT"
+          echo "readiness=$READINESS" >> "$GITHUB_OUTPUT"
+
+      - name: Upload pre-migration receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: pre-migration-receipt-${{ github.run_id }}
+          path: |
+            /tmp/pre_towns.txt
+            /tmp/pre_readiness.txt
+          retention-days: 30
+          if-no-files-found: fail
+
+      - name: Execute dry-run migration (ROLLBACK)
+        id: dry_run
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          echo "=== DRY RUN: Migration in transaction with ROLLBACK ==="
+
+          # Run the migration SQL but replace COMMIT with ROLLBACK
+          # Also replace the verification DO block to capture results
+          psql \
+            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
+            --single-transaction \
+            --set ON_ERROR_STOP=1 \
+            <<'DRY_SQL'
+
+          BEGIN;
+          SET TRANSACTION READ WRITE;
+          SET LOCAL statement_timeout = '120s';
+          SET LOCAL lock_timeout = '10s';
+
+          -- Add missing columns
+          ALTER TABLE uto.towns ADD COLUMN IF NOT EXISTS is_founding boolean NOT NULL DEFAULT false;
+          ALTER TABLE uto.towns ADD COLUMN IF NOT EXISTS recruitment_status text;
+          ALTER TABLE uto.towns ADD COLUMN IF NOT EXISTS applicant_count integer NOT NULL DEFAULT 0;
+
+          -- Upsert50 founding towns (conditional update)
+          INSERT INTO uto.towns (id, name, slug, province, status, is_founding, recruitment_status, applicant_count, aliases)
+          VALUES
+            ('ac3b266e-e9cc-5b49-8322-8caeed82259d', 'Ficksburg', 'ficksburg', 'Free State', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('cb054aca-463a-5119-a613-e0fa467d88cc', 'Harrismith', 'harrismith', 'Free State', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('e2295aa5-0de3-5b05-a326-28713c48303e', 'Ladybrand', 'ladybrand', 'Free State', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('94a9714e-2c54-5c3a-a7da-c29af33af3fb', 'Sasolburg', 'sasolburg', 'Free State', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('6e9ec4ce-305f-5222-8385-99981fd87281', 'Thaba Nchu', 'thaba-nchu', 'Free State', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('8f8a54af-b311-532b-bee9-5406365dc499', 'Brandfort', 'brandfort', 'Free State', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('c73b6817-d3d3-5ede-b3b0-f51b0eb60651', 'Kokstad', 'kokstad', 'KwaZulu-Natal', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('15ca1b01-7049-583c-8602-25bd147efbc3', 'Vryheid', 'vryheid', 'KwaZulu-Natal', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('7cb5ee5b-2658-5c98-9231-73fc7fc6c114', 'Ulundi', 'ulundi', 'KwaZulu-Natal', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('9cc94a82-b345-52d3-9ea1-ee7cdf3d3e6d', 'Estcourt', 'estcourt', 'KwaZulu-Natal', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('1d8cb25b-aa6d-5066-b90e-11be7236bc78', 'Greytown', 'greytown', 'KwaZulu-Natal', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('4cde17e8-4930-5bbe-9c5c-a39e9bde1f72', 'Nquthu', 'nquthu', 'KwaZulu-Natal', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('5eaa0c54-f9aa-5a96-a935-8649747b8ee2', 'Butterworth', 'butterworth', 'Eastern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('e9442eea-ab4c-525b-8f6f-d0dd1eef31b6', 'Qumbu', 'qumbu', 'Eastern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('218060f5-d9e9-5808-8247-01f874051e7c', 'Cofimvaba', 'cofimvaba', 'Eastern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('8546c343-709a-5c42-8cfc-736aefa536e4', 'Flagstaff', 'flagstaff', 'Eastern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('6e43aa9b-250a-5272-af2b-62b0c2f97302', 'Bizana', 'bizana', 'Eastern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('86e23bc1-3dc4-5792-b733-f6434f6b3804', 'Bhisho', 'bhisho', 'Eastern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('17e463a0-b938-5075-8765-61190a20c441', 'Burgersfort', 'burgersfort', 'Limpopo', 'recruit', true, 'recruit', 0, array['Burgersford']),
+            ('362b7140-831b-4e32-bc65-674416087bb0', 'Thohoyandou', 'thohoyandou', 'Limpopo', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('4316bd1a-0eeb-441f-aa9f-d4e90de5a816', 'Tzaneen', 'tzaneen', 'Limpopo', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('029847d9-d5ac-5a65-86be-4c778ff4ce55', 'Mokopane', 'mokopane', 'Limpopo', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('ac14abf7-ff51-5f07-90b1-49b93b530a16', 'Lephalale', 'lephalale', 'Limpopo', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('2d0047cf-5816-5a00-9325-60564654cc74', 'Lebowakgomo', 'lebowakgomo', 'Limpopo', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('5124e1b6-21ad-5339-b899-8059d329b66b', 'Koster', 'koster', 'North West', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('99b98efa-66ff-57b2-98e2-d3c01f989c20', 'Lichtenburg', 'lichtenburg', 'North West', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('6fd6fd43-045f-5663-b11d-420c086672b6', 'Zeerust', 'zeerust', 'North West', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('eb04904a-4fce-53c1-bcb3-814c7d5baabf', 'Schweizer-Reneke', 'schweizer-reneke', 'North West', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('df45d0cc-a9e9-552d-8bfd-4d4f8df80773', 'Taung', 'taung', 'North West', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('70aa6f97-f4cd-56eb-bdc7-20fca40655ff', 'Delareyville', 'delareyville', 'North West', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('6f15b0e9-06ee-5fb9-8494-b9c38c42f7e0', 'Bushbuckridge', 'bushbuckridge', 'Mpumalanga', 'recruit', true, 'recruit', 0, array['Bushbukridge']),
+            ('82aa0651-9f56-4c14-900d-1f6041afcbf6', 'Mbombela', 'mbombela', 'Mpumalanga', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('d1bd27ab-2062-5e4d-8b1c-2825129c74a5', 'eMalahleni', 'emalahleni', 'Mpumalanga', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('1fa804a1-0a11-53bb-ac54-316026360ebc', 'Sabie', 'sabie', 'Mpumalanga', 'recruit', true, 'recruit', 0, array['Sabbie']),
+            ('d9bf20e5-8a6b-5bda-afdb-fd41a23eccb6', 'Ermelo', 'ermelo', 'Mpumalanga', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('cd324904-9013-44a9-9f83-59cbbdf815c3', 'Soweto', 'soweto', 'Gauteng', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('412d1b70-cdf8-48dd-8e0c-2e799253bbb9', 'Tembisa', 'tembisa', 'Gauteng', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('2e721b18-7457-5304-8f42-290f0cf32716', 'Carletonville', 'carletonville', 'Gauteng', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('a3ffe536-e018-4740-88ea-229b49ae1df8', 'Randfontein', 'randfontein', 'Gauteng', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('ca666f80-a5b3-5806-b857-c62ce93abd9b', 'Vanderbijlpark', 'vanderbijlpark', 'Gauteng', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('beb83e7c-f5ed-4532-b3ac-517a10073594', 'Kimberley', 'kimberley', 'Northern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('78174d8f-5c22-4675-b7a3-adc3fd0a252a', 'Kuruman', 'kuruman', 'Northern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('5f13ba35-aa29-40f1-a188-f34b5f01b27b', 'Upington', 'upington', 'Northern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('1d597c83-0b03-4f83-ab6a-32f2222639b1', 'De Aar', 'de-aar', 'Northern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('5add49bb-68f4-5b86-9bdd-2f5952bafb51', 'Springbok', 'springbok', 'Northern Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('38aad56f-b81b-4f76-becb-62ac98fdf6af', 'Cape Town', 'cape-town', 'Western Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('d851b70a-0dcf-4242-846d-b27a44b44e7b', 'Paarl', 'paarl', 'Western Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('07d2d471-da5b-476f-aeb3-874e002abc32', 'Worcester', 'worcester', 'Western Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('2d11fc6d-52f0-4e2a-95b9-6f5fb9359228', 'George', 'george', 'Western Cape', 'recruit', true, 'recruit', 0, '{}'::text[]),
+            ('5e834a72-8010-5fb2-8ce2-6402f2955f6d', 'Oudtshoorn', 'oudtshoorn', 'Western Cape', 'recruit', true, 'recruit', 0, '{}'::text[])
+          ON CONFLICT (slug) DO UPDATE SET
+            province = EXCLUDED.province,
+            is_founding = true
+          WHERE
+            uto.towns.province IS DISTINCT FROM EXCLUDED.province
+            OR uto.towns.is_founding IS DISTINCT FROM true;
+
+          -- Mark11 legacy non-founding
+          UPDATE uto.towns SET is_founding = false
+          WHERE slug IN (
+            'east-london', 'gqeberha', 'mthatha', 'welkom', 'pretoria',
+            'springs', 'richards-bay', 'polokwane', 'klerksdorp',
+            'mahikeng', 'rustenburg'
+          ) AND is_founding IS DISTINCT FROM false;
+
+          -- Create readiness for36 new towns
+          INSERT INTO uto.town_readiness (town_id, applicant_count, coordinator_status, launch_readiness_pct)
+          SELECT t.id, 0, 'vacant', 0
+          FROM uto.towns t
+          WHERE t.slug IN (
+            'ficksburg','harrismith','ladybrand','sasolburg','thaba-nchu','brandfort',
+            'kokstad','vryheid','ulundi','estcourt','greytown','nquthu',
+            'butterworth','qumbu','cofimvaba','flagstaff','bizana','bhisho',
+            'burgersfort','mokopane','lephalale','lebowakgomo',
+            'koster','lichtenburg','zeerust','schweizer-reneke','taung','delareyville',
+            'bushbuckridge','emalahleni','sabie','ermelo',
+            'carletonville','vanderbijlpark',
+            'springbok','oudtshoorn'
+          ) AND NOT EXISTS (
+            SELECT 1 FROM uto.town_readiness tr WHERE tr.town_id = t.id
+          );
+
+          -- Verify invariants
+          DO $$
+          DECLARE
+            _total integer; _founding integer; _legacy integer; _synthetic integer; _readiness integer;
+          BEGIN
+            SELECT count(*) INTO _total FROM uto.towns;
+            SELECT count(*) INTO _founding FROM uto.towns WHERE is_founding = true;
+            SELECT count(*) INTO _legacy FROM uto.towns WHERE slug IN (
+              'east-london','gqeberha','mthatha','welkom','pretoria',
+              'springs','richards-bay','polokwane','klerksdorp','mahikeng','rustenburg'
+            ) AND is_founding = false;
+            SELECT count(*) INTO _synthetic FROM uto.towns WHERE slug LIKE 'synthetic-town-%' AND is_founding = false;
+
+            RAISE NOTICE 'DRY RUN invariants:';
+            RAISE NOTICE '  Total: % (expected 63)', _total;
+            RAISE NOTICE '  Founding: % (expected 50)', _founding;
+            RAISE NOTICE '  Legacy: % (expected 11)', _legacy;
+            RAISE NOTICE '  Synthetic: % (expected 2)', _synthetic;
+
+            IF _total != 63 THEN RAISE EXCEPTION 'FAIL: total=%', _total; END IF;
+            IF _founding != 50 THEN RAISE EXCEPTION 'FAIL: founding=%', _founding; END IF;
+            IF _legacy != 11 THEN RAISE EXCEPTION 'FAIL: legacy=%', _legacy; END IF;
+            IF _synthetic != 2 THEN RAISE EXCEPTION 'FAIL: synthetic=%', _synthetic; END IF;
+
+            RAISE NOTICE 'All dry-run invariants PASS';
+          END $$;
+
+          -- ROLLBACK (never commit)
+          ROLLBACK;
+
+          DRY_SQL
+
+          echo "Dry run completed (rolled back)"
+
+      - name: Verify post-rollback state
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          echo "=== Post-rollback verification ==="
+
+          TOTAL=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT count(*) FROM uto.towns;")
+          FOUNDING=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT count(*) FROM uto.towns WHERE is_founding = true;")
+          READINESS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT count(*) FROM uto.town_readiness;")
+
+          echo "Post-rollback state:"
+          echo "  Total towns: $TOTAL (expected ${{ steps.receipt.outputs.total }})"
+          echo "  Founding: $FOUNDING (expected ${{ steps.receipt.outputs.founding }})"
+          echo "  Readiness rows: $READINESS (expected ${{ steps.receipt.outputs.readiness }})"
+
+          if [ "$TOTAL" != "${{ steps.receipt.outputs.total }}" ]; then
+            echo "FAIL: total changed from ${{ steps.receipt.outputs.total }} to $TOTAL"
+            exit 1
+          fi
+          if [ "$FOUNDING" != "${{ steps.receipt.outputs.founding }}" ]; then
+            echo "FAIL: founding changed from ${{ steps.receipt.outputs.founding }} to $FOUNDING"
+            exit 1
+          fi
+          if [ "$READINESS" != "${{ steps.receipt.outputs.readiness }}" ]; then
+            echo "FAIL: readiness changed from ${{ steps.receipt.outputs.readiness }} to $READINESS"
+            exit 1
+          fi
+
+          echo "Post-rollback state MATCHES pre-migration state"
+          echo "Dry run PASSED: migration works correctly and rolls back cleanly"
