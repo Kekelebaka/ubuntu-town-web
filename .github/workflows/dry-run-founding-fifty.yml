@@ -22,9 +22,9 @@ jobs:
       actions: write
     env:
       # Immutable Northstar commit SHA (never a floating branch name)
-      NORTHSTAR_SHA: 6f4945da093d6af9c5901d8e03e786c6f8b6cd01
+      NORTHSTAR_SHA: e86ee31e6a59260f2a6ede3025505c41f8a5926e
       # Expected SHA-256 of the migration file
-      EXPECTED_CHECKSUM: 188f2096e37c9e711e986b91ac328608174e02958d37d52aa1527b4201540cc8
+      EXPECTED_CHECKSUM: 4841d56455c0419cef5b02cdcd3cd7ebb93a7fdde82884445c209ec715980e34
       # Migration path within the checked-out commit
       MIGRATION_PATH: supabase/migrations/0024_northstar_reconcile_founding_fifty.sql
       # Staging connection (non-secret)
