@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: northstar/actor-town-open-door
+          ref: workspace-v2/build-02-work-engine
           fetch-depth: 1
 
       - name: Safety guard — refuse production
@@ -38,18 +38,6 @@ jobs:
             exit 10
           fi
 
-      - name: Apply founding geography migration
-        shell: bash
-        env:
-          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
-        run: |
-          set -euo pipefail
-          psql \
-            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
-            -f supabase/migrations/0023_northstar_founding_geography.sql \
-            --single-transaction \
-            --set ON_ERROR_STOP=1
-
       - name: Apply migration to staging
         shell: bash
         env:
@@ -61,38 +49,6 @@ jobs:
             -f supabase/migrations/0022_build02_mission_work_engine.sql \
             --single-transaction \
             --set ON_ERROR_STOP=1
-
-      - name: Verify founding geography
-        shell: bash
-        env:
-          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
-        run: |
-          set -euo pipefail
-          echo "=== Verifying founding geography ==="
-          echo "--- Total towns ---"
-          psql \
-            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
-            -t -c "SELECT count(*) FROM uto.towns;"
-          echo "--- Founding towns ---"
-          psql \
-            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
-            -t -c "SELECT count(*) FROM uto.towns WHERE is_founding = true;"
-          echo "--- Province breakdown ---"
-          psql \
-            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
-            -c "SELECT province, count(*) as towns FROM uto.towns GROUP BY province ORDER BY province;"
-          echo "--- Duplicate slugs ---"
-          psql \
-            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
-            -t -c "SELECT slug, count(*) FROM uto.towns GROUP BY slug HAVING count(*) > 1;"
-          echo "--- Columns verified ---"
-          psql \
-            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
-            -t -c "SELECT column_name FROM information_schema.columns WHERE table_schema='uto' AND table_name='towns' AND column_name IN ('is_founding','recruitment_status','applicant_count') ORDER BY column_name;"
-          echo "--- town_readiness ---"
-          psql \
-            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
-            -t -c "SELECT count(*) FROM uto.town_readiness;"
 
       - name: Verify tables exist
         shell: bash
