@@ -24,13 +24,14 @@ jobs:
     env:
       STAGING_REF: lgbkfthojyxhwemgkpgo
       PRODUCTION_REF: afiokbhuxfdacbsipoqk
-      # Defence-in-depth: every psql process inherits these.
-      # default_transaction_read_only=on prevents writes even if BEGIN is missed.
-      # statement_timeout and lock_timeout prevent runaway queries.
-      PGOPTIONS: >-
-        -c default_transaction_read_only=on
-        -c statement_timeout=60000
-        -c lock_timeout=5000
+      # Authoritative Supabase Session pooler connection (non-secret)
+      PGHOST: aws-1-eu-west-1.pooler.supabase.com
+      PGPORT: "5432"
+      PGDATABASE: postgres
+      PGUSER: postgres.lgbkfthojyxhwemgkpgo
+      PGSSLMODE: require
+      # Defence-in-depth: every psql process inherits these
+      PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=15000 -c lock_timeout=5000"
     steps:
       # ============================================================
       # STEP 1: PROVE TARGET IDENTITY
@@ -55,12 +56,33 @@ jobs:
             echo "FAIL CLOSED: STAGING_REF does not match expected value"
             exit 10
           fi
-          echo "Target identity proven: staging ($STAGING_REF)"
+          if [ "$PGHOST" != "aws-1-eu-west-1.pooler.supabase.com" ]; then
+            echo "FAIL CLOSED: PGHOST does not match expected value"
+            exit 10
+          fi
+          echo "Target identity proven: staging ($STAGING_REF) via $PGHOST"
 
       # ============================================================
-      # STEP 2: DISCOVERY — what exists in the database?
-      # Single psql connection. First query proves read-only mode.
-      # Uses only information_schema and pg_catalog (always available).
+      # STEP 2: CONNECTIVITY PROBE — minimal, read-only
+      # ============================================================
+      - name: Connectivity probe
+        id: probe
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          echo "=== Proving read-only connection ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A <<'PROBE_SQL'
+          SHOW transaction_read_only;
+          SELECT current_database();
+          SELECT inet_server_addr() IS NOT NULL AS server_reached;
+          PROBE_SQL
+          echo ""
+          echo "Connectivity probe passed"
+
+      # ============================================================
+      # STEP 3: DISCOVERY — what exists in the database?
       # ============================================================
       - name: Discovery — schema and object existence
         id: discover
@@ -70,52 +92,29 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Define connection once
-          # Resolve IPv4 address for the staging database (direct endpoint is IPv6-only from GitHub Actions)
-          # Use Supabase session-mode pooler (port 5432) for IPv4 connectivity.
-          # Direct endpoint db.*.supabase.co is IPv6-only from GitHub Actions.
-          # Discover working Supabase pooler endpoint (IPv4-only from GitHub Actions).
-          # Direct endpoint db.*.supabase.co is IPv6-only and unreachable.
-          DB_URL=""
-          for region in eu-west-1 us-east-1 us-west-1 ap-southeast-1; do
-            TEST_URL="postgresql://postgres.${STAGING_REF}@aws-0-${region}.pooler.supabase.com:5432/postgres"
-            if psql "$TEST_URL" -t -A -c "SELECT 1;" > /dev/null 2>&1; then
-              DB_URL="$TEST_URL"
-              echo "Pooler found: aws-0-${region}.pooler.supabase.com:5432"
-              break
-            fi
-          done
-          if [ -z "$DB_URL" ]; then
-            echo "FAIL CLOSED: no reachable Supabase pooler found"
-            exit 10
-          fi
-
           echo "=== Proving read-only transaction ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
-            -c "SHOW transaction_read_only;"
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SHOW transaction_read_only;"
 
           echo ""
           echo "=== Database identity ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
-            -c "SELECT current_database(), inet_server_addr();"
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SELECT current_database(), inet_server_addr();"
 
           echo ""
           echo "=== uto.towns existence ==="
-          TOWNS_EXISTS=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          TOWNS_EXISTS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'uto' AND table_name = 'towns');")
           echo "uto.towns exists: $TOWNS_EXISTS"
 
           if [ "$TOWNS_EXISTS" != "t" ]; then
             echo "GATE FAILED: uto.towns does not exist"
             echo "towns_exists=false" >> "$GITHUB_OUTPUT"
-            # Still complete discovery of other objects
           else
             echo "towns_exists=true" >> "$GITHUB_OUTPUT"
           fi
 
           echo ""
           echo "=== uto.towns columns ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT column_name, data_type, is_nullable
                 FROM information_schema.columns
                 WHERE table_schema = 'uto' AND table_name = 'towns'
@@ -124,7 +123,7 @@ jobs:
           echo ""
           echo "=== Optional column presence ==="
           for col in is_founding recruitment_status applicant_count; do
-            PRESENT=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            PRESENT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
               -c "SELECT EXISTS(SELECT 1 FROM information_schema.columns WHERE table_schema = 'uto' AND table_name = 'towns' AND column_name = '$col');")
             echo "$col: $PRESENT"
             echo "col_${col}=$PRESENT" >> "$GITHUB_OUTPUT"
@@ -132,21 +131,21 @@ jobs:
 
           echo ""
           echo "=== uto.town_readiness existence ==="
-          TR_EXISTS=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          TR_EXISTS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'uto' AND table_name = 'town_readiness');")
           echo "uto.town_readiness exists: $TR_EXISTS"
           echo "readiness_exists=$TR_EXISTS" >> "$GITHUB_OUTPUT"
 
           echo ""
           echo "=== supabase_migrations.schema_migrations existence ==="
-          MIG_EXISTS=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
+          MIG_EXISTS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
             -c "SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema = 'supabase_migrations' AND table_name = 'schema_migrations');")
           echo "schema_migrations exists: $MIG_EXISTS"
           echo "migrations_exists=$MIG_EXISTS" >> "$GITHUB_OUTPUT"
 
           echo ""
           echo "=== Unique constraint on uto.towns ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT tc.constraint_name, tc.constraint_type, kcu.column_name
                 FROM information_schema.table_constraints tc
                 JOIN information_schema.key_column_usage kcu
@@ -158,14 +157,14 @@ jobs:
 
           echo ""
           echo "=== Indexes on uto.towns ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT indexname, indexdef
                 FROM pg_indexes
                 WHERE schemaname = 'uto' AND tablename = 'towns';"
 
           echo ""
           echo "=== RLS state ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT relname, relrowsecurity, relforcerowsecurity
                 FROM pg_class
                 WHERE relname IN ('towns', 'town_readiness')
@@ -173,23 +172,21 @@ jobs:
 
           echo ""
           echo "=== Policies on uto.towns ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT policyname, roles, cmd
                 FROM pg_policies
                 WHERE schemaname = 'uto' AND tablename = 'towns';"
 
           echo ""
           echo "=== Grants on uto.towns ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT grantee, privilege_type
                 FROM information_schema.role_table_grants
                 WHERE table_schema = 'uto' AND table_name = 'towns'
                 ORDER BY grantee, privilege_type;"
 
       # ============================================================
-      # STEP 3: CORE TOWN DATA — only baseline columns
-      # Single psql connection. First query proves read-only mode.
-      # Runs only if uto.towns exists.
+      # STEP 4: CORE TOWN DATA — only baseline columns
       # ============================================================
       - name: Core town data (baseline columns)
         if: steps.discover.outputs.towns_exists == 'true'
@@ -198,60 +195,40 @@ jobs:
           PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
         run: |
           set -euo pipefail
-          # Resolve IPv4 address for the staging database (direct endpoint is IPv6-only from GitHub Actions)
-          # Use Supabase session-mode pooler (port 5432) for IPv4 connectivity.
-          # Direct endpoint db.*.supabase.co is IPv6-only from GitHub Actions.
-          # Discover working Supabase pooler endpoint (IPv4-only from GitHub Actions).
-          # Direct endpoint db.*.supabase.co is IPv6-only and unreachable.
-          DB_URL=""
-          for region in eu-west-1 us-east-1 us-west-1 ap-southeast-1; do
-            TEST_URL="postgresql://postgres.${STAGING_REF}@aws-0-${region}.pooler.supabase.com:5432/postgres"
-            if psql "$TEST_URL" -t -A -c "SELECT 1;" > /dev/null 2>&1; then
-              DB_URL="$TEST_URL"
-              echo "Pooler found: aws-0-${region}.pooler.supabase.com:5432"
-              break
-            fi
-          done
-          if [ -z "$DB_URL" ]; then
-            echo "FAIL CLOSED: no reachable Supabase pooler found"
-            exit 10
-          fi
 
           echo "=== Proving read-only transaction ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
-            -c "SHOW transaction_read_only;"
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SHOW transaction_read_only;"
 
           echo ""
           echo "=== Total town count ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
-            -c "SELECT count(*) FROM uto.towns;"
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -c "SELECT count(*) FROM uto.towns;"
 
           echo ""
           echo "=== Province distribution ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT province, count(*) AS town_count
                 FROM uto.towns GROUP BY province ORDER BY province;"
 
           echo ""
           echo "=== Town register (baseline columns) ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT name, slug, province FROM uto.towns ORDER BY province, name;"
 
           echo ""
           echo "=== Duplicate IDs ==="
-          RESULT=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
             -c "SELECT id, count(*) FROM uto.towns GROUP BY id HAVING count(*) > 1;")
           echo "${RESULT:-none}"
 
           echo ""
           echo "=== Duplicate slugs ==="
-          RESULT=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
             -c "SELECT slug, count(*) FROM uto.towns GROUP BY slug HAVING count(*) > 1;")
           echo "${RESULT:-none}"
 
           echo ""
           echo "=== Duplicate normalised names ==="
-          RESULT=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
             -c "SELECT lower(replace(name, ' ', '')), count(*), array_agg(name)
                 FROM uto.towns
                 GROUP BY lower(replace(name, ' ', ''))
@@ -259,8 +236,7 @@ jobs:
           echo "${RESULT:-none}"
 
       # ============================================================
-      # STEP 4: OPTIONAL COLUMNS — only if they exist
-      # Single psql connection. First query proves read-only mode.
+      # STEP 5: OPTIONAL COLUMNS — only if they exist
       # ============================================================
       - name: Optional column data (is_founding, recruitment_status, applicant_count)
         if: steps.discover.outputs.col_is_founding == 'true'
@@ -269,32 +245,13 @@ jobs:
           PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
         run: |
           set -euo pipefail
-          # Resolve IPv4 address for the staging database (direct endpoint is IPv6-only from GitHub Actions)
-          # Use Supabase session-mode pooler (port 5432) for IPv4 connectivity.
-          # Direct endpoint db.*.supabase.co is IPv6-only from GitHub Actions.
-          # Discover working Supabase pooler endpoint (IPv4-only from GitHub Actions).
-          # Direct endpoint db.*.supabase.co is IPv6-only and unreachable.
-          DB_URL=""
-          for region in eu-west-1 us-east-1 us-west-1 ap-southeast-1; do
-            TEST_URL="postgresql://postgres.${STAGING_REF}@aws-0-${region}.pooler.supabase.com:5432/postgres"
-            if psql "$TEST_URL" -t -A -c "SELECT 1;" > /dev/null 2>&1; then
-              DB_URL="$TEST_URL"
-              echo "Pooler found: aws-0-${region}.pooler.supabase.com:5432"
-              break
-            fi
-          done
-          if [ -z "$DB_URL" ]; then
-            echo "FAIL CLOSED: no reachable Supabase pooler found"
-            exit 10
-          fi
 
           echo "=== Proving read-only transaction ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
-            -c "SHOW transaction_read_only;"
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SHOW transaction_read_only;"
 
           echo ""
           echo "=== Founding flag distribution ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT
                   CASE WHEN is_founding THEN 'founding' ELSE 'non-founding' END AS type,
                   count(*)
@@ -302,7 +259,7 @@ jobs:
 
           echo ""
           echo "=== Town register (with founding flag) ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT name, slug, province, is_founding
                 FROM uto.towns ORDER BY province, name;"
 
@@ -316,8 +273,7 @@ jobs:
           echo "These columns have not been added by any applied migration."
 
       # ============================================================
-      # STEP 5: TOWN_READINESS — only if it exists
-      # Single psql connection. First query proves read-only mode.
+      # STEP 6: TOWN_READINESS — only if it exists
       # ============================================================
       - name: town_readiness data
         if: steps.discover.outputs.readiness_exists == 'true'
@@ -326,37 +282,17 @@ jobs:
           PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
         run: |
           set -euo pipefail
-          # Resolve IPv4 address for the staging database (direct endpoint is IPv6-only from GitHub Actions)
-          # Use Supabase session-mode pooler (port 5432) for IPv4 connectivity.
-          # Direct endpoint db.*.supabase.co is IPv6-only from GitHub Actions.
-          # Discover working Supabase pooler endpoint (IPv4-only from GitHub Actions).
-          # Direct endpoint db.*.supabase.co is IPv6-only and unreachable.
-          DB_URL=""
-          for region in eu-west-1 us-east-1 us-west-1 ap-southeast-1; do
-            TEST_URL="postgresql://postgres.${STAGING_REF}@aws-0-${region}.pooler.supabase.com:5432/postgres"
-            if psql "$TEST_URL" -t -A -c "SELECT 1;" > /dev/null 2>&1; then
-              DB_URL="$TEST_URL"
-              echo "Pooler found: aws-0-${region}.pooler.supabase.com:5432"
-              break
-            fi
-          done
-          if [ -z "$DB_URL" ]; then
-            echo "FAIL CLOSED: no reachable Supabase pooler found"
-            exit 10
-          fi
 
           echo "=== Proving read-only transaction ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
-            -c "SHOW transaction_read_only;"
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SHOW transaction_read_only;"
 
           echo ""
           echo "=== town_readiness row count ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
-            -c "SELECT count(*) FROM uto.town_readiness;"
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -c "SELECT count(*) FROM uto.town_readiness;"
 
           echo ""
           echo "=== Orphaned town_readiness references ==="
-          RESULT=$(psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t \
+          RESULT=$(psql --single-transaction --set ON_ERROR_STOP=1 -t \
             -c "SELECT tr.town_id
                 FROM uto.town_readiness tr
                 LEFT JOIN uto.towns t ON t.id = tr.town_id
@@ -365,7 +301,7 @@ jobs:
 
           echo ""
           echo "=== Grants on uto.town_readiness ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT grantee, privilege_type
                 FROM information_schema.role_table_grants
                 WHERE table_schema = 'uto' AND table_name = 'town_readiness'
@@ -373,7 +309,7 @@ jobs:
 
           echo ""
           echo "=== Policies on uto.town_readiness ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT policyname, roles, cmd
                 FROM pg_policies
                 WHERE schemaname = 'uto' AND tablename = 'town_readiness';"
@@ -386,8 +322,7 @@ jobs:
           echo "table_exists = false"
 
       # ============================================================
-      # STEP 6: MIGRATION HISTORY — only if schema exists
-      # Single psql connection. First query proves read-only mode.
+      # STEP 7: MIGRATION HISTORY — only if schema exists
       # ============================================================
       - name: Migration history
         if: steps.discover.outputs.migrations_exists == 'true'
@@ -396,32 +331,13 @@ jobs:
           PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
         run: |
           set -euo pipefail
-          # Resolve IPv4 address for the staging database (direct endpoint is IPv6-only from GitHub Actions)
-          # Use Supabase session-mode pooler (port 5432) for IPv4 connectivity.
-          # Direct endpoint db.*.supabase.co is IPv6-only from GitHub Actions.
-          # Discover working Supabase pooler endpoint (IPv4-only from GitHub Actions).
-          # Direct endpoint db.*.supabase.co is IPv6-only and unreachable.
-          DB_URL=""
-          for region in eu-west-1 us-east-1 us-west-1 ap-southeast-1; do
-            TEST_URL="postgresql://postgres.${STAGING_REF}@aws-0-${region}.pooler.supabase.com:5432/postgres"
-            if psql "$TEST_URL" -t -A -c "SELECT 1;" > /dev/null 2>&1; then
-              DB_URL="$TEST_URL"
-              echo "Pooler found: aws-0-${region}.pooler.supabase.com:5432"
-              break
-            fi
-          done
-          if [ -z "$DB_URL" ]; then
-            echo "FAIL CLOSED: no reachable Supabase pooler found"
-            exit 10
-          fi
 
           echo "=== Proving read-only transaction ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 -t -A \
-            -c "SHOW transaction_read_only;"
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SHOW transaction_read_only;"
 
           echo ""
           echo "=== Recent migrations ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT version, name
                 FROM supabase_migrations.schema_migrations
                 ORDER BY version DESC
@@ -429,7 +345,7 @@ jobs:
 
           echo ""
           echo "=== Founding/northstar migrations ==="
-          psql "$DB_URL" --single-transaction --set ON_ERROR_STOP=1 \
+          psql --single-transaction --set ON_ERROR_STOP=1 \
             -c "SELECT version, name
                 FROM supabase_migrations.schema_migrations
                 WHERE name LIKE '%founding%' OR name LIKE '%northstar%' OR name LIKE '%0023%'
