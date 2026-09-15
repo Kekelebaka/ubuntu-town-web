@@ -107,53 +107,50 @@ describe('Day 1 — Canonical Town Register', () => {
     }
   });
 
-  it('total town count across provinces equals 51 (50 founding + 1 non-founding)', () => {
+  it('total town count across provinces equals 50 (all founding)', () => {
     const totalFromProvinces = CANONICAL_PROVINCES.reduce(
       (sum, p) => sum + p.towns.length, 0
     );
-    expect(totalFromProvinces).toBe(51);
+    expect(totalFromProvinces).toBe(50);
   });
 
-  // Province distribution (from the founding migration)
-  it('Gauteng has 8 founding towns', () => {
-    expect(getTownsInProvince('gauteng').length).toBe(8);
+  // Province distribution (2026 Blueprint — authoritative)
+  it('Gauteng has 5 founding towns', () => {
+    expect(getTownsInProvince('gauteng').length).toBe(5);
   });
 
-  it('Free State has 8 founding towns + 1 non-founding (Thaba Nchu)', () => {
+  it('Free State has 6 founding towns', () => {
     const freeStateTowns = getTownsInProvince('free-state');
-    const founding = freeStateTowns.filter(t => t.isFounding);
-    const nonFounding = freeStateTowns.filter(t => !t.isFounding);
-    expect(founding.length).toBe(8);
-    expect(nonFounding.length).toBe(1);
-    expect(nonFounding[0].slug).toBe('thaba-nchu');
+    expect(freeStateTowns.length).toBe(6);
+    expect(freeStateTowns.every(t => t.isFounding)).toBe(true);
   });
 
-  it('KwaZulu-Natal has 7 founding towns', () => {
-    expect(getTownsInProvince('kwaZulu-natal').length).toBe(7);
+  it('KwaZulu-Natal has 6 founding towns', () => {
+    expect(getTownsInProvince('kwaZulu-natal').length).toBe(6);
   });
 
-  it('Eastern Cape has 5 founding towns', () => {
-    expect(getTownsInProvince('eastern-cape').length).toBe(5);
+  it('Eastern Cape has 6 founding towns', () => {
+    expect(getTownsInProvince('eastern-cape').length).toBe(6);
   });
 
   it('Mpumalanga has 5 founding towns', () => {
     expect(getTownsInProvince('mpumalanga').length).toBe(5);
   });
 
-  it('Limpopo has 5 founding towns', () => {
-    expect(getTownsInProvince('limpopo').length).toBe(5);
+  it('Limpopo has 6 founding towns', () => {
+    expect(getTownsInProvince('limpopo').length).toBe(6);
   });
 
-  it('North West has 4 founding towns', () => {
-    expect(getTownsInProvince('north-west').length).toBe(4);
+  it('North West has 6 founding towns', () => {
+    expect(getTownsInProvince('north-west').length).toBe(6);
   });
 
-  it('Western Cape has 4 founding towns', () => {
-    expect(getTownsInProvince('western-cape').length).toBe(4);
+  it('Western Cape has 5 founding towns', () => {
+    expect(getTownsInProvince('western-cape').length).toBe(5);
   });
 
-  it('Northern Cape has 4 founding towns', () => {
-    expect(getTownsInProvince('northern-cape').length).toBe(4);
+  it('Northern Cape has 5 founding towns', () => {
+    expect(getTownsInProvince('northern-cape').length).toBe(5);
   });
 });
 
@@ -168,7 +165,7 @@ describe('Day 1 — Town Lookups', () => {
     expect(thabaNchu).toBeDefined();
     expect(thabaNchu!.name).toBe('Thaba Nchu');
     expect(thabaNchu!.province).toBe('Free State');
-    expect(thabaNchu!.isFounding).toBe(false);
+    expect(thabaNchu!.isFounding).toBe(true);
     
     const ladybrand = getTownBySlug('ladybrand');
     expect(ladybrand).toBeDefined();
@@ -205,6 +202,79 @@ describe('Day 1 — Town Lookups', () => {
     const results = searchTowns('lady');
     expect(results.length).toBeGreaterThan(0);
     expect(results.some(t => t.slug === 'ladybrand')).toBe(true);
+  });
+
+  // ============================================================
+  // ALIAS CONTRACT TESTS
+  // ============================================================
+
+  it('every alias resolves to exactly one canonical founding town', () => {
+    for (const town of CANONICAL_TOWNS) {
+      for (const alias of town.aliases) {
+        const resolved = getTownByAlias(alias);
+        expect(resolved).toBeDefined();
+        expect(resolved!.slug).toBe(town.slug);
+        expect(resolved!.isFounding).toBe(true);
+      }
+    }
+  });
+
+  it('no canonical slug is also an alias of another town', () => {
+    const allSlugs = new Set(CANONICAL_TOWNS.map(t => t.slug));
+    for (const town of CANONICAL_TOWNS) {
+      for (const alias of town.aliases) {
+        expect(allSlugs.has(alias.toLowerCase())).toBe(false);
+      }
+    }
+  });
+
+  it('legacy slugs do not resolve into the founding register', () => {
+    const legacySlugs = [
+      'east-london', 'gqeberha', 'mthatha', 'welkom', 'pretoria',
+      'springs', 'richards-bay', 'polokwane', 'klerksdorp',
+      'mahikeng', 'rustenburg',
+    ];
+    for (const slug of legacySlugs) {
+      const town = getTownBySlug(slug);
+      if (town) {
+        expect(town.isFounding).toBe(false);
+      }
+      // Also should not resolve as alias
+      const aliasTown = getTownByAlias(slug);
+      expect(aliasTown).toBeUndefined();
+    }
+  });
+
+  it('synthetic slugs never resolve into the public founding register', () => {
+    const syntheticSlugs = ['synthetic-town-a', 'synthetic-town-b'];
+    for (const slug of syntheticSlugs) {
+      const town = getTownBySlug(slug);
+      if (town) {
+        expect(town.isFounding).toBe(false);
+      }
+      const aliasTown = getTownByAlias(slug);
+      expect(aliasTown).toBeUndefined();
+    }
+  });
+
+  it('Hazyview does not resolve to Sabie (separate town)', () => {
+    const resolved = getTownByAlias('Hazyview');
+    expect(resolved).toBeUndefined();
+  });
+
+  it('Bloemfontein is not in the founding register', () => {
+    expect(getTownBySlug('bloemfontein')).toBeUndefined();
+    expect(getTownByAlias('Bloemfontein')).toBeUndefined();
+  });
+
+  it('Johannesburg is not in the founding register', () => {
+    expect(getTownBySlug('johannesburg')).toBeUndefined();
+    expect(getTownByAlias('Johannesburg')).toBeUndefined();
+  });
+
+  it('Kempton Park is not in the founding register', () => {
+    expect(getTownBySlug('kempton-park')).toBeUndefined();
+    expect(getTownByAlias('Kempton Park')).toBeUndefined();
   });
 });
 
@@ -504,5 +574,59 @@ describe('Day 1 — Province Structure', () => {
     
     const actualSlugs = CANONICAL_PROVINCES.map(p => p.slug).sort();
     expect(actualSlugs).toEqual(expectedSlugs.sort());
+  });
+});
+
+// ============================================================
+// TEST: Manifest/DB Parity
+// ============================================================
+
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+describe('Manifest/DB Parity', () => {
+  it('TypeScript manifest matches migration SQL rows exactly', () => {
+    // Read the migration SQL
+    const migrationPath = resolve(__dirname, '../../supabase/migrations/0024_northstar_reconcile_founding_fifty.sql');
+    const migrationSql = readFileSync(migrationPath, 'utf-8');
+
+    // Extract town entries from the SQL VALUES clause
+    // Pattern: ('uuid', 'Name', 'slug', 'Province', ...)
+    const sqlEntries = new Map<string, { id: string; name: string; slug: string; province: string }>();
+    const valuesRegex = /\('([0-9a-f-]{36})',\s*'([^']+)',\s*'([^']+)',\s*'([^']+)'/g;
+    let match;
+    while ((match = valuesRegex.exec(migrationSql)) !== null) {
+      const [, id, name, slug, province] = match;
+      // Skip non-town entries (e.g., subquery matches)
+      if (id.length === 36 && slug.length > 0) {
+        sqlEntries.set(slug, { id, name, slug, province });
+      }
+    }
+
+    // Compare with TypeScript manifest
+    const manifestSlugs = new Set(CANONICAL_TOWNS.map(t => t.slug));
+    const sqlSlugs = new Set(sqlEntries.keys());
+
+    // Every manifest town should be in SQL
+    for (const town of CANONICAL_TOWNS) {
+      const sqlTown = sqlEntries.get(town.slug);
+      expect(sqlTown).toBeDefined();
+      expect(sqlTown!.id).toBe(town.id);
+      expect(sqlTown!.name).toBe(town.name);
+      expect(sqlTown!.province).toBe(town.province);
+    }
+
+    // Every SQL town should be in manifest
+    for (const [slug, sqlTown] of Array.from(sqlEntries.entries())) {
+      const manifestTown = CANONICAL_TOWNS.find(t => t.slug === slug);
+      expect(manifestTown).toBeDefined();
+      expect(manifestTown!.id).toBe(sqlTown.id);
+      expect(manifestTown!.name).toBe(sqlTown.name);
+      expect(manifestTown!.province).toBe(sqlTown.province);
+    }
+
+    // Counts should match
+    expect(sqlEntries.size).toBe(CANONICAL_TOWNS.length);
+    expect(sqlEntries.size).toBe(50);
   });
 });
