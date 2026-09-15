@@ -139,7 +139,7 @@ jobs:
             /tmp/pre_readiness.txt
             /tmp/pre_fk_counts.txt
           retention-days: 30
-          if-no-files-found: fail
+          if-no-files-found: error
 
       - name: Dry-run migration (BEGIN → execute → assert → second-execute → assert → ROLLBACK → verify)
         id: dry_run
@@ -252,11 +252,8 @@ jobs:
           # Replace migration path placeholder
           sed -i "s|__MIGRATION_PATH__|$MIGRATION_PATH|g" /tmp/dry_run.sql
 
-          # Execute
-          psql \
-            "postgresql://postgres@db.${STAGING_REF}.supabase.co:5432/postgres" \
-            --set ON_ERROR_STOP=1 \
-            -f /tmp/dry_run.sql
+          # Execute (uses PGHOST, PGPORT, PGDATABASE, PGUSER env vars)
+          psql --set ON_ERROR_STOP=1 -f /tmp/dry_run.sql
 
           echo "Dry run completed (rolled back)"
 
