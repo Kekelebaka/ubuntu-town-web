@@ -1,0 +1,43 @@
+name: Extract Staging Town UUIDs
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: extract-town-uuids
+  cancel-in-progress: false
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+    env:
+      STAGING_REF: lgbkfthojyxhwemgkpgo
+      PRODUCTION_REF: afiokbhuxfdacbsipoqk
+      PGHOST: aws-1-eu-west-1.pooler.supabase.com
+      PGPORT: "5432"
+      PGDATABASE: postgres
+      PGUSER: postgres.lgbkfthojyxhwemgkpgo
+      PGSSLMODE: require
+      PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=15000 -c lock_timeout=5000"
+    steps:
+      - name: Safety guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$STAGING_REF" != "lgbkfthojyxhwemgkpgo" ]; then echo "FAIL CLOSED"; exit 10; fi
+          if [ "$STAGING_REF" = "$PRODUCTION_REF" ]; then echo "FAIL CLOSED"; exit 10; fi
+
+      - name: Extract UUIDs
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          echo "=== All town UUIDs ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT id, name, slug, province, is_founding, status
+                FROM uto.towns
+                ORDER BY province, name;"
