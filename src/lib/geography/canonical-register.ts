@@ -48,6 +48,7 @@ const FOUNDING_TOWNS: CanonicalTown[] = [
   { id: 'ladybrand', name: 'Ladybrand', slug: 'ladybrand', province: 'Free State', provinceSlug: 'free-state', aliases: [], isFounding: true },
   { id: 'phuthaditjhaba', name: 'Phuthaditjhaba', slug: 'phuthaditjhaba', province: 'Free State', provinceSlug: 'free-state', aliases: [], isFounding: true },
   { id: 'welkom', name: 'Welkom', slug: 'welkom', province: 'Free State', provinceSlug: 'free-state', aliases: [], isFounding: true },
+  { id: 'thaba-nchu', name: 'Thaba Nchu', slug: 'thaba-nchu', province: 'Free State', provinceSlug: 'free-state', aliases: [], isFounding: false },
 
   // KwaZulu-Natal (7)
   { id: 'durban', name: 'Durban', slug: 'durban', province: 'KwaZulu-Natal', provinceSlug: 'kwaZulu-natal', aliases: [], isFounding: true },
@@ -135,8 +136,11 @@ export const CANONICAL_PROVINCES: readonly CanonicalProvince[] = PROVINCES;
 /** All50 founding towns */
 export const CANONICAL_TOWNS: readonly CanonicalTown[] = FOUNDING_TOWNS;
 
-/** Total founding town count */
-export const FOUNDING_TOWN_COUNT = FOUNDING_TOWNS.length;
+/** Total town count (founding + non-founding) */
+export const TOTAL_TOWN_COUNT = FOUNDING_TOWNS.length;
+
+/** Founding town count (from the original migration) */
+export const FOUNDING_TOWN_COUNT = FOUNDING_TOWNS.filter(t => t.isFounding).length;
 
 /** Look up a town by slug (primary key) */
 export function getTownBySlug(slug: string): CanonicalTown | undefined {

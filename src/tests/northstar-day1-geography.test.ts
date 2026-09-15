@@ -54,7 +54,9 @@ import {
 describe('Day 1 — Canonical Town Register', () => {
   it('has exactly 50 founding towns', () => {
     expect(FOUNDING_TOWN_COUNT).toBe(50);
-    expect(CANONICAL_TOWNS.length).toBe(50);
+    // CANONICAL_TOWNS includes founding + non-founding towns (e.g., Thaba Nchu)
+    const foundingCount = CANONICAL_TOWNS.filter(t => t.isFounding).length;
+    expect(foundingCount).toBe(50);
   });
 
   it('has exactly 9 provinces', () => {
@@ -105,11 +107,11 @@ describe('Day 1 — Canonical Town Register', () => {
     }
   });
 
-  it('total town count across provinces equals 50', () => {
+  it('total town count across provinces equals 51 (50 founding + 1 non-founding)', () => {
     const totalFromProvinces = CANONICAL_PROVINCES.reduce(
       (sum, p) => sum + p.towns.length, 0
     );
-    expect(totalFromProvinces).toBe(50);
+    expect(totalFromProvinces).toBe(51);
   });
 
   // Province distribution (from the founding migration)
@@ -117,8 +119,13 @@ describe('Day 1 — Canonical Town Register', () => {
     expect(getTownsInProvince('gauteng').length).toBe(8);
   });
 
-  it('Free State has 8 founding towns', () => {
-    expect(getTownsInProvince('free-state').length).toBe(8);
+  it('Free State has 8 founding towns + 1 non-founding (Thaba Nchu)', () => {
+    const freeStateTowns = getTownsInProvince('free-state');
+    const founding = freeStateTowns.filter(t => t.isFounding);
+    const nonFounding = freeStateTowns.filter(t => !t.isFounding);
+    expect(founding.length).toBe(8);
+    expect(nonFounding.length).toBe(1);
+    expect(nonFounding[0].slug).toBe('thaba-nchu');
   });
 
   it('KwaZulu-Natal has 7 founding towns', () => {
@@ -156,9 +163,12 @@ describe('Day 1 — Canonical Town Register', () => {
 
 describe('Day 1 — Town Lookups', () => {
   it('getTownBySlug finds known towns', () => {
+    // Thaba Nchu was added for the Day 2 acceptance path
     const thabaNchu = getTownBySlug('thaba-nchu');
-    // Thaba Nchu is NOT in the Founding 50 (it's in the JSON but not seeded)
-    expect(thabaNchu).toBeUndefined();
+    expect(thabaNchu).toBeDefined();
+    expect(thabaNchu!.name).toBe('Thaba Nchu');
+    expect(thabaNchu!.province).toBe('Free State');
+    expect(thabaNchu!.isFounding).toBe(false);
     
     const ladybrand = getTownBySlug('ladybrand');
     expect(ladybrand).toBeDefined();
