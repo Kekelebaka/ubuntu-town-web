@@ -1,0 +1,391 @@
+name: Apply Founding Fifty — Staging
+
+# PERMANENT staging application of the founding fifty reconciliation.
+# One psql connection. One transaction. All assertions before COMMIT.
+# NEVER touches production. NEVER deploys application code.
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: apply-founding-fifty-staging
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: write
+    env:
+      # Immutable Northstar commit SHA (never a floating branch name)
+      NORTHSTAR_SHA: e86ee31e6a59260f2a6ede3025505c41f8a5926e
+      # Expected SHA-256 of the migration file
+      EXPECTED_CHECKSUM: 4841d56455c0419cef5b02cdcd3cd7ebb93a7fdde82884445c209ec715980e34
+      # Migration path within the checked-out commit
+      MIGRATION_PATH: supabase/migrations/0024_northstar_reconcile_founding_fifty.sql
+      # Migration ledger version (timestamp format matching existing convention)
+      MIGRATION_VERSION: "20260916090000"
+      MIGRATION_NAME: northstar_reconcile_founding_fifty
+      # Staging connection (non-secret)
+      STAGING_REF: lgbkfthojyxhwemgkpgo
+      PRODUCTION_REF: afiokbhuxfdacbsipoqk
+      PGHOST: aws-1-eu-west-1.pooler.supabase.com
+      PGPORT: "5432"
+      PGDATABASE: postgres
+      PGUSER: postgres.lgbkfthojyxhwemgkpgo
+      PGSSLMODE: require
+      PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=120000 -c lock_timeout=10000"
+    steps:
+      # ============================================================
+      # STEP 1: SAFETY GUARD
+      # ============================================================
+      - name: Safety guard — prove target identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$STAGING_REF" ]; then echo "FAIL CLOSED"; exit 10; fi
+          if [ -z "$PRODUCTION_REF" ]; then echo "FAIL CLOSED"; exit 10; fi
+          if [ "$STAGING_REF" = "$PRODUCTION_REF" ]; then echo "FAIL CLOSED"; exit 10; fi
+          if [ "$STAGING_REF" != "lgbkfthojyxhwemgkpgo" ]; then echo "FAIL CLOSED"; exit 10; fi
+          if [ "$PGHOST" != "aws-1-eu-west-1.pooler.supabase.com" ]; then echo "FAIL CLOSED"; exit 10; fi
+          echo "Target identity proven: staging ($STAGING_REF) via $PGHOST"
+
+      # ============================================================
+      # STEP 2: CHECKOUT AND VERIFY
+      # ============================================================
+      - name: Checkout immutable Northstar commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.NORTHSTAR_SHA }}
+          fetch-depth: 1
+
+      - name: Verify migration checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTUAL=$(sha256sum "$MIGRATION_PATH" | awk '{print $1}')
+          echo "Expected: $EXPECTED_CHECKSUM"
+          echo "Actual:   $ACTUAL"
+          if [ "$ACTUAL" != "$EXPECTED_CHECKSUM" ]; then
+            echo "FAIL CLOSED: migration checksum mismatch"
+            exit 10
+          fi
+          echo "Migration checksum verified"
+
+      # ============================================================
+      # STEP 3: PRE-COMMIT SAFETY — CAPTURE AND VERIFY PRE-STATE
+      # ============================================================
+      - name: Capture pre-state receipt
+        id: prestate
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          # Town receipt (non-sensitive geography only)
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT id, name, slug, province, is_founding, status, updated_at
+                FROM uto.towns ORDER BY slug;" > /tmp/pre_towns.txt
+
+          # Readiness receipt
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT town_id, applicant_count, coordinator_status, launch_readiness_pct
+                FROM uto.town_readiness ORDER BY town_id;" > /tmp/pre_readiness.txt
+
+          # Synthetic FK counts
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT 'role_assignments', t.slug, count(r.id)
+                FROM uto.towns t LEFT JOIN uto.role_assignments r ON r.town_id = t.id
+                WHERE t.slug LIKE 'synthetic-town-%' GROUP BY t.slug
+                UNION ALL
+                SELECT 'coordinators', t.slug, count(r.id)
+                FROM uto.towns t LEFT JOIN uto.coordinators r ON r.town_id = t.id
+                WHERE t.slug LIKE 'synthetic-town-%' GROUP BY t.slug
+                UNION ALL
+                SELECT 'community_work', t.slug, count(r.id)
+                FROM uto.towns t LEFT JOIN uto.community_work r ON r.town_id = t.id
+                WHERE t.slug LIKE 'synthetic-town-%' GROUP BY t.slug
+                UNION ALL
+                SELECT 'work_missions', t.slug, count(r.id)
+                FROM uto.towns t LEFT JOIN uto.work_missions r ON r.town_id = t.id
+                WHERE t.slug LIKE 'synthetic-town-%' GROUP BY t.slug
+                ORDER BY 1, 2;" > /tmp/pre_fk_counts.txt
+
+          # Policies
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT policyname, roles, cmd FROM pg_policies
+                WHERE schemaname='uto' AND tablename='towns' ORDER BY policyname;" > /tmp/pre_policies.txt
+
+          # Grants
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT grantee, privilege_type FROM information_schema.role_table_grants
+                WHERE table_schema='uto' AND table_name='towns' ORDER BY grantee, privilege_type;" > /tmp/pre_grants.txt
+
+          # RLS flags
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT relname, relrowsecurity, relforcerowsecurity FROM pg_class
+                WHERE relname IN ('towns','town_readiness')
+                  AND relnamespace=(SELECT oid FROM pg_namespace WHERE nspname='uto');" > /tmp/pre_rls.txt
+
+          # Migration ledger
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT version, name FROM supabase_migrations.schema_migrations
+                ORDER BY version;" > /tmp/pre_migrations.txt
+
+          # Counts
+          TOTAL=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SELECT count(*) FROM uto.towns;")
+          FOUNDING=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SELECT count(*) FROM uto.towns WHERE is_founding = true;")
+          READINESS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SELECT count(*) FROM uto.town_readiness;")
+          POLICIES=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SELECT count(*) FROM pg_policies WHERE schemaname='uto' AND tablename='towns';")
+
+          echo "Pre-state: total=$TOTAL founding=$FOUNDING readiness=$READINESS policies=$POLICIES"
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "founding=$FOUNDING" >> "$GITHUB_OUTPUT"
+          echo "readiness=$READINESS" >> "$GITHUB_OUTPUT"
+          echo "policies=$POLICIES" >> "$GITHUB_OUTPUT"
+
+      - name: Verify pre-state matches expected baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "=== Pre-state verification ==="
+          echo "Total: ${{ steps.prestate.outputs.total }} (expected 27)"
+          echo "Founding: ${{ steps.prestate.outputs.founding }} (expected 25)"
+          echo "Readiness: ${{ steps.prestate.outputs.readiness }} (expected 25)"
+          echo "Policies: ${{ steps.prestate.outputs.policies }} (expected 2)"
+
+          if [ "${{ steps.prestate.outputs.total }}" != "27" ]; then
+            echo "DRIFT DETECTED: total=${{ steps.prestate.outputs.total }}, expected 27"
+            exit 1
+          fi
+          if [ "${{ steps.prestate.outputs.founding }}" != "25" ]; then
+            echo "DRIFT DETECTED: founding=${{ steps.prestate.outputs.founding }}, expected 25"
+            exit 1
+          fi
+          if [ "${{ steps.prestate.outputs.readiness }}" != "25" ]; then
+            echo "DRIFT DETECTED: readiness=${{ steps.prestate.outputs.readiness }}, expected 25"
+            exit 1
+          fi
+          if [ "${{ steps.prestate.outputs.policies }}" != "2" ]; then
+            echo "DRIFT DETECTED: policies=${{ steps.prestate.outputs.policies }}, expected 2"
+            exit 1
+          fi
+          echo "Pre-state verification PASSED — no drift detected"
+
+      - name: Upload pre-state receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: pre-apply-receipt-${{ github.run_id }}
+          path: |
+            /tmp/pre_towns.txt
+            /tmp/pre_readiness.txt
+            /tmp/pre_fk_counts.txt
+            /tmp/pre_policies.txt
+            /tmp/pre_grants.txt
+            /tmp/pre_rls.txt
+            /tmp/pre_migrations.txt
+          retention-days: 90
+          if-no-files-found: error
+
+      # ============================================================
+      # STEP 4: PERMANENT TRANSACTION
+      # ============================================================
+      - name: Apply migration in permanent transaction
+        id: apply
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          echo "=== APPLYING MIGRATION (PERMANENT) ==="
+
+          cat > /tmp/apply.sql << 'APPLY_SQL'
+
+          BEGIN;
+          SET LOCAL TRANSACTION READ WRITE;
+          SET LOCAL statement_timeout = '120s';
+          SET LOCAL lock_timeout = '10s';
+
+          -- ============================================================
+          -- PRE-STATE ASSERTIONS (inside transaction)
+          -- ============================================================
+          DO $$
+          DECLARE
+            _total integer; _founding integer; _readiness integer;
+          BEGIN
+            SELECT count(*) INTO _total FROM uto.towns;
+            SELECT count(*) INTO _founding FROM uto.towns WHERE is_founding = true;
+            SELECT count(*) INTO _readiness FROM uto.town_readiness;
+
+            RAISE NOTICE '=== PRE-STATE ASSERTIONS ===';
+            RAISE NOTICE '  Total: % (expected 27)', _total;
+            RAISE NOTICE '  Founding: % (expected 25)', _founding;
+            RAISE NOTICE '  Readiness: % (expected 25)', _readiness;
+
+            IF _total != 27 THEN RAISE EXCEPTION 'PRE-STATE FAIL: total=%', _total; END IF;
+            IF _founding != 25 THEN RAISE EXCEPTION 'PRE-STATE FAIL: founding=%', _founding; END IF;
+            IF _readiness != 25 THEN RAISE EXCEPTION 'PRE-STATE FAIL: readiness=%', _readiness; END IF;
+
+            RAISE NOTICE 'PRE-STATE: ALL ASSERTIONS PASS';
+          END $$;
+
+          -- ============================================================
+          -- APPLY MIGRATION
+          -- ============================================================
+
+          \i __MIGRATION_PATH__
+
+          -- ============================================================
+          -- POST-STATE ASSERTIONS (before COMMIT)
+          -- ============================================================
+          DO $$
+          DECLARE
+            _total integer; _founding integer; _legacy integer; _synthetic integer;
+            _readiness integer; _province_count integer;
+            _dup_ids integer; _dup_slugs integer;
+          BEGIN
+            SELECT count(*) INTO _total FROM uto.towns;
+            SELECT count(*) INTO _founding FROM uto.towns WHERE is_founding = true;
+            SELECT count(*) INTO _legacy FROM uto.towns WHERE slug IN (
+              'east-london','gqeberha','mthatha','welkom','pretoria',
+              'springs','richards-bay','polokwane','klerksdorp','mahikeng','rustenburg'
+            ) AND is_founding = false;
+            SELECT count(*) INTO _synthetic FROM uto.towns WHERE slug LIKE 'synthetic-town-%' AND is_founding = false;
+            SELECT count(*) INTO _readiness FROM uto.town_readiness;
+
+            -- Province distribution check
+            SELECT count(*) INTO _province_count FROM (
+              SELECT province FROM uto.towns WHERE is_founding = true
+              GROUP BY province HAVING count(*) = 6
+            ) sub;
+            -- Should have 5 provinces with 6 towns each
+
+            -- Duplicate check
+            SELECT count(*) INTO _dup_ids FROM (
+              SELECT id FROM uto.towns GROUP BY id HAVING count(*) > 1
+            ) sub;
+            SELECT count(*) INTO _dup_slugs FROM (
+              SELECT slug FROM uto.towns GROUP BY slug HAVING count(*) > 1
+            ) sub;
+
+            RAISE NOTICE '=== POST-STATE ASSERTIONS ===';
+            RAISE NOTICE '  Total: % (expected 63)', _total;
+            RAISE NOTICE '  Founding: % (expected 50)', _founding;
+            RAISE NOTICE '  Legacy: % (expected 11)', _legacy;
+            RAISE NOTICE '  Synthetic: % (expected 2)', _synthetic;
+            RAISE NOTICE '  Readiness: % (expected 61)', _readiness;
+            RAISE NOTICE '  Duplicate IDs: % (expected 0)', _dup_ids;
+            RAISE NOTICE '  Duplicate slugs: % (expected 0)', _dup_slugs;
+
+            IF _total != 63 THEN RAISE EXCEPTION 'POST-STATE FAIL: total=%', _total; END IF;
+            IF _founding != 50 THEN RAISE EXCEPTION 'POST-STATE FAIL: founding=%', _founding; END IF;
+            IF _legacy != 11 THEN RAISE EXCEPTION 'POST-STATE FAIL: legacy=%', _legacy; END IF;
+            IF _synthetic != 2 THEN RAISE EXCEPTION 'POST-STATE FAIL: synthetic=%', _synthetic; END IF;
+            IF _readiness != 61 THEN RAISE EXCEPTION 'POST-STATE FAIL: readiness=%', _readiness; END IF;
+            IF _dup_ids != 0 THEN RAISE EXCEPTION 'POST-STATE FAIL: duplicate IDs=%', _dup_ids; END IF;
+            IF _dup_slugs != 0 THEN RAISE EXCEPTION 'POST-STATE FAIL: duplicate slugs=%', _dup_slugs; END IF;
+
+            RAISE NOTICE 'POST-STATE: ALL ASSERTIONS PASS';
+          END $$;
+
+          -- ============================================================
+          -- RECORD IN MIGRATION LEDGER
+          -- ============================================================
+          INSERT INTO supabase_migrations.schema_migrations (version, name)
+          VALUES ('__MIGRATION_VERSION__', '__MIGRATION_NAME__')
+          ON CONFLICT (version) DO NOTHING;
+
+          -- Verify ledger entry
+          DO $$
+          DECLARE
+            _count integer;
+          BEGIN
+            SELECT count(*) INTO _count
+            FROM supabase_migrations.schema_migrations
+            WHERE version = '__MIGRATION_VERSION__';
+
+            IF _count != 1 THEN
+              RAISE EXCEPTION 'LEDGER FAIL: expected 1 entry for version %, got %', '__MIGRATION_VERSION__', _count;
+            END IF;
+
+            RAISE NOTICE 'LEDGER: entry recorded correctly';
+          END $$;
+
+          COMMIT;
+
+          APPLY_SQL
+
+          # Replace placeholders
+          sed -i "s|__MIGRATION_PATH__|$MIGRATION_PATH|g" /tmp/apply.sql
+          sed -i "s|__MIGRATION_VERSION__|$MIGRATION_VERSION|g" /tmp/apply.sql
+          sed -i "s|__MIGRATION_NAME__|$MIGRATION_NAME|g" /tmp/apply.sql
+
+          # Execute
+          psql --set ON_ERROR_STOP=1 -f /tmp/apply.sql
+
+          echo "Migration applied and committed successfully"
+
+      # ============================================================
+      # STEP 5: INDEPENDENT POST-COMMIT VERIFICATION
+      # ============================================================
+      - name: Independent post-commit verification
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          echo "=== POST-COMMIT VERIFICATION (fresh read-only connection) ==="
+
+          TOTAL=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SELECT count(*) FROM uto.towns;")
+          FOUNDING=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SELECT count(*) FROM uto.towns WHERE is_founding = true;")
+          READINESS=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SELECT count(*) FROM uto.town_readiness;")
+          POLICIES=$(psql --single-transaction --set ON_ERROR_STOP=1 -t -A -c "SELECT count(*) FROM pg_policies WHERE schemaname='uto' AND tablename='towns';")
+
+          echo "Post-commit: total=$TOTAL founding=$FOUNDING readiness=$READINESS policies=$POLICIES"
+
+          if [ "$TOTAL" != "63" ]; then echo "FAIL: total=$TOTAL"; exit 1; fi
+          if [ "$FOUNDING" != "50" ]; then echo "FAIL: founding=$FOUNDING"; exit 1; fi
+          if [ "$READINESS" != "61" ]; then echo "FAIL: readiness=$READINESS"; exit 1; fi
+          if [ "$POLICIES" != "2" ]; then echo "FAIL: policies=$POLICIES"; exit 1; fi
+
+          # Province distribution
+          echo "=== Province distribution ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT province, count(*) FROM uto.towns WHERE is_founding=true GROUP BY province ORDER BY province;"
+
+          # Migration ledger entry
+          echo "=== Migration ledger ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT version, name FROM supabase_migrations.schema_migrations WHERE version='$MIGRATION_VERSION';"
+
+          # Synthetic FK counts
+          psql --single-transaction --set ON_ERROR_STOP=1 -t -A \
+            -c "SELECT 'role_assignments', t.slug, count(r.id)
+                FROM uto.towns t LEFT JOIN uto.role_assignments r ON r.town_id = t.id
+                WHERE t.slug LIKE 'synthetic-town-%' GROUP BY t.slug
+                UNION ALL
+                SELECT 'coordinators', t.slug, count(r.id)
+                FROM uto.towns t LEFT JOIN uto.coordinators r ON r.town_id = t.id
+                WHERE t.slug LIKE 'synthetic-town-%' GROUP BY t.slug
+                UNION ALL
+                SELECT 'community_work', t.slug, count(r.id)
+                FROM uto.towns t LEFT JOIN uto.community_work r ON r.town_id = t.id
+                WHERE t.slug LIKE 'synthetic-town-%' GROUP BY t.slug
+                UNION ALL
+                SELECT 'work_missions', t.slug, count(r.id)
+                FROM uto.towns t LEFT JOIN uto.work_missions r ON r.town_id = t.id
+                WHERE t.slug LIKE 'synthetic-town-%' GROUP BY t.slug
+                ORDER BY 1, 2;" > /tmp/post_fk_counts.txt
+
+          if ! diff /tmp/pre_fk_counts.txt /tmp/post_fk_counts.txt; then
+            echo "FAIL: synthetic FK counts changed"
+            exit 1
+          fi
+
+          echo ""
+          echo "POST-COMMIT VERIFICATION: ALL CHECKS PASSED"
