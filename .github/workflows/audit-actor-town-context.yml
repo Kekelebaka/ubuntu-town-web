@@ -1,0 +1,211 @@
+name: Audit Actor-Town Context — Staging
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: audit-actor-town-context
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    env:
+      STAGING_REF: lgbkfthojyxhwemgkpgo
+      PRODUCTION_REF: afiokbhuxfdacbsipoqk
+      PGHOST: aws-1-eu-west-1.pooler.supabase.com
+      PGPORT: "5432"
+      PGDATABASE: postgres
+      PGUSER: postgres.lgbkfthojyxhwemgkpgo
+      PGSSLMODE: require
+      PGOPTIONS: "-c default_transaction_read_only=on -c statement_timeout=30000 -c lock_timeout=5000"
+    steps:
+      - name: Safety guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$STAGING_REF" = "$PRODUCTION_REF" ]; then echo "FAIL CLOSED"; exit 10; fi
+          if [ "$STAGING_REF" != "lgbkfthojyxhwemgkpgo" ]; then echo "FAIL CLOSED"; exit 10; fi
+
+      - name: Actor-Town context audit
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.H02R_STAGING_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          echo "=== 1. Role distribution by role_key ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT role_key, count(*) as count,
+                       count(DISTINCT user_id) as unique_users,
+                       count(DISTINCT town_id) as unique_towns,
+                       count(*) FILTER (WHERE town_id IS NULL) as national_count
+                FROM uto.role_assignments
+                GROUP BY role_key
+                ORDER BY count DESC;"
+
+          echo ""
+          echo "=== 2. Town-scoped vs national assignments ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT
+                   CASE WHEN town_id IS NULL THEN 'national' ELSE 'town_scoped' END as scope,
+                   count(*) as assignment_count,
+                   count(DISTINCT user_id) as unique_users
+                 FROM uto.role_assignments
+                 GROUP BY 1
+                 ORDER BY 1;"
+
+          echo ""
+          echo "=== 3. Assignments by town classification ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT
+                   CASE
+                     WHEN t.is_founding = true THEN 'founding'
+                     WHEN t.slug LIKE 'synthetic-town-%' THEN 'synthetic'
+                     WHEN t.is_founding = false AND t.slug NOT LIKE 'synthetic-town-%' THEN 'legacy'
+                     ELSE 'unknown'
+                   END as town_class,
+                   count(DISTINCT ra.id) as assignment_count,
+                   count(DISTINCT ra.user_id) as unique_users,
+                   count(DISTINCT ra.town_id) as unique_towns
+                 FROM uto.role_assignments ra
+                 LEFT JOIN uto.towns t ON t.id = ra.town_id
+                 GROUP BY 1
+                 ORDER BY 1;"
+
+          echo ""
+          echo "=== 4. Orphan role_assignments (town_id references non-existent town) ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT ra.id, ra.user_id, ra.town_id, ra.role_key
+                 FROM uto.role_assignments ra
+                 LEFT JOIN uto.towns t ON t.id = ra.town_id
+                 WHERE ra.town_id IS NOT NULL AND t.id IS NULL;"
+
+          echo ""
+          echo "=== 5. Users with multiple town assignments ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT user_id, count(DISTINCT town_id) as town_count,
+                       array_agg(DISTINCT town_id) as town_ids,
+                       array_agg(DISTINCT role_key) as roles
+                 FROM uto.role_assignments
+                 WHERE town_id IS NOT NULL
+                 GROUP BY user_id
+                 HAVING count(DISTINCT town_id) > 1
+                 ORDER BY town_count DESC
+                 LIMIT 20;"
+
+          echo ""
+          echo "=== 6. References to legacy towns ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT t.slug, t.name,
+                       count(DISTINCT ra.id) as role_assignments,
+                       count(DISTINCT cw.id) as community_work,
+                       count(DISTINCT s.id) as signals,
+                       count(DISTINCT wm.id) as work_missions
+                 FROM uto.towns t
+                 LEFT JOIN uto.role_assignments ra ON ra.town_id = t.id
+                 LEFT JOIN uto.community_work cw ON cw.town_id = t.id
+                 LEFT JOIN uto.signals s ON s.town_id = t.id
+                 LEFT JOIN uto.work_missions wm ON wm.town_id = t.id
+                 WHERE t.is_founding = false AND t.slug NOT LIKE 'synthetic-town-%'
+                 GROUP BY t.slug, t.name
+                 ORDER BY role_assignments DESC;"
+
+          echo ""
+          echo "=== 7. References to synthetic towns ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT t.slug, t.name,
+                       count(DISTINCT ra.id) as role_assignments,
+                       count(DISTINCT cw.id) as community_work,
+                       count(DISTINCT s.id) as signals,
+                       count(DISTINCT wm.id) as work_missions,
+                       count(DISTINCT c.id) as coordinators
+                 FROM uto.towns t
+                 LEFT JOIN uto.role_assignments ra ON ra.town_id = t.id
+                 LEFT JOIN uto.community_work cw ON cw.town_id = t.id
+                 LEFT JOIN uto.signals s ON s.town_id = t.id
+                 LEFT JOIN uto.work_missions wm ON wm.town_id = t.id
+                 LEFT JOIN uto.coordinators c ON c.town_id = t.id
+                 WHERE t.slug LIKE 'synthetic-town-%'
+                 GROUP BY t.slug, t.name;"
+
+          echo ""
+          echo "=== 8. Coordinator records ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT
+                   CASE
+                     WHEN t.is_founding = true THEN 'founding'
+                     WHEN t.slug LIKE 'synthetic-town-%' THEN 'synthetic'
+                     WHEN t.is_founding = false AND t.slug NOT LIKE 'synthetic-town-%' THEN 'legacy'
+                     ELSE 'unknown'
+                   END as town_class,
+                   count(*) as coordinator_count
+                 FROM uto.coordinators c
+                 LEFT JOIN uto.towns t ON t.id = c.town_id
+                 GROUP BY 1
+                 ORDER BY 1;"
+
+          echo ""
+          echo "=== 9. is_admin() callers ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT routine_name, routine_type, security_type
+                 FROM information_schema.routines
+                 WHERE routine_schema = 'uto'
+                   AND routine_name LIKE '%admin%'
+                 ORDER BY routine_name;"
+
+          echo ""
+          echo "=== 10. SECURITY DEFINER functions ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT p.proname, p.prosecdef as security_definer,
+                       p.prosrc as body_preview
+                 FROM pg_proc p
+                 JOIN pg_namespace n ON n.oid = p.pronamespace
+                 WHERE n.nspname = 'uto' AND p.prosecdef = true
+                 ORDER BY p.proname;"
+
+          echo ""
+          echo "=== 11. RLS policies on role_assignments ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT policyname, cmd, roles, qual, with_check
+                 FROM pg_policies
+                 WHERE schemaname = 'uto' AND tablename = 'role_assignments'
+                 ORDER BY policyname;"
+
+          echo ""
+          echo "=== 12. RLS on towns ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT policyname, cmd, roles, qual, with_check
+                 FROM pg_policies
+                 WHERE schemaname = 'uto' AND tablename = 'towns'
+                 ORDER BY policyname;"
+
+          echo ""
+          echo "=== 13. Users with no town assignment (potential nationals) ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT role_key, count(*) as count
+                 FROM uto.role_assignments
+                 WHERE town_id IS NULL
+                 GROUP BY role_key
+                 ORDER BY count DESC;"
+
+          echo ""
+          echo "=== 14. Total assignment count ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT count(*) as total_assignments,
+                       count(DISTINCT user_id) as unique_users,
+                       count(DISTINCT town_id) as unique_towns
+                 FROM uto.role_assignments;"
+
+          echo ""
+          echo "=== 15. App helper functions (app.*) ==="
+          psql --single-transaction --set ON_ERROR_STOP=1 \
+            -c "SELECT p.proname, p.prosecdef as security_definer,
+                       pg_get_function_arguments(p.oid) as args
+                 FROM pg_proc p
+                 JOIN pg_namespace n ON n.oid = p.pronamespace
+                 WHERE n.nspname = 'app'
+                 ORDER BY p.proname;"
