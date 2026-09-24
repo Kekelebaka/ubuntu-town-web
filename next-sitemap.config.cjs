@@ -2,6 +2,14 @@
 module.exports = {
   siteUrl: 'https://www.ubuntutown.co.za',
   generateRobotsTxt: true,
+
+  // Preserve the password-recovery route in generated sitemap output.
+  // This route exists at runtime but is not reliably discovered by
+  // next-sitemap from the production build manifest.
+  additionalPaths: async (config) => [
+    await config.transform(config, '/forgot-password'),
+  ],
+
   robotsTxtOptions: {
     policies: [
       {
