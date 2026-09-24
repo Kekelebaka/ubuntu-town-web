@@ -4,6 +4,7 @@ import React, { Suspense } from 'react';
 import { Toaster as SonnerToaster } from 'sonner';
 import { ThemeProvider, useTheme } from 'next-themes';
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
+import { TownProvider } from '@/contexts/town-context';
 
 function CustomerToaster() {
   const theme = useTheme();
@@ -30,7 +31,9 @@ export function DynamicLayoutProviders({
       themes={['light', 'dark']}
       defaultTheme="light"
     >
-      {children}
+      <TownProvider>
+        {children}
+      </TownProvider>
       <Suspense>
         <ProgressBar
           height="4px"
