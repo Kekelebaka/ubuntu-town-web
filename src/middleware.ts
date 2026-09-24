@@ -5,7 +5,7 @@ import { updateSession } from './supabase-clients/middleware';
 export const runtime = 'experimental-edge';
 
 const apiRoutes = ['/api{/*path}'];
-const RESERVED_SUBDOMAINS = ['enter', 'www', 'api', 'admin', 'mail', 'ftp'];
+const RESERVED_SUBDOMAINS = ['app', 'enter', 'www', 'api', 'admin', 'mail', 'ftp'];
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
