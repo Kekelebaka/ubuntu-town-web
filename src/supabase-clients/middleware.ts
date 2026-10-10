@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import { match } from 'path-to-regexp';
+import { decideRouteAccess } from '@/lib/route-guard';
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -34,30 +34,25 @@ export async function updateSession(request: NextRequest) {
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  const protectedPages = [
-    '/dashboard',
-    '/private-item',
-    '/private-items',
-    '/items',
-    '/item',
-  ];
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // if user doesn't exist and the page is protected, redirect to login
-  if (
-    !user &&
-    protectedPages.some((page) => {
-      // eslint-disable-next-line no-unexpected-multiline
-      const matcher = match(page);
-      return matcher(request.nextUrl.pathname);
-    })
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  // ROUTE PROTECTION — FAIL CLOSED / DEFAULT DENY.
+  // The public allowlist lives in src/lib/route-guard.ts; every path that is
+  // not explicitly public requires a session. Unauthenticated visitors are sent
+  // to /login with a `next` param so they land back on the page they asked for.
+  const decision = decideRouteAccess(request.nextUrl.pathname, {
+    isAuthenticated: Boolean(user),
+    search: request.nextUrl.search,
+  });
+
+  if (!decision.allowed) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
+    url.search = decision.redirectTo
+      ? decision.redirectTo.slice('/login'.length)
+      : '';
     return NextResponse.redirect(url);
   }
 
