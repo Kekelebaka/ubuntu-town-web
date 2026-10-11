@@ -76,4 +76,28 @@ describe("pulse scope resolver (shared primitive)", () => {
     expect(canSee(scopes, "person:u-x")).toBe(true);
     expect(canSee(scopes, "town:t1")).toBe(false);
   });
+
+  it("nested + initiative scope: initiative nodes hang under towns; initiative_head scoped to initiative", () => {
+    const tree = buildScopeTree(towns, [
+      { id: "i-food", name: "Food Garden", town_id: "t1" },
+      { id: "i-national", name: "Ubuntu Passport", town_id: null },
+    ]);
+    expect(tree.find((n) => n.id === "initiative:i-food")!.parent).toBe("town:t1");
+    expect(tree.find((n) => n.id === "initiative:i-national")!.parent).toBe("national");
+    const head = resolveViewerScopes(
+      { userId: "u-i", assignments: [{ user_id: "u-i", role_key: "initiative_head", town_id: null, initiative: "i-food" }] },
+      tree
+    );
+    expect(canSee(head, "initiative:i-food")).toBe(true);
+    expect(canSee(head, "town:t2")).toBe(false);
+  });
+
+  it("same role / same scope grants identical visibility (excluding the self-node)", () => {
+    const tree = buildScopeTree(towns);
+    const a = resolveViewerScopes({ userId: "u-1", assignments: [{ user_id: "u-1", role_key: "coordinator", town_id: "t1" }] }, tree);
+    const b = resolveViewerScopes({ userId: "u-2", assignments: [{ user_id: "u-2", role_key: "coordinator", town_id: "t1" }] }, tree);
+    const strip = (s: string[]) => s.filter((id) => !id.startsWith("person:")).sort();
+    expect(strip(a)).toEqual(strip(b));
+    expect(a).toContain("person:u-1"); // self-node is per-viewer
+  });
 });
