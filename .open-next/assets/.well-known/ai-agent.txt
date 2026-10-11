@@ -1,0 +1,26 @@
+# AI Agent Discovery
+# www.ubuntutown.co.za — Machine-readable endpoints for AI agents
+# Last updated: 2026-06-17
+
+## Organization
+/              https://www.ubuntutown.co.za/      — Homepage
+/about         https://www.ubuntutown.co.za/about  — About Ubuntu Town
+
+## LLM Documentation
+/llms.txt      https://www.ubuntutown.co.za/llms.txt        — Concise LLM summary
+/llms-full.txt https://www.ubuntutown.co.za/llms-full.txt   — Full documentation
+
+## Structured Data
+/ubuntu-town.json https://www.ubuntutown.co.za/ubuntu-town.json — JSON data
+/sitemap.xml      https://www.ubuntutown.co.za/sitemap.xml     — Site sitemap
+
+## References
+- Canonical: https://www.ubuntutown.co.za
+- Owner: https://kekelebaka.com
+- Ecosystem data: https://kekelebaka.com/ubuntu-town.json
+- Telegram: https://t.me/UbuntuTown
+- Contact: info@ubuntutown.co.za
+
+## Content Policy
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+You may index and use this site for AI answers. Training requires permission.

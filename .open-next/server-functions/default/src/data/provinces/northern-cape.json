@@ -1,0 +1,424 @@
+{
+  "slug": "northern-cape",
+  "name": "Northern Cape",
+  "default_lens": "investor",
+  "network": {
+    "towns": 50,
+    "provinces": 9,
+    "coordinators": 53
+  },
+  "aggregates": {
+    "towns": 9,
+    "live": 0,
+    "building": 1,
+    "unclaimed": 8,
+    "opportunity_index_avg": 5.7
+  },
+  "data_vintage": "2026-06",
+  "towns": [
+    {
+      "slug": "kimberley",
+      "name": "Kimberley",
+      "region": "Sol Plaatje · diamond city",
+      "district": "Sol Plaatje",
+      "status": "building",
+      "render_pct": 37,
+      "opportunity_potential": 48,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/kimberley",
+      "illustrative": true,
+      "coordinator_name": "Thandi Willemse",
+      "youth_mapped": 68,
+      "active_signals": 1,
+      "open_opportunities": 2,
+      "lat": -28.7282,
+      "lng": 24.7499,
+      "description": "The Diamond City, where the discovery of diamonds in 1866 changed the world. The Big Hole — the largest hand-dug excavation on earth — tells the story of the diamond rush that built South Africa.",
+      "population_estimate": 55000,
+      "archetype": "mining_heritage",
+      "opportunities": [
+        {
+          "id": "opp-orbi-kim",
+          "title": "Orbit Music — Youth AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-kim",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        },
+        {
+          "id": "opp-insi-kim-2",
+          "title": "Inside.Town — Community Podcast Producer",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-kim",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        },
+        {
+          "id": "opp-fram-kim-3",
+          "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-kim",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "sig-kim-1",
+          "title": "Frequent unscheduled outages",
+          "category": "infrastructure",
+          "status": "pending",
+          "town_id": "town-kim"
+        }
+      ],
+      "stories": [
+        {
+          "slug": "kimberley",
+          "title": "Big Hole, Big Dreams",
+          "content": "People say Kimberley ran out of diamonds. But the real gem is the people. I started a hair salon with R5,000.",
+          "author_name": "Reneilwe M.",
+          "id": "seed-kimberley-story",
+          "town_id": null
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-kim-1",
+          "name": "Galeshewe Youth Hub",
+          "category": "education",
+          "is_verified": false,
+          "town_id": "town-kim"
+        }
+      ],
+      "access_points": [
+        {
+          "id": "ap-kim-1",
+          "name": "Galeshewe Library",
+          "category": "library",
+          "is_verified": true,
+          "town_id": "town-kim"
+        }
+      ],
+      "services": [
+        {
+          "title": "Sol Plaatje University",
+          "description": "Newest SA university. Education, heritage, and creative arts.",
+          "price_range": "R8,000 - R25,000/year",
+          "category": "education"
+        },
+        {
+          "title": "Big Hole Museum & Diamond Mine",
+          "description": "Largest hand-dug excavation in the world. Museum and mine tour.",
+          "price_range": "R120 - R200",
+          "category": "tourism"
+        }
+      ]
+    },
+    {
+      "slug": "upington",
+      "name": "Upington",
+      "region": "Dawid Kruiper · Orange River",
+      "district": "Dawid Kruiper",
+      "status": "ghost",
+      "render_pct": 8,
+      "opportunity_potential": 38,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/upington",
+      "illustrative": true,
+      "coordinator_name": "Dineo Sethole",
+      "youth_mapped": 28,
+      "active_signals": 0,
+      "open_opportunities": 1,
+      "lat": -28.4478,
+      "lng": 21.2561,
+      "description": "On the banks of the Orange River in the Kalahari, Upington is South Africa's wine frontier — the extreme heat and irrigation create unique wines. The surrounding red dunes and river oasis are starkly beautiful.",
+      "population_estimate": 45000,
+      "archetype": "kalahari_gateway",
+      "opportunities": [
+        {
+          "id": "opp-solar-upi",
+          "title": "Northern Cape Solar Farm Technician Training",
+          "type": "training",
+          "source": "private",
+          "deadline_date": "2026-12-31",
+          "town_id": "town-upi",
+          "metadata": {
+            "provider": "REDZ Programme"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "upington",
+          "name": "Orange River Wine Cellars",
+          "category": "food",
+          "is_verified": false,
+          "id": "seed-upington-biz",
+          "town_id": null
+        }
+      ],
+      "services": [
+        {
+          "title": "Upington TVET campus",
+          "description": "Agriculture and business programmes for the Northern Cape.",
+          "price_range": "R3,000 - R8,000/year",
+          "category": "education"
+        },
+        {
+          "title": "Orange River Wine Cellars",
+          "description": "South Africa's most northerly wine route. Cellar tours and tastings.",
+          "price_range": "R50 - R150",
+          "category": "tourism"
+        }
+      ]
+    },
+    {
+      "slug": "springbok",
+      "name": "Springbok",
+      "region": "Nama Khoi · Namaqualand",
+      "district": "Nama Khoi",
+      "status": "ghost",
+      "render_pct": 6,
+      "opportunity_potential": 35,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/springbok",
+      "illustrative": true,
+      "coordinator_name": "Busisiwe Nyathi",
+      "youth_mapped": 12,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -29.6667,
+      "lng": 17.8833,
+      "description": "The gateway to Namaqualand, Springbok explodes into a carpet of wildflowers every August–September — one of nature's greatest spectacles. The Goegap Nature Reserve showcases the region's unique succulents.",
+      "population_estimate": 12000,
+      "archetype": "namaqualand",
+      "opportunities": [
+        {
+          "id": "opp-coord-spring",
+          "title": "Ubuntu Town Coordinator — Springbok",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-spring",
+          "metadata": {
+            "ecosystem": "coordinator"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "springbok",
+          "name": "Namaqualand Tourism",
+          "category": "tourism",
+          "is_verified": false,
+          "id": "seed-springbok-biz",
+          "town_id": null
+        }
+      ]
+    },
+    {
+      "slug": "de-aar",
+      "name": "De Aar",
+      "region": "Emthanjeni · railway junction",
+      "district": "Emthanjeni",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/de-aar",
+      "illustrative": true,
+      "coordinator_name": "Johannes Louw",
+      "lat": -30.65,
+      "lng": 24.0167,
+      "description": "South Africa's railway junction, where north–south and east–west lines cross. De Aar is a town of trains, wide skies, and the quiet determination of Karoo communities.",
+      "population_estimate": 8000,
+      "archetype": "railway_town",
+      "opportunities": [
+        {
+          "id": "opp-kasi-deaar",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-deaar",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-fixe-deaar",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-deaar",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-ubun-deaar",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-deaar",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "kuruman",
+      "name": "Kuruman",
+      "region": "Ga-Segonyana · eye of the Kalahari",
+      "district": "Ga-Segonyana",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 32,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/kuruman",
+      "illustrative": true,
+      "lat": -27.45,
+      "lng": 23.4333,
+      "description": "The Eye of Kuruman — a natural spring that produces 20 million litres of water daily from the Kalahari — has sustained this town for millennia. The Moffat Mission here was a launchpad for Christianity in southern Africa.",
+      "population_estimate": 10000,
+      "archetype": "mission_heritage"
+    },
+    {
+      "slug": "calvinia",
+      "name": "Calvinia",
+      "region": "Hantam · Karoo heartland",
+      "district": "Hantam",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 25,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/calvinia",
+      "illustrative": true,
+      "lat": -31.4833,
+      "lng": 19.7833,
+      "description": "Namaqualand town famous for spring wildflowers and the annual Calvinia Namaqualand Cherry Festival."
+    },
+    {
+      "slug": "sutherland",
+      "name": "Sutherland",
+      "region": "Karoo · telescope town",
+      "district": "Karoo Hoogland",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 28,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/sutherland",
+      "illustrative": true,
+      "lat": -32.4,
+      "lng": 20.6833,
+      "description": "Coldest town in South Africa, home to the South African Large Telescope (SALT) and pristine Karoo night skies."
+    },
+    {
+      "slug": "colesberg",
+      "name": "Colesberg",
+      "region": "karoo town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -30.7167,
+      "lng": 25.1,
+      "description": "A Karoo town at the crossroads of the N1 and N9, Colesberg is where travellers stop and Karoo lamb dinners are a tradition. The town's sheepdogs and merino wool are legendary.",
+      "population_estimate": 5000,
+      "archetype": "karoo_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/colesberg",
+      "illustrative": true
+    },
+    {
+      "slug": "postmasburg",
+      "name": "Postmasburg",
+      "region": "mining town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -28.3333,
+      "lng": 23.0667,
+      "description": "A mining town in the Northern Cape's iron ore belt, Postmasburg is where mineral extraction meets the vast Kalahari landscape.",
+      "population_estimate": 6000,
+      "archetype": "mining_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/postmasburg",
+      "illustrative": true
+    }
+  ],
+  "hero_image": "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=1200&q=80",
+  "description": "South Africa's largest and most sparsely populated province — 7 towns across the diamond coast, Namaqualand's spring flowers, and the vast Karoo. The Northern Cape is frontier country.",
+  "coordinators": [
+    {
+      "name": "Busisiwe Nyathi",
+      "status": "active",
+      "town": "springbok"
+    },
+    {
+      "name": "Dineo Sethole",
+      "status": "active",
+      "town": "upington"
+    },
+    {
+      "name": "Johannes Louw",
+      "status": "active",
+      "town": "de-aar"
+    },
+    {
+      "name": "Thandi Willemse",
+      "status": "active",
+      "town": "kimberley"
+    }
+  ],
+  "top_opportunities": [
+    {
+      "title": "Northern Cape Solar Farm Technician Training",
+      "type": "training",
+      "source": "private",
+      "town": "upington"
+    },
+    {
+      "title": "Ubuntu Town Coordinator — Springbok",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "springbok"
+    },
+    {
+      "title": "Orbit Music — Youth AI Music Creation Workshop",
+      "type": "training",
+      "source": "ngo",
+      "town": "kimberley"
+    },
+    {
+      "title": "Inside.Town — Community Podcast Producer",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "kimberley"
+    },
+    {
+      "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "kimberley"
+    }
+  ]
+}

@@ -1,0 +1,898 @@
+{
+  "slug": "gauteng",
+  "name": "Gauteng",
+  "default_lens": "investor",
+  "network": {
+    "towns": 50,
+    "provinces": 9,
+    "coordinators": 53
+  },
+  "aggregates": {
+    "towns": 18,
+    "live": 0,
+    "building": 6,
+    "unclaimed": 12,
+    "opportunity_index_avg": 13.9
+  },
+  "data_vintage": "2026-06",
+  "towns": [
+    {
+      "slug": "merafong",
+      "name": "Merafong Cluster",
+      "region": "West Rand · mining & youth",
+      "district": "West Rand",
+      "status": "building",
+      "render_pct": 32,
+      "opportunity_potential": 58,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/merafong",
+      "illustrative": true,
+      "lat": -26.4167,
+      "lng": 27.25,
+      "description": "Mining cluster west of Johannesburg, serving the gold mining communities of the West Rand."
+    },
+    {
+      "slug": "johannesburg",
+      "name": "Johannesburg",
+      "region": "Metro · economic capital",
+      "district": "City of Johannesburg",
+      "status": "building",
+      "render_pct": 94,
+      "opportunity_potential": 240,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/johannesburg",
+      "illustrative": false,
+      "coordinator_name": "Naledi Khumalo",
+      "youth_mapped": 342,
+      "active_signals": 4,
+      "open_opportunities": 8,
+      "lat": -26.2041,
+      "lng": 28.0473,
+      "description": "Africa's economic powerhouse rises from the gold-mining reef to become the continent's most dynamic city, where Maboneng's art galleries sit alongside Soweto's heritage streets. Joburg never stops reinventing itself — it's the city of gold, now the city of grit, innovation, and 21st-century African ambition.",
+      "population_estimate": 5635000,
+      "archetype": "major_city",
+      "opportunities": [
+        {
+          "id": "opp-nyda-jhb",
+          "title": "NYDA National Youth Service Phase V — 100,000 Paid Opportunities",
+          "type": "volunteer",
+          "source": "government",
+          "deadline_date": "2026-09-30",
+          "town_id": "town-jhb",
+          "metadata": {
+            "url": "https://sayouth.mobi",
+            "national": true,
+            "provider": "NYDA + PYEI"
+          }
+        },
+        {
+          "id": "opp-funza-jhb",
+          "title": "Funza Lushaka Teaching Bursary 2027",
+          "type": "training",
+          "source": "government",
+          "deadline_date": "2026-10-31",
+          "town_id": "town-jhb",
+          "metadata": {
+            "provider": "Department of Basic Education"
+          }
+        },
+        {
+          "id": "opp-saps-jhb",
+          "title": "SAPS Police Trainee Recruitment 2027",
+          "type": "training",
+          "source": "government",
+          "deadline_date": "2026-08-31",
+          "town_id": "town-jhb",
+          "metadata": {
+            "provider": "South African Police Service"
+          }
+        },
+        {
+          "id": "opp-epwp-jhb",
+          "title": "EPWP Community Works Programme",
+          "type": "internship",
+          "source": "government",
+          "deadline_date": null,
+          "town_id": "town-jhb",
+          "metadata": {
+            "ongoing": true,
+            "provider": "Department of Public Works"
+          }
+        },
+        {
+          "id": "opp-eskom-jhb",
+          "title": "Eskom Graduate-in-Training Programme 2027",
+          "type": "internship",
+          "source": "private",
+          "deadline_date": "2026-09-15",
+          "town_id": "town-jhb",
+          "metadata": {
+            "provider": "Eskom"
+          }
+        },
+        {
+          "id": "opp-nsfas-jhb",
+          "title": "NSFAS Financial Aid 2027 Applications",
+          "type": "training",
+          "source": "government",
+          "deadline_date": "2026-11-30",
+          "town_id": "town-jhb",
+          "metadata": {
+            "provider": "NSFAS"
+          }
+        },
+        {
+          "id": "opp-bankseta-jhb",
+          "title": "BANKSETA Banking Sector Learnership",
+          "type": "training",
+          "source": "government",
+          "deadline_date": "2026-12-31",
+          "town_id": "town-jhb",
+          "metadata": {
+            "provider": "BANKSETA"
+          }
+        },
+        {
+          "id": "opp-fix-jhb",
+          "title": "FixEasy24 — Verified Service Providers Needed (Plumbers, Electricians, Handymen)",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-jhb",
+          "metadata": {
+            "earning": "Lead fees + listing visibility",
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-kasi-jhb",
+          "title": "KasiBuy — Local Sellers & Spaza Partners Wanted",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-jhb",
+          "metadata": {
+            "earning": "Sales commission + product margin",
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-frame-jhb",
+          "title": "FrameSouth — Town Photographer & Visual Partner",
+          "type": "internship",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-jhb",
+          "metadata": {
+            "earning": "Paid briefs + event coverage",
+            "ecosystem": "framesouth"
+          }
+        },
+        {
+          "id": "opp-aicafe-jhb",
+          "title": "AI Cafe — Internet Cafe Partner / AI Access Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-jhb",
+          "metadata": {
+            "earning": "Service fees + partner subscription",
+            "ecosystem": "aicafe"
+          }
+        },
+        {
+          "id": "opp-eco-jhb",
+          "title": "EcoChar — 5-Day Charcoal Production Training (Free)",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-jhb",
+          "metadata": {
+            "earning": "Production + distribution margin",
+            "ecosystem": "ecochar"
+          }
+        },
+        {
+          "id": "opp-buntu-jhb",
+          "title": "BuntuBar — Mobile Bar & Beverage Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-jhb",
+          "metadata": {
+            "earning": "Event packages + workshop fees",
+            "ecosystem": "buntubar"
+          }
+        },
+        {
+          "id": "opp-acad-jhb",
+          "title": "Ubuntu Academy — CV & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-jhb",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        },
+        {
+          "id": "opp-orbit-jhb",
+          "title": "Orbit Music — Monthly AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-jhb",
+          "metadata": {
+            "earning": "Streams + briefs + showcase",
+            "ecosystem": "orbit_music"
+          }
+        },
+        {
+          "id": "opp-inside-jhb",
+          "title": "Inside.Town — Podcast Host & Town Voice",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-jhb",
+          "metadata": {
+            "earning": "Sponsor packages + content fees",
+            "ecosystem": "inside_town"
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "sig-jhb-1",
+          "title": "Pothole crisis — M1 off-ramp Braamfontein",
+          "category": "infrastructure",
+          "status": "pending",
+          "town_id": "town-jhb"
+        },
+        {
+          "id": "sig-jhb-2",
+          "title": "Transformer failure — Soweto Zone 6",
+          "category": "infrastructure",
+          "status": "pending",
+          "town_id": "town-jhb"
+        },
+        {
+          "id": "sig-jhb-3",
+          "title": "Cable theft — Hillbrow substation",
+          "category": "safety",
+          "status": "pending",
+          "town_id": "town-jhb"
+        },
+        {
+          "id": "sig-jhb-4",
+          "title": "Free coding bootcamp — Braamfontein Library",
+          "category": "education",
+          "status": "pending",
+          "town_id": "town-jhb"
+        }
+      ],
+      "stories": [
+        {
+          "id": "story-jhb-1",
+          "title": "How I Found My First Job Through Ubuntu Town",
+          "content": "Thembi from Soweto used the opportunity board to find NYDA placement.",
+          "author_name": "Thembi M.",
+          "town_id": "town-jhb"
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-jhb-1",
+          "name": "Soweto Spaza Hub",
+          "category": "retail",
+          "is_verified": true,
+          "town_id": "town-jhb"
+        },
+        {
+          "id": "biz-jhb-2",
+          "name": "Diepkloof FixEasy24",
+          "category": "healthcare",
+          "is_verified": true,
+          "town_id": "town-jhb"
+        },
+        {
+          "id": "biz-jhb-3",
+          "name": "Braamfontein Tech Cafe",
+          "category": "education",
+          "is_verified": true,
+          "town_id": "town-jhb"
+        }
+      ],
+      "events": [
+        {
+          "id": "evt-jhb-1",
+          "title": "Ubuntu Town Johannesburg Launch",
+          "description": "Official launch of Ubuntu Town digital twin.",
+          "event_date": "2026-07-15",
+          "town_id": "town-jhb"
+        },
+        {
+          "slug": "johannesburg",
+          "title": "Ubuntu Town JHB Launch",
+          "description": "Official launch of Ubuntu Town digital twin for Johannesburg",
+          "event_date": "2026-07-15",
+          "id": "seed-johannesburg-evt",
+          "town_id": null
+        }
+      ],
+      "access_points": [
+        {
+          "id": "ap-jhb-1",
+          "name": "Soweto Community Library",
+          "category": "library",
+          "is_verified": true,
+          "town_id": "town-jhb"
+        },
+        {
+          "id": "ap-jhb-2",
+          "name": "Diepkloof Youth Centre",
+          "category": "community_centre",
+          "is_verified": true,
+          "town_id": "town-jhb"
+        }
+      ],
+      "services": [
+        {
+          "title": "SW Gauteng TVET — Sandton campus",
+          "description": "Engineering, business, and IT programmes. NSFAS eligible.",
+          "price_range": "R6,000 - R18,000/year",
+          "category": "education"
+        },
+        {
+          "title": "Rea Vaya Bus — BRT system",
+          "description": "Bus rapid transit connecting Soweto, CBD, and Rosebank.",
+          "price_range": "R10 - R40",
+          "category": "transport"
+        },
+        {
+          "title": "Chris Hani Baragwanath Hospital",
+          "description": "Third-largest hospital in the world. Emergency and specialist services.",
+          "price_range": "Free (public)",
+          "category": "healthcare"
+        }
+      ]
+    },
+    {
+      "slug": "soweto",
+      "name": "Soweto",
+      "region": "Johannesburg · heritage & culture",
+      "district": "City of Johannesburg",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 55,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/soweto",
+      "illustrative": true,
+      "lat": -26.2485,
+      "lng": 27.854,
+      "description": "South Africa's most famous township is where the 1976 student uprising changed the world, and where Vilakazi Street once hosted both Mandela and Tutu as neighbours. Today, Soweto pulses with music, food, art, and an unbreakable spirit.",
+      "population_estimate": 1272000,
+      "archetype": "township_heritage"
+    },
+    {
+      "slug": "pretoria",
+      "name": "Pretoria",
+      "region": "Tshwane · administrative capital",
+      "district": "City of Tshwane",
+      "status": "building",
+      "render_pct": 47,
+      "opportunity_potential": 65,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/pretoria",
+      "illustrative": false,
+      "coordinator_name": "Lerato Mokoena",
+      "youth_mapped": 215,
+      "active_signals": 1,
+      "open_opportunities": 4,
+      "lat": -25.7479,
+      "lng": 28.2293,
+      "description": "South Africa's administrative capital is the city of jacarandas — every October, purple blossoms transform the streets into a living painting. The Union Buildings, Voortrekker Monument, and University of Pretoria make it a city where governance, history, and education converge.",
+      "population_estimate": 741000,
+      "archetype": "administrative_capital",
+      "opportunities": [
+        {
+          "id": "opp-saps-pta",
+          "title": "SAPS Police Trainee Recruitment 2027",
+          "type": "training",
+          "source": "government",
+          "deadline_date": "2026-08-31",
+          "town_id": "town-pta",
+          "metadata": {}
+        },
+        {
+          "id": "opp-csir-pta",
+          "title": "CSIR Studentship Programme 2027",
+          "type": "internship",
+          "source": "government",
+          "deadline_date": "2026-10-15",
+          "town_id": "town-pta",
+          "metadata": {
+            "provider": "CSIR"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-pta-1",
+          "name": "Mamelodi Fresh Produce",
+          "category": "retail",
+          "is_verified": true,
+          "town_id": "town-pta"
+        }
+      ],
+      "access_points": [
+        {
+          "id": "ap-pta-1",
+          "name": "Mamelodi Thusong Centre",
+          "category": "community_centre",
+          "is_verified": true,
+          "town_id": "town-pta"
+        }
+      ],
+      "services": [
+        {
+          "title": "Tshwane North TVET",
+          "description": "Engineering and business programmes. Multiple campuses.",
+          "price_range": "R5,000 - R14,000/year",
+          "category": "education"
+        },
+        {
+          "title": "A Re Yeng — Tshwane BRT",
+          "description": "Bus rapid transit connecting Pretoria CBD, Hatfield, and Soshanguve.",
+          "price_range": "R8 - R35",
+          "category": "transport"
+        }
+      ]
+    },
+    {
+      "slug": "tembisa",
+      "name": "Tembisa",
+      "region": "Ekurhuleni · township hub",
+      "district": "Ekurhuleni",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 42,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/tembisa",
+      "illustrative": true,
+      "lat": -26.0083,
+      "lng": 28.2333,
+      "description": "One of Gauteng's largest townships, Tembisa is a community of hustlers, dreamers, and doers where the taxi rank is the economic heartbeat. The annual Tembisa Festival celebrates the township's creative energy.",
+      "population_estimate": 463000,
+      "archetype": "township"
+    },
+    {
+      "slug": "benoni",
+      "name": "Benoni",
+      "region": "Ekurhuleni · East Rand",
+      "district": "Ekurhuleni",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 40,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/benoni",
+      "illustrative": true,
+      "lat": -26.1833,
+      "lng": 28.3167,
+      "description": "East Rand city known for its lakes, mining heritage, and the Benoni Northerns cricket ground."
+    },
+    {
+      "slug": "randburg",
+      "name": "Randburg",
+      "region": "Johannesburg · north",
+      "district": "City of Johannesburg",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/randburg",
+      "illustrative": true,
+      "lat": -26.0936,
+      "lng": 28.0512,
+      "description": "A major commercial node in northern Johannesburg, Randburg serves a diverse community of shoppers, workers, and families. The area's shopping centres and residential neighbourhoods make it a self-contained urban hub.",
+      "population_estimate": 337000,
+      "archetype": "suburban"
+    },
+    {
+      "slug": "roodepoort",
+      "name": "Roodepoort",
+      "region": "West Rand · mining belt",
+      "district": "West Rand",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 38,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/roodepoort",
+      "illustrative": true,
+      "lat": -26.15,
+      "lng": 27.875,
+      "description": "West Rand city with gold mining roots, now a diverse suburban hub between Johannesburg and Krugersdorp."
+    },
+    {
+      "slug": "kempton-park",
+      "name": "Kempton Park",
+      "region": "Ekurhuleni · airport node",
+      "district": "Ekurhuleni",
+      "status": "ghost",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/kempton-park",
+      "illustrative": true,
+      "coordinator_name": "Noluthando Mgwenya",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -26.1,
+      "lng": 28.2333,
+      "description": "Home to OR Tambo International Airport, South Africa's busiest airport and a major logistics hub.",
+      "opportunities": [
+        {
+          "id": "opp-bunt-kemptonpark",
+          "title": "BuntuBar — Mobile Bar Event Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-kemptonpark",
+          "metadata": {
+            "ecosystem": "buntubar"
+          }
+        },
+        {
+          "id": "opp-aica-kemptonpark-2",
+          "title": "AI Café — Digital Access Point / CV Service Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-kemptonpark",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        },
+        {
+          "id": "opp-ubun-kemptonpark-3",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-kemptonpark",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "centurion",
+      "name": "Centurion",
+      "region": "Tshwane · south corridor",
+      "district": "City of Tshwane",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 42,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/centurion",
+      "illustrative": true,
+      "lat": -25.8556,
+      "lng": 28.1903,
+      "description": "Straddling the border of Pretoria and Johannesburg, Centurion is a rapidly growing commercial and residential hub where government and private sector converge.",
+      "population_estimate": 236000,
+      "archetype": "suburban"
+    },
+    {
+      "slug": "ekurhuleni",
+      "name": "Ekurhuleni",
+      "region": "",
+      "status": "building",
+      "render_pct": 23,
+      "opportunity_potential": 30,
+      "coordinator_status": "assigned",
+      "route": "/town/ekurhuleni",
+      "illustrative": false,
+      "coordinator_name": "Zanele Mkhize",
+      "youth_mapped": 180,
+      "active_signals": 0,
+      "open_opportunities": 3,
+      "lat": -26.1833,
+      "lng": 28.2333,
+      "description": "The East Rand's industrial heartland is where South Africa manufactures — from Germiston's factories to Benoni's lakes and Boksburg's communities. Ekurhuleni is the engine room that keeps the Gauteng economy running.",
+      "population_estimate": 3179000,
+      "archetype": "industrial",
+      "opportunities": [
+        {
+          "id": "opp-merseta-ek",
+          "title": "MerSETA Manufacturing Learnership",
+          "type": "training",
+          "source": "government",
+          "deadline_date": "2026-12-31",
+          "town_id": "town-ek",
+          "metadata": {
+            "provider": "MerSETA"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "carletonville",
+      "name": "Carletonville",
+      "region": "",
+      "status": "building",
+      "render_pct": 25,
+      "opportunity_potential": 45,
+      "coordinator_status": "assigned",
+      "route": "/town/carletonville",
+      "illustrative": false,
+      "coordinator_name": "Motshidisi Mabele",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -26.35,
+      "lng": 27.4,
+      "description": "Deep-level gold mining town on the West Rand, where some of the world's deepest mines operate.",
+      "opportunities": [
+        {
+          "id": "opp-ubun-carletonville",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-carletonville",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        },
+        {
+          "id": "opp-orbi-carletonville-2",
+          "title": "Orbit Music — Youth AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-carletonville",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        },
+        {
+          "id": "opp-insi-carletonville-3",
+          "title": "Inside.Town — Community Podcast Producer",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-carletonville",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "vanderbijlpark",
+      "name": "Vanderbijlpark",
+      "region": "",
+      "status": "building",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "coordinator_status": "assigned",
+      "route": "/town/vanderbijlpark",
+      "illustrative": false,
+      "coordinator_name": "Lesego Tau",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -26.7,
+      "lng": 27.8,
+      "description": "Steel city on the Vaal River, home to ArcelorMittal's largest South African plant.",
+      "opportunities": [
+        {
+          "id": "opp-fram-vanderbijlpark",
+          "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-vanderbijlpark",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        },
+        {
+          "id": "opp-fixe-vanderbijlpark-2",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-vanderbijlpark",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-kasi-vanderbijlpark-3",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-vanderbijlpark",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "sandton",
+      "name": "Sandton",
+      "region": "business hub",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -26.1075,
+      "lng": 28.0526,
+      "description": "Africa's richest square mile, Sandton is where global finance meets African ambition — the Johannesburg Stock Exchange, luxury hotels, and the iconic Nelson Mandela Square anchor South Africa's financial capital.",
+      "population_estimate": 220000,
+      "archetype": "business_hub",
+      "coordinator_status": "recruiting",
+      "route": "/town/sandton",
+      "illustrative": true
+    },
+    {
+      "slug": "midrand",
+      "name": "Midrand",
+      "region": "business hub",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -25.9964,
+      "lng": 28.1286,
+      "description": "Between Johannesburg and Pretoria, Midrand is a conference and business hub centred around Gallagher Convention Centre and the rapidly developing Waterfall City development.",
+      "population_estimate": 150000,
+      "archetype": "business_hub",
+      "coordinator_status": "recruiting",
+      "route": "/town/midrand",
+      "illustrative": true
+    },
+    {
+      "slug": "mabopane",
+      "name": "Mabopane",
+      "region": "township",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -25.4833,
+      "lng": 27.85,
+      "description": "A township in the north of Pretoria, Mabopane is a community where youth entrepreneurship and community resilience define daily life.",
+      "population_estimate": 280000,
+      "archetype": "township",
+      "coordinator_status": "recruiting",
+      "route": "/town/mabopane",
+      "illustrative": true
+    },
+    {
+      "slug": "mamelodi",
+      "name": "Mamelodi",
+      "region": "township",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -25.7167,
+      "lng": 28.3333,
+      "description": "East of Pretoria, Mamelodi is a vibrant township with a rich musical heritage — it's produced some of South Africa's finest mbaqanga and kwaito artists.",
+      "population_estimate": 350000,
+      "archetype": "township",
+      "coordinator_status": "recruiting",
+      "route": "/town/mamelodi",
+      "illustrative": true
+    },
+    {
+      "slug": "soshanguve",
+      "name": "Soshanguve",
+      "region": "township",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -25.4333,
+      "lng": 28.1,
+      "description": "North of Pretoria, Soshanguve is a large township built in the 1970s that has grown into a community with its own identity, markets, and cultural events.",
+      "population_estimate": 400000,
+      "archetype": "township",
+      "coordinator_status": "recruiting",
+      "route": "/town/soshanguve",
+      "illustrative": true
+    }
+  ],
+  "hero_image": "https://images.unsplash.com/photo-1577992804682-8e7d2c5dca3d?w=1200&q=80",
+  "description": "Africa's economic powerhouse. Johannesburg, Pretoria, and 11 more towns drive the continent's largest urban economy — from Sandton's finance district to Soweto's heritage streets.",
+  "coordinators": [
+    {
+      "name": "Naledi Khumalo",
+      "status": "active",
+      "town": "johannesburg"
+    },
+    {
+      "name": "Motshidisi Mabele",
+      "status": "active",
+      "town": "carletonville"
+    },
+    {
+      "name": "Zanele Mkhize",
+      "status": "active",
+      "town": "ekurhuleni"
+    },
+    {
+      "name": "Noluthando Mgwenya",
+      "status": "active",
+      "town": "kempton-park"
+    },
+    {
+      "name": "Lesego Tau",
+      "status": "active",
+      "town": "vanderbijlpark"
+    },
+    {
+      "name": "Lerato Mokoena",
+      "status": "active",
+      "town": "pretoria"
+    },
+    {
+      "name": "Thabo Molefe",
+      "status": "active",
+      "town": "johannesburg"
+    }
+  ],
+  "featured_stories": [
+    {
+      "title": "How I Found My First Job Through Ubuntu Town",
+      "content": "Thembi from Soweto used the opportunity board to find NYDA placement.",
+      "author": "Thembi M.",
+      "town": "johannesburg"
+    }
+  ],
+  "top_opportunities": [
+    {
+      "title": "NYDA National Youth Service Phase V — 100,000 Paid Opportunities",
+      "type": "volunteer",
+      "source": "government",
+      "town": "johannesburg"
+    },
+    {
+      "title": "Funza Lushaka Teaching Bursary 2027",
+      "type": "training",
+      "source": "government",
+      "town": "johannesburg"
+    },
+    {
+      "title": "SAPS Police Trainee Recruitment 2027",
+      "type": "training",
+      "source": "government",
+      "town": "johannesburg"
+    },
+    {
+      "title": "EPWP Community Works Programme",
+      "type": "internship",
+      "source": "government",
+      "town": "johannesburg"
+    },
+    {
+      "title": "Eskom Graduate-in-Training Programme 2027",
+      "type": "internship",
+      "source": "private",
+      "town": "johannesburg"
+    }
+  ]
+}

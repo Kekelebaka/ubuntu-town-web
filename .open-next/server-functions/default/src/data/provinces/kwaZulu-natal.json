@@ -1,0 +1,803 @@
+{
+  "slug": "kwaZulu-natal",
+  "name": "KwaZulu-Natal",
+  "default_lens": "visitor",
+  "network": {
+    "towns": 50,
+    "provinces": 9,
+    "coordinators": 53
+  },
+  "aggregates": {
+    "towns": 18,
+    "live": 0,
+    "building": 4,
+    "unclaimed": 14,
+    "opportunity_index_avg": 11.6
+  },
+  "data_vintage": "2026-06",
+  "towns": [
+    {
+      "slug": "newcastle",
+      "name": "Newcastle",
+      "region": "Amajuba · industrial north",
+      "district": "Amajuba",
+      "status": "building",
+      "render_pct": 25,
+      "opportunity_potential": 50,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/newcastle",
+      "illustrative": true,
+      "coordinator_name": "Pumi Cele",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -27.758,
+      "lng": 29.9317,
+      "description": "KwaZulu-Natal's northernmost major town, Newcastle is an industrial and agricultural centre with deep Zulu heritage. The annual Newcastle Show and surrounding battlefields make it a town of contrasts.",
+      "population_estimate": 40000,
+      "archetype": "industrial_town",
+      "opportunities": [
+        {
+          "id": "opp-aica-newcastle",
+          "title": "AI Café — Digital Access Point / CV Service Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-newcastle",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        },
+        {
+          "id": "opp-ubun-newcastle-2",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-newcastle",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        },
+        {
+          "id": "opp-orbi-newcastle-3",
+          "title": "Orbit Music — Youth AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-newcastle",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "newcastle",
+          "name": "Newcastle Show Grounds",
+          "category": "tourism",
+          "is_verified": false,
+          "id": "seed-newcastle-biz",
+          "town_id": null
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "kokstad",
+      "name": "Kokstad",
+      "region": "Harry Gwala · Griqualand east",
+      "district": "Harry Gwala",
+      "status": "building",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/kokstad",
+      "illustrative": true,
+      "coordinator_name": "Lerato Maseko",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -30.55,
+      "lng": 30.4167,
+      "description": "IsiGqubu town in southern KZN, gateway to the Drakensberg and home to the annual Kokstad Show.",
+      "opportunities": [
+        {
+          "id": "opp-ecoc-kokstad",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-kokstad",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        },
+        {
+          "id": "opp-bunt-kokstad-2",
+          "title": "BuntuBar — Mobile Bar Event Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-kokstad",
+          "metadata": {
+            "ecosystem": "buntubar"
+          }
+        },
+        {
+          "id": "opp-aica-kokstad-3",
+          "title": "AI Café — Digital Access Point / CV Service Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-kokstad",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "durban",
+      "name": "Durban",
+      "region": "eThekwini · port city",
+      "district": "eThekwini",
+      "status": "building",
+      "render_pct": 72,
+      "opportunity_potential": 135,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/durban",
+      "illustrative": false,
+      "coordinator_name": "Mandla Zulu",
+      "youth_mapped": 265,
+      "active_signals": 2,
+      "open_opportunities": 5,
+      "lat": -29.8587,
+      "lng": 31.0218,
+      "description": "Where the Indian Ocean meets Zulu heritage, Durban is South Africa's playground — golden beaches, the uShaka Marine World, and the world-famous bunny chow create a city unlike anywhere else on earth. The warm subtropical climate and cultural fusion make Durban endlessly inviting.",
+      "population_estimate": 5950000,
+      "archetype": "major_city",
+      "opportunities": [
+        {
+          "id": "opp-nyda-dur",
+          "title": "NYDA National Youth Service Phase V — 100,000 Paid Opportunities",
+          "type": "volunteer",
+          "source": "government",
+          "deadline_date": "2026-09-30",
+          "town_id": "town-dur",
+          "metadata": {
+            "national": true
+          }
+        },
+        {
+          "id": "opp-saps-dur",
+          "title": "SAPS Police Trainee Recruitment 2027",
+          "type": "training",
+          "source": "government",
+          "deadline_date": "2026-08-31",
+          "town_id": "town-dur",
+          "metadata": {}
+        },
+        {
+          "id": "opp-maritime-dur",
+          "title": "Durban Maritime Academy Intake 2027",
+          "type": "training",
+          "source": "government",
+          "deadline_date": "2026-10-31",
+          "town_id": "town-dur",
+          "metadata": {
+            "provider": "Transnet"
+          }
+        },
+        {
+          "id": "opp-fix-dur",
+          "title": "FixEasy24 — Verified Service Providers Needed",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-dur",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-frame-dur",
+          "title": "FrameSouth — Town Photographer & Visual Partner",
+          "type": "internship",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-dur",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        },
+        {
+          "id": "opp-buntu-dur",
+          "title": "BuntuBar — Mobile Bar & Beverage Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-dur",
+          "metadata": {
+            "ecosystem": "buntubar"
+          }
+        },
+        {
+          "id": "opp-orbit-dur",
+          "title": "Orbit Music — Monthly AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-dur",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        },
+        {
+          "id": "opp-inside-dur",
+          "title": "Inside.Town — Podcast Host & Town Voice",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-dur",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        },
+        {
+          "id": "opp-family-dur",
+          "title": "FamilyHouse — Home Host & Accommodation Partner",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-dur",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "sig-dur-1",
+          "title": "Flood damage — KwaMashu bridge not repaired",
+          "category": "infrastructure",
+          "status": "pending",
+          "town_id": "town-dur"
+        }
+      ],
+      "stories": [
+        {
+          "slug": "durban",
+          "title": "Warwick Junction Traders Unite",
+          "content": "The informal traders at Warwick Junction formed a cooperative. Now we share resources and market together.",
+          "author_name": "Nomsa K.",
+          "id": "seed-durban-story",
+          "town_id": null
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-dur-1",
+          "name": "Warwick Junction Traders",
+          "category": "retail",
+          "is_verified": true,
+          "town_id": "town-dur"
+        },
+        {
+          "id": "biz-dur-2",
+          "name": "Umlazi Health Clinic",
+          "category": "healthcare",
+          "is_verified": true,
+          "town_id": "town-dur"
+        }
+      ],
+      "events": [
+        {
+          "id": "evt-dur-1",
+          "title": "Durban Signal Day",
+          "description": "Community day for signal submissions.",
+          "event_date": "2026-07-10",
+          "town_id": "town-dur"
+        },
+        {
+          "slug": "durban",
+          "title": "Durban July",
+          "description": "South Africa's premier horse racing and fashion event",
+          "event_date": "2026-07-04",
+          "id": "seed-durban-evt",
+          "town_id": null
+        }
+      ],
+      "access_points": [
+        {
+          "id": "ap-dur-1",
+          "name": "KwaMashu Community Hall",
+          "category": "community_centre",
+          "is_verified": true,
+          "town_id": "town-dur"
+        }
+      ],
+      "services": [
+        {
+          "title": "Umgungundlovu TVET — PMB campus",
+          "description": "Engineering, agriculture, and business programmes.",
+          "price_range": "R5,000 - R12,000/year",
+          "category": "education"
+        },
+        {
+          "title": "People Mover — Durban CBD bus",
+          "description": "Hop-on hop-off bus service covering the beachfront and CBD.",
+          "price_range": "R5 - R20",
+          "category": "transport"
+        },
+        {
+          "title": "Addington Hospital",
+          "description": "Major public hospital on the North Beach road. Emergency services.",
+          "price_range": "Free (public)",
+          "category": "healthcare"
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "pietermaritzburg",
+      "name": "Pietermaritzburg",
+      "region": "uMsunduzi · capital city",
+      "district": "uMsunduzi",
+      "status": "building",
+      "render_pct": 27,
+      "opportunity_potential": 55,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/pietermaritzburg",
+      "illustrative": false,
+      "coordinator_name": "Tumi Phiri",
+      "youth_mapped": 120,
+      "active_signals": 0,
+      "open_opportunities": 2,
+      "lat": -29.6,
+      "lng": 30.3833,
+      "description": "The City of Flowers and capital of KZN, Pietermaritzburg is where Gandhi was thrown off a train and where the Midlands Meander craft route begins. Historic buildings, university culture, and surrounding farmlands give it small-city charm.",
+      "population_estimate": 223000,
+      "archetype": "provincial_capital",
+      "opportunities": [
+        {
+          "id": "opp-orbi-pmb",
+          "title": "Orbit Music — Youth AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-pmb",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        },
+        {
+          "id": "opp-insi-pmb-2",
+          "title": "Inside.Town — Community Podcast Producer",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-pmb",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        },
+        {
+          "id": "opp-fram-pmb-3",
+          "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-pmb",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "pietermaritzburg",
+          "name": "Midlands Meander Craft Route",
+          "category": "tourism",
+          "is_verified": false,
+          "id": "seed-pietermaritzburg-biz",
+          "town_id": null
+        }
+      ]
+    },
+    {
+      "slug": "richards-bay",
+      "name": "Richards Bay",
+      "region": "uMhlathuze · port & industry",
+      "district": "uMhlathuze",
+      "status": "ghost",
+      "render_pct": 24,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/richards-bay",
+      "illustrative": true,
+      "coordinator_name": "Zinhle Shabangu",
+      "youth_mapped": 85,
+      "active_signals": 0,
+      "open_opportunities": 1,
+      "lat": -28.7833,
+      "lng": 32.0667,
+      "description": "A deepwater port on the northern KZN coast, Richards Bay is where South Africa's aluminium smelting and mineral exports connect to global markets. The surrounding wetlands are a biodiversity hotspot.",
+      "population_estimate": 55000,
+      "archetype": "port_town",
+      "opportunities": [
+        {
+          "id": "opp-fixe-rb",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-rb",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-kasi-rb-2",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-rb",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-fami-rb-3",
+          "title": "FamilyHouse — Home Hospitality Host Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-rb",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "empangeni",
+      "name": "Empangeni",
+      "region": "uMhlathuze · sugar belt",
+      "district": "uMhlathuze",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 35,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/empangeni",
+      "illustrative": true,
+      "lat": -28.7333,
+      "lng": 31.9,
+      "description": "Sugar cane town near Richards Bay, serving the agricultural and industrial north coast."
+    },
+    {
+      "slug": "port-shepstone",
+      "name": "Port Shepstone",
+      "region": "Ray Nkonyeni · south coast",
+      "district": "Ray Nkonyeni",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 38,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/port-shepstone",
+      "illustrative": true,
+      "lat": -30.7333,
+      "lng": 30.45,
+      "description": "The largest town on KZN's south coast, Port Shepstone serves a fishing and holiday community with beautiful beaches and the Oribi Gorge nearby.",
+      "population_estimate": 15000,
+      "archetype": "coastal_town"
+    },
+    {
+      "slug": "greytown",
+      "name": "Greytown",
+      "region": "uMvoti · midlands",
+      "district": "uMvoti",
+      "status": "ghost",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/greytown",
+      "illustrative": true,
+      "coordinator_name": "Thabo Molefe",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -29.0667,
+      "lng": 30.5833,
+      "description": "Midlands town surrounded by timber plantations and dairy farms, gateway to the uMvoti area.",
+      "opportunities": [
+        {
+          "id": "opp-aica-greytown",
+          "title": "AI Café — Digital Access Point / CV Service Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-greytown",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        },
+        {
+          "id": "opp-ubun-greytown-2",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-greytown",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        },
+        {
+          "id": "opp-orbi-greytown-3",
+          "title": "Orbit Music — Youth AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-greytown",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "nquthu",
+      "name": "Nquthu",
+      "region": "uMzinyathi · heritage",
+      "district": "uMzinyathi",
+      "status": "ghost",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/nquthu",
+      "illustrative": true,
+      "coordinator_name": "Nokuthula Cele",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -28.2167,
+      "lng": 30.65,
+      "description": "Battlefields town near Isandlwana and Rorke's Drift, heart of Zulu heritage country.",
+      "opportunities": [
+        {
+          "id": "opp-insi-nquthu",
+          "title": "Inside.Town — Community Podcast Producer",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-nquthu",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        },
+        {
+          "id": "opp-fram-nquthu-2",
+          "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-nquthu",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        },
+        {
+          "id": "opp-fixe-nquthu-3",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-nquthu",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "harding",
+      "name": "Harding",
+      "region": "uMzimkhulu · rural south",
+      "district": "uMzimkhulu",
+      "status": "ghost",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/harding",
+      "illustrative": true,
+      "coordinator_name": "Palesa Khumalo",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -30.5833,
+      "lng": 29.8833,
+      "description": "Southern KZN timber town nestled in the Umzimkulu valley, gateway to the Wild Coast.",
+      "opportunities": [
+        {
+          "id": "opp-insi-harding",
+          "title": "Inside.Town — Community Podcast Producer",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-harding",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        },
+        {
+          "id": "opp-fram-harding-2",
+          "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-harding",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        },
+        {
+          "id": "opp-fixe-harding-3",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-harding",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "estcourt",
+      "name": "Estcourt",
+      "region": "uMsunduzi · midlands",
+      "district": "uMtshezi",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 32,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/estcourt",
+      "illustrative": true,
+      "lat": -29.0167,
+      "lng": 29.8833,
+      "description": "A small midlands town between Durban and the Drakensberg, Estcourt is a gateway to both the mountains and the battlefields of Isandlwana and Rorke's Drift.",
+      "population_estimate": 18000,
+      "archetype": "midlands"
+    },
+    {
+      "slug": "ulundi",
+      "name": "Ulundi",
+      "region": "Zululand · royal capital",
+      "district": "Zululand",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/ulundi",
+      "illustrative": true,
+      "lat": -28.3333,
+      "lng": 31.4167,
+      "description": "Former capital of KwaZulu, seat of the Zulu monarchy, and site of the final battle of the Anglo-Zulu War."
+    },
+    {
+      "slug": "umlazi",
+      "name": "Umlazi",
+      "region": "township",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -29.9667,
+      "lng": 30.8833,
+      "description": "Durban's largest township, Umlazi is a community of over 200,000 where youth culture, music, and entrepreneurship create a vibrant township economy.",
+      "population_estimate": 400000,
+      "archetype": "township",
+      "coordinator_status": "recruiting",
+      "route": "/town/umlazi",
+      "illustrative": true
+    },
+    {
+      "slug": "kwamashu",
+      "name": "KwaMashu",
+      "region": "township",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -29.7333,
+      "lng": 30.95,
+      "description": "North of Durban, KwaMashu is a township built in the 1960s that has become a cultural powerhouse — home to musicians, artists, and community leaders who shaped South African music.",
+      "population_estimate": 175000,
+      "archetype": "township",
+      "coordinator_status": "recruiting",
+      "route": "/town/kwamashu",
+      "illustrative": true
+    },
+    {
+      "slug": "vryheid",
+      "name": "Vryheid",
+      "region": "battlefields",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -27.7667,
+      "lng": 30.7833,
+      "description": "A farming town in northern KZN, Vryheid serves the surrounding coal mining and agricultural communities. The nearby battlefields tell the story of the Anglo-Zulu War.",
+      "population_estimate": 25000,
+      "archetype": "battlefields",
+      "coordinator_status": "recruiting",
+      "route": "/town/vryheid",
+      "illustrative": true
+    },
+    {
+      "slug": "ladysmith",
+      "name": "Ladysmith",
+      "region": "battlefields",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -28.5667,
+      "lng": 29.7833,
+      "description": "Famous for the 118-day Siege during the Anglo-Boer War, Ladysmith is a KZN town with deep military heritage and dramatic Drakensberg views.",
+      "population_estimate": 20000,
+      "archetype": "battlefields",
+      "coordinator_status": "recruiting",
+      "route": "/town/ladysmith",
+      "illustrative": true
+    },
+    {
+      "slug": "hluhluwe",
+      "name": "Hluhluwe",
+      "region": "wildlife",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -28.0833,
+      "lng": 32.0667,
+      "description": "The gateway to the Hluhluwe-iMfolozi Park, the world's oldest game reserve where white rhinos were saved from extinction. This is Big Five country.",
+      "population_estimate": 5000,
+      "archetype": "wildlife",
+      "coordinator_status": "recruiting",
+      "route": "/town/hluhluwe",
+      "illustrative": true
+    },
+    {
+      "slug": "st-lucia",
+      "name": "St Lucia",
+      "region": "ecotourism",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -27.4,
+      "lng": 32.4333,
+      "description": "The Estuary of the iSimangaliso Wetland Park — a UNESCO World Heritage Site where hippos wander the streets and crocodiles sun on the riverbank.",
+      "population_estimate": 3000,
+      "archetype": "ecotourism",
+      "coordinator_status": "recruiting",
+      "route": "/town/st-lucia",
+      "illustrative": true
+    }
+  ],
+  "hero_image": "https://images.unsplash.com/photo-1573790387438-4da905039392?w=1200&q=80",
+  "description": "Where the Indian Ocean meets Zulu heritage. 12 towns from Durban's golden beaches to the Drakensberg mountains, blending subtropical warmth with deep cultural roots."
+}

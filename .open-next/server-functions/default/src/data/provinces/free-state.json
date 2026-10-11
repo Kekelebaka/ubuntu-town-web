@@ -1,0 +1,1257 @@
+{
+  "slug": "free-state",
+  "name": "Free State",
+  "default_lens": "investor",
+  "network": {
+    "towns": 50,
+    "provinces": 9,
+    "coordinators": 53
+  },
+  "aggregates": {
+    "towns": 34,
+    "live": 0,
+    "building": 9,
+    "unclaimed": 25,
+    "opportunity_index_avg": 8.4
+  },
+  "data_vintage": "2026-06",
+  "towns": [
+    {
+      "slug": "ladybrand",
+      "name": "Ladybrand",
+      "region": "Mantsopa · Lesotho gateway",
+      "district": "Thabo Mofutsanyana",
+      "status": "building",
+      "render_pct": 25,
+      "opportunity_potential": 62,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/ladybrand",
+      "illustrative": false,
+      "coordinator_name": "Magauta Mapheleba",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -29.1947,
+      "lng": 27.4575,
+      "description": "Nestled against the Maloti mountain escarpment at the Lesotho border, Ladybrand is a charming town of sandstone buildings, art galleries, and some of the best farm stalls in the Free State. The nearby Basotho Cultural Village and Qhobosheane Cave paintings connect visitors to thousands of years of human settlement.",
+      "population_estimate": 8500,
+      "archetype": "heritage_town",
+      "opportunities": [
+        {
+          "id": "opp-ubun-ladybrand",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ladybrand",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        },
+        {
+          "id": "opp-orbi-ladybrand-2",
+          "title": "Orbit Music — Youth AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ladybrand",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        },
+        {
+          "id": "opp-insi-ladybrand-3",
+          "title": "Inside.Town — Community Podcast Producer",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ladybrand",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "ladybrand",
+          "name": "Ladybrand Farm Stall",
+          "category": "food",
+          "is_verified": false,
+          "id": "seed-ladybrand-biz",
+          "town_id": null
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "ficksburg",
+      "name": "Ficksburg",
+      "region": "Setsoto · cherry capital",
+      "district": "Thabo Mofutsanyana",
+      "status": "building",
+      "render_pct": 25,
+      "opportunity_potential": 54,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/ficksburg",
+      "illustrative": false,
+      "coordinator_name": "Magauta Mapheleba",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -28.8689,
+      "lng": 27.8825,
+      "description": "Ficksburg is the self-proclaimed Cherry Capital of South Africa, hosting the annual Cherry Festival each November when the orchards burst into bloom. The town's Masermeng Cultural Village offers authentic Basotho heritage experiences, while the surrounding farmlands produce some of the province's finest livestock.",
+      "population_estimate": 12000,
+      "archetype": "agricultural_town",
+      "opportunities": [
+        {
+          "id": "opp-fram-ficksburg",
+          "title": "FrameSouth — Town Photographer / Visual Proof Creator",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ficksburg",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        },
+        {
+          "id": "opp-fixe-ficksburg-2",
+          "title": "FixEasy24 — Verified Service Provider Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ficksburg",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-kasi-ficksburg-3",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-ficksburg",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "ficksburg",
+          "name": "Cherry Festival Market",
+          "category": "tourism",
+          "is_verified": false,
+          "id": "seed-ficksburg-biz",
+          "town_id": null
+        }
+      ],
+      "events": [
+        {
+          "slug": "ficksburg",
+          "title": "Cherry Festival",
+          "description": "Annual cherry harvest celebration with tastings, music, and market stalls",
+          "event_date": "2026-11-15",
+          "id": "seed-ficksburg-evt",
+          "town_id": null
+        }
+      ],
+      "services": [
+        {
+          "title": "Cherry Festival — November annually",
+          "description": "Annual cherry harvest celebration. Tastings, music, market stalls.",
+          "price_range": "R50 - R200",
+          "category": "tourism"
+        },
+        {
+          "title": "Masermeng Cultural Village",
+          "description": "Authentic Basotho heritage experiences and traditional meals.",
+          "price_range": "R100 - R300",
+          "category": "tourism"
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "clarens",
+      "name": "Clarens",
+      "region": "Dihlabeng · arts & Maluti",
+      "district": "Thabo Mofutsanyana",
+      "status": "building",
+      "render_pct": 30,
+      "opportunity_potential": 58,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/clarens",
+      "illustrative": false,
+      "lat": -28.5167,
+      "lng": 28.4167,
+      "description": "Known as the Jewel of the Free State, Clarens is an artistic village surrounded by sandstone cliffs and golden grasslands, home to dozens of galleries, craft shops, and the famous Clarens Brewery. The town attracts creatives and outdoor enthusiasts with hiking trails, fly-fishing, and the nearby Golden Gate Highlands.",
+      "population_estimate": 5000,
+      "archetype": "art_village",
+      "stories": [
+        {
+          "slug": "clarens",
+          "title": "Art Village Rising",
+          "content": "Clarens galleries now attract visitors from around the world. The annual Arts Festival brings thousands to our small mountain village.",
+          "author_name": "Anna V.",
+          "id": "seed-clarens-story",
+          "town_id": null
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "clarens",
+          "name": "Clarens Brewery",
+          "category": "food",
+          "is_verified": false,
+          "id": "seed-clarens-biz",
+          "town_id": null
+        },
+        {
+          "slug": "clarens",
+          "name": "Clarens Village Square Art Gallery",
+          "category": "tourism",
+          "is_verified": false,
+          "id": "seed-clarens-biz",
+          "town_id": null
+        }
+      ],
+      "events": [
+        {
+          "slug": "clarens",
+          "title": "Clarens Arts Festival",
+          "description": "Annual arts and culture festival celebrating local talent",
+          "event_date": "2026-09-20",
+          "id": "seed-clarens-evt",
+          "town_id": null
+        }
+      ],
+      "services": [
+        {
+          "title": "Clarens Village Square — art galleries",
+          "description": "Over 20 galleries and craft shops in the sandstone village.",
+          "price_range": "Free entry",
+          "category": "tourism"
+        },
+        {
+          "title": "Golden Gate Highlands — day visitor centre",
+          "description": "Dramatic sandstone cliffs and high-altitude grasslands.",
+          "price_range": "R40 - R80",
+          "category": "tourism"
+        }
+      ]
+    },
+    {
+      "slug": "bethlehem",
+      "name": "Bethlehem",
+      "region": "Dihlabeng · eastern FS hub",
+      "district": "Thabo Mofutsanyana",
+      "status": "building",
+      "render_pct": 25,
+      "opportunity_potential": 48,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/bethlehem",
+      "illustrative": false,
+      "coordinator_name": "Sinoto Selepe",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -28.2308,
+      "lng": 28.3075,
+      "description": "A small Karoo town with big dreams, Bethlehem serves as the commercial hub of the eastern Free State with stunning mountain views in every direction. The nearby Golden Gate Highlands National Park, with its dramatic sandstone cliffs and Basotho cultural heritage, draws visitors year-round.",
+      "population_estimate": 16000,
+      "archetype": "gateway_town",
+      "opportunities": [
+        {
+          "id": "opp-kasi-bethlehem",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-bethlehem",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-fami-bethlehem-2",
+          "title": "FamilyHouse — Home Hospitality Host Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-bethlehem",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        },
+        {
+          "id": "opp-ecoc-bethlehem-3",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-bethlehem",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "bethlehem",
+          "name": "Maluti View B&B",
+          "category": "hospitality",
+          "is_verified": false,
+          "id": "seed-bethlehem-biz",
+          "town_id": null
+        }
+      ],
+      "cv_count": 2
+    },
+    {
+      "slug": "harrismith",
+      "name": "Harrismith",
+      "region": "Maluti-a-Phofung · N3 hub",
+      "district": "Maluti-a-Phofung",
+      "status": "building",
+      "render_pct": 15,
+      "opportunity_potential": 52,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/harrismith",
+      "illustrative": false,
+      "coordinator_name": "Sipho Nkosi",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -28.27,
+      "lng": 29.13,
+      "description": "N3 crossroads town between Johannesburg and Durban, with Platberg mountain as its landmark. Gateway to the Drakensberg.",
+      "opportunities": [
+        {
+          "id": "opp-kasi-harrismith",
+          "title": "KasiBuy — Local Spaza / WhatsApp Store Listing",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-harrismith",
+          "metadata": {
+            "ecosystem": "kasibuy"
+          }
+        },
+        {
+          "id": "opp-fami-harrismith-2",
+          "title": "FamilyHouse — Home Hospitality Host Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-harrismith",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        },
+        {
+          "id": "opp-ecoc-harrismith-3",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-harrismith",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        }
+      ],
+      "stories": [
+        {
+          "slug": "harrismith",
+          "title": "N3 Crossroads Opportunity",
+          "content": "Being on the N3 between Joburg and Durban means truckers stop here. We are turning that traffic into trade.",
+          "author_name": "Sipho M.",
+          "id": "seed-harrismith-story",
+          "town_id": null
+        }
+      ],
+      "businesses": [
+        {
+          "slug": "harrismith",
+          "name": "Platberg Mountain Resort",
+          "category": "hospitality",
+          "is_verified": false,
+          "id": "seed-harrismith-biz",
+          "town_id": null
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "senekal",
+      "name": "Senekal",
+      "region": "Setsoto · agri town",
+      "district": "Thabo Mofutsanyana",
+      "status": "building",
+      "render_pct": 25,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/senekal",
+      "illustrative": false,
+      "coordinator_name": "Palesa Judith Makhetha",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -28.3167,
+      "lng": 27.6,
+      "description": "Maize and cattle farming town in the heart of the Setsoto municipality. Annual agricultural show draws the community together.",
+      "opportunities": [
+        {
+          "id": "opp-ubun-senekal",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-senekal",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        },
+        {
+          "id": "opp-orbi-senekal-2",
+          "title": "Orbit Music — Youth AI Music Creation Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-senekal",
+          "metadata": {
+            "ecosystem": "orbit_music"
+          }
+        },
+        {
+          "id": "opp-insi-senekal-3",
+          "title": "Inside.Town — Community Podcast Producer",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-senekal",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "phuthaditjhaba",
+      "name": "Phuthaditjhaba",
+      "region": "Maluti-a-Phofung · Qwaqwa",
+      "district": "Maluti-a-Phofung",
+      "status": "ghost",
+      "render_pct": 15,
+      "opportunity_potential": 45,
+      "heritage": true,
+      "coordinator_status": "assigned",
+      "route": "/town/phuthaditjhaba",
+      "illustrative": true,
+      "coordinator_name": "Ayanda Radebe",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -28.5333,
+      "lng": 28.8333,
+      "description": "QwaQwa campus town at the foot of the Maluti Mountains, home to the University of the Free State QwaQwa campus.",
+      "opportunities": [
+        {
+          "id": "opp-bunt-phuthaditjhaba",
+          "title": "BuntuBar — Mobile Bar Event Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-phuthaditjhaba",
+          "metadata": {
+            "ecosystem": "buntubar"
+          }
+        },
+        {
+          "id": "opp-aica-phuthaditjhaba-2",
+          "title": "AI Café — Digital Access Point / CV Service Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-phuthaditjhaba",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        },
+        {
+          "id": "opp-ubun-phuthaditjhaba-3",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-phuthaditjhaba",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "botshabelo",
+      "name": "Botshabelo",
+      "region": "Mantsopa · township",
+      "district": "Thabo Mofutsanyana",
+      "status": "ghost",
+      "render_pct": 25,
+      "opportunity_potential": 45,
+      "heritage": false,
+      "coordinator_status": "assigned",
+      "route": "/town/botshabelo",
+      "illustrative": true,
+      "coordinator_name": "Xoliswa Portia Xhalabile",
+      "youth_mapped": 0,
+      "active_signals": 0,
+      "open_opportunities": 0,
+      "lat": -29.2167,
+      "lng": 26.7333,
+      "description": "Large township south of Bloemfontein with over 300,000 residents. A major residential area with a growing economy.",
+      "opportunities": [
+        {
+          "id": "opp-bunt-botshabelo",
+          "title": "BuntuBar — Mobile Bar Event Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-botshabelo",
+          "metadata": {
+            "ecosystem": "buntubar"
+          }
+        },
+        {
+          "id": "opp-aica-botshabelo-2",
+          "title": "AI Café — Digital Access Point / CV Service Agent",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-botshabelo",
+          "metadata": {
+            "ecosystem": "aicafe"
+          }
+        },
+        {
+          "id": "opp-ubun-botshabelo-3",
+          "title": "Ubuntu Academy — Skills & Job Readiness Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-botshabelo",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        }
+      ],
+      "cv_count": 1
+    },
+    {
+      "slug": "clocolan",
+      "name": "Clocolan",
+      "region": "Setsoto · grain & sandstone",
+      "district": "Thabo Mofutsanyana",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 28,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/clocolan",
+      "illustrative": true,
+      "lat": -28.9,
+      "lng": 27.5667,
+      "description": "Small farming town known for sandstone geology and grain production in the eastern Free State."
+    },
+    {
+      "slug": "fouriesburg",
+      "name": "Fouriesburg",
+      "region": "Dihlabeng · Brandwater basin",
+      "district": "Thabo Mofutsanyana",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/fouriesburg",
+      "illustrative": true,
+      "lat": -28.6167,
+      "lng": 28.25,
+      "description": "Perched in the foothills of the Maloti Mountains at the gateway to Lesotho, Fouriesburg is a peaceful farming town where the annual Fouriesburg Arts Festival celebrates local talent. The nearby Sani Pass offers one of South Africa's most thrilling mountain drives into the Kingdom in the Sky.",
+      "population_estimate": 2500,
+      "archetype": "heritage_town"
+    },
+    {
+      "slug": "reitz",
+      "name": "Reitz",
+      "region": "Nketoana · maize belt",
+      "district": "Thabo Mofutsanyana",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 26,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/reitz",
+      "illustrative": true,
+      "lat": -27.8,
+      "lng": 28.4333,
+      "description": "A small but determined farming town in the northern Free State, Reitz is the centre of a rich agricultural district producing maize, sunflowers, and livestock. The annual Reitz Show brings the whole community together to celebrate rural life.",
+      "population_estimate": 3500,
+      "archetype": "farming_town"
+    },
+    {
+      "slug": "marquard",
+      "name": "Marquard",
+      "region": "Setsoto · grain",
+      "district": "Thabo Mofutsanyana",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 22,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/marquard",
+      "illustrative": true,
+      "lat": -28.0667,
+      "lng": 27.8833,
+      "description": "Quiet grain farming village surrounded by wheat and maize fields. A tight-knit rural community."
+    },
+    {
+      "slug": "hobhouse",
+      "name": "Hobhouse",
+      "region": "Mantsopa · border farming",
+      "district": "Thabo Mofutsanyana",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 20,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/hobhouse",
+      "illustrative": true,
+      "lat": -29.5333,
+      "lng": 26.95,
+      "description": "Border farming village near Lesotho, where generations have worked the land in the southern Free State."
+    },
+    {
+      "slug": "tweespruit",
+      "name": "Tweespruit",
+      "region": "Mantsopa · N8 corridor",
+      "district": "Thabo Mofutsanyana",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 24,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/tweespruit",
+      "illustrative": true,
+      "lat": -29.2333,
+      "lng": 27.1833,
+      "description": "Small town on the N8 between Bloemfontein and Ladybrand, surrounded by agricultural land."
+    },
+    {
+      "slug": "zastron",
+      "name": "Zastron",
+      "region": "Mohokare · Maluti foothills",
+      "district": "Xhariep",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 25,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/zastron",
+      "illustrative": true,
+      "lat": -30.3,
+      "lng": 27.0333,
+      "description": "Historic town at the Maluti foothills, known for the Battle of Mabolidrift and Karoo landscape."
+    },
+    {
+      "slug": "wepener",
+      "name": "Wepener",
+      "region": "Mohokare · Caledon river",
+      "district": "Xhariep",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 18,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/wepener",
+      "illustrative": true,
+      "lat": -29.75,
+      "lng": 27.0333,
+      "description": "Right on the border with Lesotho at the Caledon River, Wepener is a small trading town that serves the surrounding farming community and the mountain kingdom next door. The annual agricultural show draws visitors from both sides of the border.",
+      "population_estimate": 2000,
+      "archetype": "border_town"
+    },
+    {
+      "slug": "smithfield",
+      "name": "Smithfield",
+      "region": "Mohokare · historic Karoo",
+      "district": "Xhariep",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 22,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/smithfield",
+      "illustrative": true,
+      "lat": -30.2167,
+      "lng": 25.55,
+      "description": "Smithfield holds a special place in South African history as the birthplace of Oliver Reginald Tambo, ANC president and anti-apartheid leader. This small southern Free State town is working to preserve and celebrate this heritage.",
+      "population_estimate": 1200,
+      "archetype": "heritage_town"
+    },
+    {
+      "slug": "rosendal",
+      "name": "Rosendal",
+      "region": "Dihlabeng · arts hamlet",
+      "district": "Thabo Mofutsanyana",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 16,
+      "heritage": true,
+      "coordinator_status": "recruiting",
+      "route": "/town/rosendal",
+      "illustrative": true,
+      "lat": -28.5333,
+      "lng": 27.9833,
+      "description": "Arts hamlet known for galleries, craft markets, and stunning Maluti Mountain views."
+    },
+    {
+      "slug": "paul-roux",
+      "name": "Paul Roux",
+      "region": "Dihlabeng · sandstone village",
+      "district": "Thabo Mofutsanyana",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 15,
+      "heritage": false,
+      "coordinator_status": "recruiting",
+      "route": "/town/paul-roux",
+      "illustrative": true,
+      "lat": -28.3,
+      "lng": 27.95,
+      "description": "Small sandstone village in the Dihlabeng municipality, surrounded by farmlands."
+    },
+    {
+      "slug": "bloemfontein",
+      "name": "Bloemfontein",
+      "region": "",
+      "status": "building",
+      "render_pct": 55,
+      "opportunity_potential": 75,
+      "coordinator_status": "assigned",
+      "route": "/town/bloemfontein",
+      "illustrative": false,
+      "coordinator_name": "Tshabalala Katleho Alfred",
+      "youth_mapped": 145,
+      "active_signals": 1,
+      "open_opportunities": 3,
+      "lat": -29.0852,
+      "lng": 26.1596,
+      "description": "The judicial capital of South Africa and City of Roses, Bloemfontein sits at the heart of the Free State where the National Museum, Naval Hill, and the University of the Free State anchor a city that blends heritage with youthful energy. From the annual spring flower displays to the vibrant twin cities of Mangaung, this is where South Africa's legal and academic traditions meet everyday South African life.",
+      "population_estimate": 256000,
+      "archetype": "provincial_capital",
+      "opportunities": [
+        {
+          "id": "opp-nyda-bloem",
+          "title": "NYDA National Youth Service Phase V — 100,000 Paid Opportunities",
+          "type": "volunteer",
+          "source": "government",
+          "deadline_date": "2026-09-30",
+          "town_id": "town-bloem",
+          "metadata": {
+            "national": true
+          }
+        },
+        {
+          "id": "opp-fix-bloem",
+          "title": "FixEasy24 — Verified Service Providers Needed",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-bloem",
+          "metadata": {
+            "ecosystem": "fixeasy24"
+          }
+        },
+        {
+          "id": "opp-frame-bloem",
+          "title": "FrameSouth — Town Photographer & Visual Partner",
+          "type": "internship",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-bloem",
+          "metadata": {
+            "ecosystem": "framesouth"
+          }
+        },
+        {
+          "id": "opp-acad-bloem",
+          "title": "Ubuntu Academy — Business Profile & Marketing Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-bloem",
+          "metadata": {
+            "ecosystem": "ubuntu_academy"
+          }
+        },
+        {
+          "id": "opp-inside-bloem",
+          "title": "Inside.Town — Podcast Host & Town Voice",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-bloem",
+          "metadata": {
+            "ecosystem": "inside_town"
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "sig-bloem-1",
+          "title": "Boil water notice — Mangaung",
+          "category": "infrastructure",
+          "status": "pending",
+          "town_id": "town-bloem"
+        }
+      ],
+      "businesses": [
+        {
+          "id": "biz-bloem-1",
+          "name": "Botshabelo Community Kitchen",
+          "category": "retail",
+          "is_verified": true,
+          "town_id": "town-bloem"
+        }
+      ],
+      "events": [
+        {
+          "id": "evt-bloem-1",
+          "title": "Mangaung Water Crisis Town Hall",
+          "description": "Community meeting on water infrastructure.",
+          "event_date": "2026-07-08",
+          "town_id": "town-bloem"
+        },
+        {
+          "slug": "bloemfontein",
+          "title": "MACUFE Festival",
+          "description": "Mangaung African Cultural Festival — music, dance, art, and theatre",
+          "event_date": "2026-10-01",
+          "id": "seed-bloemfontein-evt",
+          "town_id": null
+        }
+      ],
+      "access_points": [
+        {
+          "id": "ap-bloem-1",
+          "name": "Botshabelo Community Centre",
+          "category": "community_centre",
+          "is_verified": true,
+          "town_id": "town-bloem"
+        }
+      ],
+      "services": [
+        {
+          "title": "Motheo TVET College — NATED programmes",
+          "description": "Engineering, business, and utility studies. Registration open.",
+          "price_range": "R5,000 - R15,000/year",
+          "category": "education"
+        },
+        {
+          "title": "National Museum — school tours",
+          "description": "Free educational tours for schools. Natural history and cultural exhibits.",
+          "price_range": "Free",
+          "category": "tourism"
+        },
+        {
+          "title": "Mangaung Water & Sanitation",
+          "description": "Municipal water and sanitation services. Report faults online.",
+          "price_range": "Municipal rates",
+          "category": "utility"
+        }
+      ],
+      "cv_count": 3
+    },
+    {
+      "slug": "welkom",
+      "name": "Welkom",
+      "region": "",
+      "status": "building",
+      "render_pct": 35,
+      "opportunity_potential": 45,
+      "coordinator_status": "assigned",
+      "route": "/town/welkom",
+      "illustrative": false,
+      "coordinator_name": "Dineo Mosia",
+      "youth_mapped": 98,
+      "active_signals": 0,
+      "open_opportunities": 2,
+      "lat": -27.975,
+      "lng": 26.7333,
+      "description": "Gold mining city in the Lejweleputswa district, home to gold mines and the Goldfields Mall.",
+      "opportunities": [
+        {
+          "id": "opp-fami-welk",
+          "title": "FamilyHouse — Home Hospitality Host Registration",
+          "type": "opportunity",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-welk",
+          "metadata": {
+            "ecosystem": "familyhouse"
+          }
+        },
+        {
+          "id": "opp-ecoc-welk-2",
+          "title": "EcoChar — 5-Day Charcoal Production Training",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-welk",
+          "metadata": {
+            "ecosystem": "ecochar"
+          }
+        },
+        {
+          "id": "opp-bunt-welk-3",
+          "title": "BuntuBar — Mobile Bar Event Workshop",
+          "type": "training",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-welk",
+          "metadata": {
+            "ecosystem": "buntubar"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "kroonstad",
+      "name": "Kroonstad",
+      "region": "",
+      "status": "building",
+      "render_pct": 9,
+      "opportunity_potential": 30,
+      "coordinator_status": "assigned",
+      "route": "/town/kroonstad",
+      "illustrative": false,
+      "coordinator_name": "Mandla Sithole",
+      "youth_mapped": 35,
+      "active_signals": 0,
+      "open_opportunities": 1,
+      "lat": -27.65,
+      "lng": 27.2333,
+      "description": "A major agricultural centre on the N1 highway, Kroonstad serves the surrounding grain and livestock farms while offering visitors a slice of Free State town life. The Vaal River nearby provides fishing and watersports, and the town's Dutch Reformed churches are architectural landmarks.",
+      "population_estimate": 25000,
+      "archetype": "commercial_town",
+      "opportunities": [
+        {
+          "id": "opp-coord-kroon",
+          "title": "Ubuntu Town Coordinator — Kroonstad",
+          "type": "volunteer",
+          "source": "ngo",
+          "deadline_date": null,
+          "town_id": "town-kroon",
+          "metadata": {
+            "ecosystem": "coordinator"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "lindley",
+      "name": "Lindley",
+      "region": "farming town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -27.8833,
+      "lng": 27.9,
+      "description": "Lindley is a quiet Free State farming community on the banks of the Vals River, where life moves at the pace of the seasons. The surrounding grain fields and livestock farms are the heartbeat of this close-knit town.",
+      "population_estimate": 2800,
+      "archetype": "farming_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/lindley",
+      "illustrative": true
+    },
+    {
+      "slug": "petrusburg",
+      "name": "Petrusburg",
+      "region": "farming town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -29.1333,
+      "lng": 25.75,
+      "description": "A small agricultural town between Bloemfontein and Kimberley, Petrusburg is a crossroads community where Free State farming meets Northern Cape frontier spirit. The town's churches and school are community anchors.",
+      "population_estimate": 2200,
+      "archetype": "farming_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/petrusburg",
+      "illustrative": true
+    },
+    {
+      "slug": "jagersfontein",
+      "name": "Jagersfontein",
+      "region": "mining heritage",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -29.7833,
+      "lng": 25.4333,
+      "description": "One of the oldest diamond towns in South Africa, Jagersfontein was where diamonds were first discovered in the 1870s — even before Kimberley. The historic town square and mining heritage tell the story of the diamond rush that changed the world.",
+      "population_estimate": 1800,
+      "archetype": "mining_heritage",
+      "coordinator_status": "recruiting",
+      "route": "/town/jagersfontein",
+      "illustrative": true
+    },
+    {
+      "slug": "villiers",
+      "name": "Villiers",
+      "region": "farming town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -27.1167,
+      "lng": 28.55,
+      "description": "A small town along the N3 between Johannesburg and Durban, Villiers is a Free State crossroads where travellers stop and locals carry on with farming life. The surrounding landscape is classic highveld — rolling grass and big skies.",
+      "population_estimate": 1500,
+      "archetype": "farming_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/villiers",
+      "illustrative": true
+    },
+    {
+      "slug": "heidelberg-fs",
+      "name": "Heidelberg FS",
+      "region": "farming town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -29.5167,
+      "lng": 26.65,
+      "description": "A small farming community on the banks of the Riet River, Heidelberg in the Free State is where generations of farming families have built a life on the land. The town's churches and school are the pillars of the community.",
+      "population_estimate": 2000,
+      "archetype": "farming_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/heidelberg-fs",
+      "illustrative": true
+    },
+    {
+      "slug": "staasiens",
+      "name": "Staasiens",
+      "region": "farming town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -29.3,
+      "lng": 25.9,
+      "description": "Deep in the Free State farmlands, Staasiens represents the heartland of South African agriculture — wide fields, hardworking communities, and the quiet dignity of rural life.",
+      "population_estimate": 800,
+      "archetype": "farming_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/staasiens",
+      "illustrative": true
+    },
+    {
+      "slug": "golden-gate",
+      "name": "Golden Gate",
+      "region": "nature reserve",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -28.5333,
+      "lng": 28.55,
+      "description": "The Golden Gate Highlands National Park is a landscape of dramatic sandstone cliffs, high-altitude grasslands, and the Basotho Cultural Village. This is where Lesotho's mountains meet the Free State plains in a blaze of golden light.",
+      "population_estimate": 500,
+      "archetype": "nature_reserve",
+      "coordinator_status": "recruiting",
+      "route": "/town/golden-gate",
+      "illustrative": true
+    },
+    {
+      "slug": "philippolis",
+      "name": "Philippolis",
+      "region": "heritage town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -30.0833,
+      "lng": 25.2667,
+      "description": "The oldest town in the Free State, Philippolis was founded by missionaries in 1822 and was once home to the famous Adam Kok III. The historic thatched-roof buildings and mission station tell a story of resilience and cultural exchange.",
+      "population_estimate": 1200,
+      "archetype": "heritage_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/philippolis",
+      "illustrative": true
+    },
+    {
+      "slug": "trompsburg",
+      "name": "Trompsburg",
+      "region": "farming town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -30.0333,
+      "lng": 25.7833,
+      "description": "A quiet farming town in the southern Free State near the Lesotho border, Trompsburg is surrounded by sheep and cattle farms in the rolling grasslands. The town's annual agricultural show is the highlight of the social calendar.",
+      "population_estimate": 1500,
+      "archetype": "farming_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/trompsburg",
+      "illustrative": true
+    },
+    {
+      "slug": "springfontein",
+      "name": "Springfontein",
+      "region": "heritage town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -30.2833,
+      "lng": 25.7,
+      "description": "On the historic railway line between Bloemfontein and the Cape, Springfontein is a small farming community with a proud Boer War heritage. The surrounding veld is classic Free State — wide skies, golden grass, and endless horizons.",
+      "population_estimate": 1000,
+      "archetype": "heritage_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/springfontein",
+      "illustrative": true
+    },
+    {
+      "slug": "thaba-nchu",
+      "name": "Thaba Nchu",
+      "region": "cultural town",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -29.2167,
+      "lng": 26.85,
+      "description": "Thaba Nchu means 'black mountain' in Sesotho and is the historical home of the Barolong people in the Free State. The town's Basotho heritage, annual cultural events, and community spirit make it a vital part of the province's identity.",
+      "population_estimate": 15000,
+      "archetype": "cultural_town",
+      "coordinator_status": "recruiting",
+      "route": "/town/thaba-nchu",
+      "illustrative": true
+    },
+    {
+      "slug": "mangaung",
+      "name": "Mangaung",
+      "region": "metropolitan",
+      "status": "ghost",
+      "render_pct": 0,
+      "opportunity_potential": 30,
+      "lat": -29.0852,
+      "lng": 26.1596,
+      "description": "The metropolitan municipality that includes Bloemfontein, Mangaung is where urban energy meets Free State soul. The University of the Free State brings youth culture and innovation, while the annual MACUFE festival is one of South Africa's premier arts events.",
+      "population_estimate": 256000,
+      "archetype": "metropolitan",
+      "coordinator_status": "recruiting",
+      "route": "/town/mangaung",
+      "illustrative": true
+    }
+  ],
+  "hero_image": "https://images.unsplash.com/photo-1590001155093-a3c66ab0c3ff?w=1200&q=80",
+  "description": "The heartland of South Africa, where golden grasslands stretch to the horizon and sandstone towns hold centuries of stories. Free State is home to 22 towns across rolling farmlands, the Maluti Mountains, and the Golden Gate Highlands.",
+  "coordinators": [
+    {
+      "name": "Dineo Mosia",
+      "status": "active",
+      "town": "welkom"
+    },
+    {
+      "name": "Palesa Judith Makhetha",
+      "status": "active",
+      "town": "senekal"
+    },
+    {
+      "name": "Magauta Mapheleba",
+      "status": "active",
+      "town": "ladybrand"
+    },
+    {
+      "name": "Sinoto Selepe",
+      "status": "active",
+      "town": "bethlehem"
+    },
+    {
+      "name": "Xoliswa Portia Xhalabile",
+      "status": "active",
+      "town": "botshabelo"
+    },
+    {
+      "name": "Magauta Mapheleba",
+      "status": "active",
+      "town": "ficksburg"
+    },
+    {
+      "name": "Tshabalala Katleho Alfred",
+      "status": "active",
+      "town": "bloemfontein"
+    },
+    {
+      "name": "Sipho Nkosi",
+      "status": "active",
+      "town": "harrismith"
+    },
+    {
+      "name": "Mandla Sithole",
+      "status": "active",
+      "town": "kroonstad"
+    },
+    {
+      "name": "Ayanda Radebe",
+      "status": "active",
+      "town": "phuthaditjhaba"
+    },
+    {
+      "name": "Mpho Lekota",
+      "status": "active",
+      "town": "bloemfontein"
+    }
+  ],
+  "top_opportunities": [
+    {
+      "title": "NYDA National Youth Service Phase V — 100,000 Paid Opportunities",
+      "type": "volunteer",
+      "source": "government",
+      "town": "bloemfontein"
+    },
+    {
+      "title": "FixEasy24 — Verified Service Providers Needed",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "bloemfontein"
+    },
+    {
+      "title": "FrameSouth — Town Photographer & Visual Partner",
+      "type": "internship",
+      "source": "ngo",
+      "town": "bloemfontein"
+    },
+    {
+      "title": "Ubuntu Academy — Business Profile & Marketing Workshop",
+      "type": "training",
+      "source": "ngo",
+      "town": "bloemfontein"
+    },
+    {
+      "title": "Inside.Town — Podcast Host & Town Voice",
+      "type": "volunteer",
+      "source": "ngo",
+      "town": "bloemfontein"
+    }
+  ]
+}

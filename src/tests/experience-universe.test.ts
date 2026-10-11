@@ -13,7 +13,7 @@ import {
   NATIONAL_STATEMENTS, provinceStatements, townStatements, initiativeStatements,
   personStatements, FLYWHEEL,
 } from '../lib/experience/stories';
-import { fiveModes, actRows, nationalRollup, universeToDataset, actionProposal, scopeTree } from '../lib/experience/derive';
+import { fiveModes, actRows, nationalRollup, universeToDataset, scopeTree } from '../lib/experience/derive';
 import { proposeAction } from '../lib/pulse/engine';
 
 /** Every evidence id a statement may cite must resolve to a real synthetic row. */
