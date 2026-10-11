@@ -53,6 +53,7 @@ export const ROUTE_MATRIX: MatrixRow[] = [
   { route: '/private-item/abc123', authRequired: true, role: null }, // /private-item/[privateItemId]
   { route: '/update-password', authRequired: true, role: null },
   // --- protected: operating system shell ---
+  { route: '/pulse', authRequired: true, role: null }, // Town Pulse (derived/read-only engine projection)
   { route: '/workspace', authRequired: true, role: null },
   { route: '/workspace/new', authRequired: true, role: null },
   { route: '/workspace/people', authRequired: true, role: null },
@@ -75,11 +76,11 @@ export const ROUTE_MATRIX: MatrixRow[] = [
 ];
 
 describe('route protection matrix — every route in src/app', () => {
-  it('covers 35 pages + 2 /auth route handlers + 2 API routes', () => {
-    // src/app contains 35 page.tsx files and 4 route.ts handlers:
+  it('covers 36 pages + 2 /auth route handlers + 2 API routes', () => {
+    // src/app contains 36 page.tsx files and 4 route.ts handlers:
     // /auth/callback, /auth/confirm (auth plumbing) and /api/release,
     // /api/revalidate (the "2 API routes").
-    expect(ROUTE_MATRIX).toHaveLength(39);
+    expect(ROUTE_MATRIX).toHaveLength(40);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/api/'))).toHaveLength(2);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/auth/'))).toHaveLength(4);
   });
