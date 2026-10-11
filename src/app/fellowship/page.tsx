@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase-client';
 
-export const runtime = 'edge';
 
 
 

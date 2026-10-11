@@ -39,6 +39,9 @@ export const PUBLIC_EXACT_PATHS: readonly string[] = [
  * - /api/revalidate — worker handshake, token-checked inside the route
  */
 export const PUBLIC_PATH_PREFIXES: readonly string[] = [
+  // EXPERIENCE 001 (public synthetic demo environment — synthetic data only, no
+  // production wiring, consequential actions simulated + human-gated). Explicit allowlist edit.
+  '/os',
   '/about',
   '/towns',
   '/town',

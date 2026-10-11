@@ -1,4 +1,3 @@
-export const runtime = 'edge';
 import { Suspense } from 'react';
 import { getCachedLoggedInVerifiedSupabaseUser } from '@/rsc-data/supabase';
 import { UpdatePassword } from './UpdatePassword';

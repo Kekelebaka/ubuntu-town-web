@@ -30,6 +30,16 @@ const config: NextConfig = {
       },
     ],
   },
+  // EXPERIENCE 001 PREVIEW ONLY: when EXPERIENCE_ROOT_REDIRECT=1 at build time
+  // (the public preview build), the opening experience serves at the bare URL.
+  // The main app build does not set this flag and is unaffected.
+  ...(process.env.EXPERIENCE_ROOT_REDIRECT === '1'
+    ? {
+        async redirects() {
+          return [{ source: '/', destination: '/os', permanent: false }];
+        },
+      }
+    : {}),
 };
 
 export default config;

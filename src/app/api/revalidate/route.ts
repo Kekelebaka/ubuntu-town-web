@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 // Revalidate town pages + search after publish
 // Called by the outbox worker with REVALIDATE_TOKEN
 
-export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {

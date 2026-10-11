@@ -73,6 +73,18 @@ export const ROUTE_MATRIX: MatrixRow[] = [
   { route: '/submit-signal', authRequired: true, role: null },
   { route: '/town-home', authRequired: true, role: null },
   { route: '/town-select', authRequired: true, role: null },
+  // --- public: EXPERIENCE 001 (synthetic demo environment; synthetic data only;
+  // consequential actions simulated and human-gated; explicit allowlist edit) ---
+  { route: '/os', authRequired: false, role: null },
+  { route: '/os/national', authRequired: false, role: null },
+  { route: '/os/province/free-state', authRequired: false, role: null }, // /os/province/[slug]
+  { route: '/os/town/senekal', authRequired: false, role: null }, // /os/town/[slug]
+  { route: '/os/initiative/syn-init-fixeasy-senekal', authRequired: false, role: null }, // /os/initiative/[id]
+  { route: '/os/person/syn-person-palesa', authRequired: false, role: null }, // /os/person/[id]
+  { route: '/os/mission/syn-work-201', authRequired: false, role: null }, // /os/mission/[id]
+  { route: '/os/proof/syn-proof-301', authRequired: false, role: null }, // /os/proof/[id]
+  { route: '/os/learning/syn-learning-401', authRequired: false, role: null }, // /os/learning/[id]
+  { route: '/os/opportunity/syn-opp-903', authRequired: false, role: null }, // /os/opportunity/[id]
 ];
 
 describe('route protection matrix — every route in src/app', () => {
@@ -80,7 +92,7 @@ describe('route protection matrix — every route in src/app', () => {
     // src/app contains 36 page.tsx files and 4 route.ts handlers:
     // /auth/callback, /auth/confirm (auth plumbing) and /api/release,
     // /api/revalidate (the "2 API routes").
-    expect(ROUTE_MATRIX).toHaveLength(40);
+    expect(ROUTE_MATRIX).toHaveLength(50);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/api/'))).toHaveLength(2);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/auth/'))).toHaveLength(4);
   });
@@ -110,6 +122,14 @@ describe('route protection matrix — every route in src/app', () => {
       '/town/senekal': '/town/[slug]',
       '/province/free-state': '/province/[slug]',
       '/private-item/abc123': '/private-item/[privateItemId]',
+      '/os/province/free-state': '/os/province/[slug]',
+      '/os/town/senekal': '/os/town/[slug]',
+      '/os/initiative/syn-init-fixeasy-senekal': '/os/initiative/[id]',
+      '/os/person/syn-person-palesa': '/os/person/[id]',
+      '/os/mission/syn-work-201': '/os/mission/[id]',
+      '/os/proof/syn-proof-301': '/os/proof/[id]',
+      '/os/learning/syn-learning-401': '/os/learning/[id]',
+      '/os/opportunity/syn-opp-903': '/os/opportunity/[id]',
     };
     const matrixShapes = ROUTE_MATRIX.map(
       (r) => dynamicRepresentatives[r.route] ?? r.route

@@ -3,7 +3,6 @@ import { createSupabaseClient } from '@/supabase-clients/server';
 import { decideAdminAccess } from '@/lib/admin-gate';
 import AdminFellowshipClient from './AdminFellowshipClient';
 
-export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 /**
