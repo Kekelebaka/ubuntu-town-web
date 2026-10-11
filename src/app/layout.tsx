@@ -199,10 +199,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${inter.variable} ${robotoMono.variable} ${bricolage.variable} ${plexMono.variable} ${caveat.variable}`}
     >
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icons/icon-192.png" sizes="any" />
         <script
           defer
-          data-domain={typeof window !== 'undefined' ? window.location.hostname : 'ubuntutown.co.za'}
+          data-domain={new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ubuntutown.co.za').hostname}
           src="https://plausible.io/js/script.js"
         ></script>
         <meta name="theme-color" content="#6B1F66" />
@@ -219,6 +219,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body>
+        {/* KeepNames shim: the bundled next-themes inline theme script references
+            esbuild's `__name` helper without defining it, which throws mid-script and
+            broke client-side init on the public preview. Defining it first is inert
+            for every other script. */}
+        <script dangerouslySetInnerHTML={{ __html: 'var __name=(f,n)=>f;' }} />
         <ServiceWorkerRegister />
         <DynamicLayoutProviders>
           <ClientLayout>
