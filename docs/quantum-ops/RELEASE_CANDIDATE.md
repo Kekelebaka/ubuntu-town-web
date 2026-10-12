@@ -10,8 +10,11 @@ is the control plane.
 - **Prior SHAs**: 9dd2f69 (Passport) → d2959da (truth-map) → e5be239 (CI gate) → 9837b100 (convergence).
 
 ## CI result
-- PR #34 runs `validate` (env-separation guard + lint + typecheck + test + build). Two check runs executing;
-  result gate the merge. No silent local-only success.
+- PR #34 `validate` (env-separation guard + gitignore check + `npm ci` + lint + typecheck + test + build):
+  **PASS** (two check runs, 1m57s). No silent local-only success.
+- **Fixed this session**: `npm ci` failed on GitHub Actions (npm 10) due to lock drift from the integration line
+  ("Missing: @esbuild/… from lock file") — regenerated `package-lock.json` with npm 10; `npm@10 ci --dry-run` exit 0.
+  This also un-breaks **Deploy Web** (same `npm ci`, Node 20), which had not run since 2026-09-24.
 
 ## Test result (exact counts)
 - **Unit/integration (vitest)**: **400 passed / 400** (20 files) = 386 prior + 14 new `learnings-write` tests.
