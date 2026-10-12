@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   description: 'Your town: people, economy, assets, opportunities, initiatives and proof.',
 };
 
-export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export default function TownPage() {

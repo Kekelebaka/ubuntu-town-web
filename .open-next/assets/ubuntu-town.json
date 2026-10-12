@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.ubuntutown.co.za/ubuntu-town.json",
+  "title": "Ubuntu Town — Structured Data",
+  "description": "Machine-readable data for Ubuntu Town: community opportunity infrastructure for South African towns.",
+  "lastUpdated": "2026-06-17",
+  "organization": {
+    "name": "Ubuntu Town",
+    "alternateName": ["Ubuntu Town OS", "UTown"],
+    "url": "https://www.ubuntutown.co.za",
+    "tagline": "1 Million CVs. 1 Million Opportunities.",
+    "motto": "One Town. Many Hands. U > I",
+    "description": "Ubuntu Town builds community opportunity infrastructure for South African towns, small towns, and townships. It transforms local human potential into verified, transactable opportunity through a structured operating system coordinated by trained local ambassadors.",
+    "foundingLocation": "South Africa",
+    "foundingDate": "2025-2026",
+    "founder": {
+      "name": "Keke Lebaka",
+      "url": "https://kekelebaka.com"
+    },
+    "contactPoint": {
+      "email": "info@ubuntutown.co.za",
+      "contactType": "general inquiry"
+    },
+    "socialProfile": {
+      "telegram": "https://t.me/UbuntuTown"
+    }
+  },
+  "status": "live",
+  "scale": {
+    "townsActivated": 22,
+    "ambassadorsTrained": 45
+  },
+  "targets2026": {
+    "townsActivated": 50,
+    "provincesCovered": 9,
+    "townSignalsCaptured": "10000+",
+    "opportunitiesSurfaced": "50000+",
+    "coordinatorsSupported": 500,
+    "workpacksLaunched": 5000
+  },
+  "operationalWorkflow": ["Signal", "Opportunity", "Workpack", "Proof", "Review", "Memory", "Governance"],
+  "ecosystemPathways": [
+    "Ubuntu Academy",
+    "AI Café",
+    "Job Fixer",
+    "KasiBuy",
+    "EcoChar",
+    "FrameSouth",
+    "Orbit Music",
+    "FixEasy",
+    "Family House",
+    "Buntu Bar"
+  ],
+  "contentPolicy": {
+    "search": true,
+    "aiInput": true,
+    "aiTrain": false
+  }
+}

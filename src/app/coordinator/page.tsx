@@ -238,7 +238,7 @@ export default function CoordinatorDashboard() {
           <div className="bg-ubuntu-card border border-ubuntu-border rounded-xl p-6">
             <h2 className="text-lg font-bold mb-4">Ecosystem Brands</h2>
             <div className="grid grid-cols-2 gap-2">
-              {['inside_town','framesouth','fixeasy24','kasibuy','familyhouse','ecochar','buntubar','aicafe','ubuntu_academy','orbit_music'].map((brand) => (
+              {['inside_town','framesouth','fixeasy24','kasibuy','familyhouse','buntubar','aicafe','orbit_music'].map((brand) => (
                 <div key={brand} className={`flex items-center gap-2 p-2 rounded-lg ${brandCounts[brand] ? 'bg-learning/10' : 'bg-ubuntu-cream'}`}>
                   {brandCounts[brand] ? <CheckCircle className="w-4 h-4 text-learning" /> : <AlertCircle className="w-4 h-4 text-muted-foreground/50" />}
                   <span className={`text-xs capitalize ${brandCounts[brand] ? 'font-medium' : 'text-muted-foreground'}`}>{brand.replace(/_/g, ' ')}</span>

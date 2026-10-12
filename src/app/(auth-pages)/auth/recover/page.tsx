@@ -1,4 +1,3 @@
-export const runtime = 'edge';
 
 import { sanitizeAuthNextPath } from '@/utils/auth-recovery';
 import { RecoverPasswordClient } from './RecoverPasswordClient';

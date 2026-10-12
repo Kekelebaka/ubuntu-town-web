@@ -1,0 +1,318 @@
+{
+  "object": "ubuntu-town-blueprint-roster",
+  "version": "1.0.0-provisional",
+  "created": "2026-10-12",
+  "authority": "BLUEPRINT = product/portfolio authority. This file is the explicit, versioned, machine-readable product geography: the 50 Blueprint towns operating cohort across 9 provinces.",
+  "provenance": {
+    "names_source": "evidence/founding50-names.json — the 50 preserved town names from the Founding-50 reconciliation migration (20260707002039). The only NAMED 50-town artifact in the estate.",
+    "province_source": "uto.towns live canonical rows (read-only join by name; 50/50 matched).",
+    "is_founding_flag": "EXPLICITLY NOT THE ROSTER. The is_founding=true flag marks 50 DIFFERENT rows — only 26 of these 50 named towns carry it (24 flagged rows are not in this roster, 24 roster towns are not flagged). Documented contradiction C-05. The flag must never substitute for this roster.",
+    "ratification_status": "PENDING HUMAN RATIFICATION — the human must confirm this file as THE approved Blueprint roster (the one remaining gate on geography truth)."
+  },
+  "counts": {
+    "towns": 50,
+    "provinces": 9
+  },
+  "towns": [
+    {
+      "name": "East London",
+      "province": "Eastern Cape",
+      "slug": "east-london",
+      "canonical_row_id": "9a8db9e3-19c0-4ad7-9033-d2a5109f5ed8"
+    },
+    {
+      "name": "Gqeberha",
+      "province": "Eastern Cape",
+      "slug": "gqeberha",
+      "canonical_row_id": "d456ecf2-2ac3-4097-9443-18184ca5477f"
+    },
+    {
+      "name": "KwaMaqoma",
+      "province": "Eastern Cape",
+      "slug": "kwamaqoma",
+      "canonical_row_id": "6daee406-5323-4dbe-bc92-3d04f0a53cc5"
+    },
+    {
+      "name": "Matatiele",
+      "province": "Eastern Cape",
+      "slug": "matatiele",
+      "canonical_row_id": "293d4378-fb98-4748-8066-17ea927557db"
+    },
+    {
+      "name": "Mthatha",
+      "province": "Eastern Cape",
+      "slug": "mthatha",
+      "canonical_row_id": "04e408c0-5369-4408-87dd-981056ba385d"
+    },
+    {
+      "name": "Bethlehem",
+      "province": "Free State",
+      "slug": "bethlehem",
+      "canonical_row_id": "795666dc-c502-4ddb-958f-a6a95572a5b1"
+    },
+    {
+      "name": "Bloemfontein",
+      "province": "Free State",
+      "slug": "bloemfontein",
+      "canonical_row_id": "dd449341-f4a4-4cec-b305-e7e1f4b58767"
+    },
+    {
+      "name": "Ficksburg",
+      "province": "Free State",
+      "slug": "ficksburg",
+      "canonical_row_id": "11203014-8042-472c-bcac-e2bc30a23a7f"
+    },
+    {
+      "name": "Harrismith",
+      "province": "Free State",
+      "slug": "harrismith",
+      "canonical_row_id": "ec7f59d9-a338-41cb-abc8-114abef72b82"
+    },
+    {
+      "name": "Ladybrand",
+      "province": "Free State",
+      "slug": "ladybrand",
+      "canonical_row_id": "af1c288d-7e20-451c-8474-b2263e9977a4"
+    },
+    {
+      "name": "Phuthaditjhaba",
+      "province": "Free State",
+      "slug": "phuthaditjhaba",
+      "canonical_row_id": "c713ec7c-5d20-4695-8aab-6b5a1def981b"
+    },
+    {
+      "name": "Senekal",
+      "province": "Free State",
+      "slug": "senekal",
+      "canonical_row_id": "562a10e9-0803-4d62-b61f-1f2799e83e67"
+    },
+    {
+      "name": "Welkom",
+      "province": "Free State",
+      "slug": "welkom",
+      "canonical_row_id": "7acdf389-d387-4999-81ce-e41065f33e43"
+    },
+    {
+      "name": "Johannesburg",
+      "province": "Gauteng",
+      "slug": "johannesburg",
+      "canonical_row_id": "3403df5f-9005-4d7a-9020-4c4ea82498f0"
+    },
+    {
+      "name": "Kempton Park",
+      "province": "Gauteng",
+      "slug": "kempton-park",
+      "canonical_row_id": "7ec108e3-bc86-4893-8481-619c71507b7b"
+    },
+    {
+      "name": "Pretoria",
+      "province": "Gauteng",
+      "slug": "pretoria",
+      "canonical_row_id": "500d0b8e-8d76-47ee-8404-fb6400eba0f0"
+    },
+    {
+      "name": "Randfontein",
+      "province": "Gauteng",
+      "slug": "randfontein",
+      "canonical_row_id": "9ec08356-d0f7-48f6-834d-6b55507ffc2f"
+    },
+    {
+      "name": "Soweto",
+      "province": "Gauteng",
+      "slug": "soweto",
+      "canonical_row_id": "7d8b899b-2b09-4dc6-9387-36c2d80dd2b3"
+    },
+    {
+      "name": "Springs",
+      "province": "Gauteng",
+      "slug": "springs",
+      "canonical_row_id": "fac3697d-4927-4a9b-8601-9c4736b91e8b"
+    },
+    {
+      "name": "Tembisa",
+      "province": "Gauteng",
+      "slug": "tembisa",
+      "canonical_row_id": "a323bd21-0efd-4cbe-a90d-3d57754a6c11"
+    },
+    {
+      "name": "Vanderbijlpark",
+      "province": "Gauteng",
+      "slug": "vanderbijlpark",
+      "canonical_row_id": "d748cac0-f5c7-4aef-86bc-bcf1a56fd018"
+    },
+    {
+      "name": "Durban",
+      "province": "KwaZulu-Natal",
+      "slug": "durban",
+      "canonical_row_id": "dd88efd5-03d6-4d9a-ac93-21acc5daa3de"
+    },
+    {
+      "name": "Greytown",
+      "province": "KwaZulu-Natal",
+      "slug": "greytown",
+      "canonical_row_id": "712a1148-6321-4b3b-a169-0fc44de6ecdf"
+    },
+    {
+      "name": "Harding",
+      "province": "KwaZulu-Natal",
+      "slug": "harding",
+      "canonical_row_id": "b82e4092-d8b7-4a37-b4ac-1a0ba340a67d"
+    },
+    {
+      "name": "Kokstad",
+      "province": "KwaZulu-Natal",
+      "slug": "kokstad",
+      "canonical_row_id": "aa3ebced-3993-4a3a-9e2c-7892422b624c"
+    },
+    {
+      "name": "Newcastle",
+      "province": "KwaZulu-Natal",
+      "slug": "newcastle",
+      "canonical_row_id": "d968fd92-290e-4957-a359-5acb21de6ecf"
+    },
+    {
+      "name": "Nquthu",
+      "province": "KwaZulu-Natal",
+      "slug": "nquthu",
+      "canonical_row_id": "db6faa72-8496-40af-82d7-266fe7646b68"
+    },
+    {
+      "name": "Richards Bay",
+      "province": "KwaZulu-Natal",
+      "slug": "richards-bay",
+      "canonical_row_id": "8fa03206-df4d-4574-851a-3901d411de5a"
+    },
+    {
+      "name": "Burgersfort",
+      "province": "Limpopo",
+      "slug": "burgersfort",
+      "canonical_row_id": "9a9a29a1-7b23-4388-8ddb-da1ff56c351f"
+    },
+    {
+      "name": "Mokopane",
+      "province": "Limpopo",
+      "slug": "mokopane",
+      "canonical_row_id": "fa94f2cc-c9e7-4529-a03a-228cb6e71735"
+    },
+    {
+      "name": "Polokwane",
+      "province": "Limpopo",
+      "slug": "polokwane",
+      "canonical_row_id": "d591d159-8902-4ede-bcc4-fbb0288c9cf2"
+    },
+    {
+      "name": "Thohoyandou",
+      "province": "Limpopo",
+      "slug": "thohoyandou",
+      "canonical_row_id": "43fa9917-401d-45c1-86d5-5d74ff10be6a"
+    },
+    {
+      "name": "Tzaneen",
+      "province": "Limpopo",
+      "slug": "tzaneen",
+      "canonical_row_id": "a1057a54-f5b0-4945-866f-f776e8bb089b"
+    },
+    {
+      "name": "Acornhoek",
+      "province": "Mpumalanga",
+      "slug": "acornhoek",
+      "canonical_row_id": "aff2e9b9-79bf-4320-9536-3d84f34caf69"
+    },
+    {
+      "name": "Bushbuckridge",
+      "province": "Mpumalanga",
+      "slug": "bushbuckridge",
+      "canonical_row_id": "af03ace3-762a-4624-b568-5669b81aec9c"
+    },
+    {
+      "name": "Emalahleni",
+      "province": "Mpumalanga",
+      "slug": "emalahleni",
+      "canonical_row_id": "58879263-24f0-435f-a29c-6161dd7ca594"
+    },
+    {
+      "name": "Mbombela",
+      "province": "Mpumalanga",
+      "slug": "mbombela",
+      "canonical_row_id": "832f6087-5ada-4923-adda-aab530fba8b6"
+    },
+    {
+      "name": "Sabie",
+      "province": "Mpumalanga",
+      "slug": "sabie",
+      "canonical_row_id": "8fbc3846-fe5e-4795-8be9-726af3267592"
+    },
+    {
+      "name": "Brits",
+      "province": "North West",
+      "slug": "brits",
+      "canonical_row_id": "ed742378-d5c3-4486-b783-107f02396995"
+    },
+    {
+      "name": "Klerksdorp",
+      "province": "North West",
+      "slug": "klerksdorp",
+      "canonical_row_id": "14c71179-c6a6-44a4-b424-ce1eca1e774a"
+    },
+    {
+      "name": "Mahikeng",
+      "province": "North West",
+      "slug": "mahikeng",
+      "canonical_row_id": "f8ea53c6-75d5-4c81-8ed9-fca37fb12ea8"
+    },
+    {
+      "name": "Rustenburg",
+      "province": "North West",
+      "slug": "rustenburg",
+      "canonical_row_id": "036b7bfb-ddca-4be3-ae31-e77d75899d19"
+    },
+    {
+      "name": "De Aar",
+      "province": "Northern Cape",
+      "slug": "de-aar",
+      "canonical_row_id": "9d836274-9ce9-4b2b-ab8e-8f8acb2facda"
+    },
+    {
+      "name": "Kimberley",
+      "province": "Northern Cape",
+      "slug": "kimberley",
+      "canonical_row_id": "6ba926dd-32d8-42de-afe4-17e09007798f"
+    },
+    {
+      "name": "Kuruman",
+      "province": "Northern Cape",
+      "slug": "kuruman",
+      "canonical_row_id": "487e81b0-99c5-4182-8092-b80ad8b2026b"
+    },
+    {
+      "name": "Upington",
+      "province": "Northern Cape",
+      "slug": "upington",
+      "canonical_row_id": "534566ac-7f71-4bc6-8836-39e1b4c3ceab"
+    },
+    {
+      "name": "Cape Town",
+      "province": "Western Cape",
+      "slug": "cape-town",
+      "canonical_row_id": "a97a6853-9413-4b91-abeb-57f653e4daee"
+    },
+    {
+      "name": "George",
+      "province": "Western Cape",
+      "slug": "george",
+      "canonical_row_id": "cd6f78f8-c62d-4d81-a0fa-0470d10b4e85"
+    },
+    {
+      "name": "Paarl",
+      "province": "Western Cape",
+      "slug": "paarl",
+      "canonical_row_id": "66812430-0f27-4995-b4ab-7b304d69ccf4"
+    },
+    {
+      "name": "Worcester",
+      "province": "Western Cape",
+      "slug": "worcester",
+      "canonical_row_id": "539d0332-ed3c-4ea9-9c86-6a3b0eff6312"
+    }
+  ]
+}

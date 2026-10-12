@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   description: 'Review submitted community work and its evidence.',
 };
 
-export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export default function ReviewQueuePage() {

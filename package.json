@@ -70,7 +70,6 @@
     "fuse.js": "^7.4.2",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.577.0",
-    "next": "^15.5.2",
     "next-nprogress-bar": "^2.4.7",
     "next-safe-action": "^8.5.2",
     "next-seo": "^7.2.0",
@@ -95,12 +94,13 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
+    "@opennextjs/cloudflare": "^1.20.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.0.0",
     "@types/nprogress": "^0.2.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "next": "^15.5.27",
     "oxlint": "^1.65.0",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.3.0",

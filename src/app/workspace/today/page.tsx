@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   description: 'What needs you today in your town.',
 };
 
-export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export default function TodayPage() {

@@ -114,11 +114,9 @@ const ECOSYSTEM_PRODUCTS: { key: string; icon: string; name: string; desc: strin
   { key: 'kasibuy',        icon: '🛒', name: 'KasiBuy',        desc: 'List your spaza or shop on the local marketplace' },
   { key: 'framesouth',     icon: '📷', name: 'FrameSouth',     desc: "Become the town's photographer — document, prove, earn" },
   { key: 'aicafe',         icon: '💻', name: 'AI Café',        desc: 'Partner to bring AI and internet access to your community' },
-  { key: 'ubuntuacademy',  icon: '📚', name: 'Ubuntu Academy', desc: 'Free CV and job readiness workshops' },
   { key: 'orbitmusic',     icon: '🎵', name: 'Orbit Music',    desc: 'Create music with AI — workshops and tools' },
   { key: 'insidetown',     icon: '🎙️', name: 'Inside.Town',    desc: "Host a podcast — tell your town's story" },
   { key: 'familyhouse',    icon: '🏠', name: 'FamilyHouse',    desc: 'Host visitors in your home — earn from hospitality' },
-  { key: 'ecochar',        icon: '🌿', name: 'EcoChar',        desc: '5-day charcoal production training — green economy skills' },
   { key: 'buntubar',       icon: '🍺', name: 'BuntuBar',       desc: 'Mobile bar and beverage workshop — events economy' },
 ];
 

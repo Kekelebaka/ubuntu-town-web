@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 
 // Public release provenance for Gate 12. No secrets, no private repo data.
-export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {

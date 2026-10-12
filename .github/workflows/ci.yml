@@ -1,0 +1,57 @@
+name: CI
+
+# PR / branch validation gate. Runs the same lint + typecheck + test + build checks as
+# deploy-web.yml but WITHOUT deploying — so every pull request gets automated evidence
+# before a human merges. (Previously no workflow had a `pull_request` trigger, so PRs
+# carried zero automated validation.)
+#
+# Mirrors deploy-web.yml's proven setup: Node 20, npm cache, .env.local.uto (publishable
+# keys only), npm ci. No Cloudflare secrets are used here.
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]   # main pushes are validated + deployed by deploy-web.yml
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Environment-separation guard: fail if any staging config references a production
+      # identifier (Supabase ref / Pages project / prod key). Pure node, no install needed.
+      - name: Env separation guard (staging must not touch production)
+        run: node scripts/guard-env-separation.mjs
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Configure uto env
+        run: cp .env.local.uto .env.local
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test
+
+      - name: Build (production)
+        run: npm run build
+        env:
+          NEXT_PUBLIC_GIT_SHA: ${{ github.sha }}
+          NEXT_PUBLIC_GIT_BRANCH: ${{ github.ref_name }}
+          NEXT_PUBLIC_RELEASE_SOURCE: github-actions

@@ -1,19 +1,13 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { match } from 'path-to-regexp';
 import { updateSession } from './supabase-clients/middleware';
 
 export const runtime = 'experimental-edge';
 
-const apiRoutes = ['/api{/*path}'];
-const RESERVED_SUBDOMAINS = ['enter', 'www', 'api', 'admin', 'mail', 'ftp'];
+const RESERVED_SUBDOMAINS = ['app', 'enter', 'www', 'api', 'admin', 'mail', 'ftp'];
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const hostname = request.headers.get('host') || '';
-
-  if (apiRoutes.some((route) => match(route)(pathname))) {
-    return null;
-  }
 
   // === SUBDOMAIN ROUTING ===
   // senekal.ubuntutown.co.za → rewrite to /town/senekal
@@ -35,7 +29,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  // FAIL CLOSED: the middleware (and its default-deny route guard) runs for
+  // /api too — only /api/release and /api/revalidate are allowlisted public in
+  // src/lib/route-guard.ts. Static/sitemap/robots files are excluded here and
+  // also allowlisted in the guard, so either layer alone keeps them public.
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
 };

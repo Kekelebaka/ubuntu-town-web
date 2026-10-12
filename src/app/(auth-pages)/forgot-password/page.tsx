@@ -1,9 +1,8 @@
-export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 import { ForgotPassword } from './ForgotPassword';
 
-// This route must run as a server function. Without `runtime = 'edge'` the
+// This route must run as a server function (OpenNext Cloudflare: default nodejs runtime).
 // next-on-pages build prerenders it, Cloudflare Pages then serves it as a
 // static asset, and the server-action POST returns 405 Method Not Allowed —
 // so password recovery silently failed with "Failed to send password reset

@@ -32,7 +32,6 @@ export const OPPORTUNITY_NODES: OpportunityNode[] = [
   { slug: 'ai-cafe', name: 'AI Café', tagline: 'Get online, get skilled, get paid.', Icon: Bot, accentVar: 'var(--color-ubuntu-purple)' },
   { slug: 'the-plug', name: 'The Plug', tagline: 'Airtime, data, electricity, bills — sorted.', Icon: Zap, accentVar: 'var(--color-ubuntu-orange)' },
   { slug: 'kasibuy', name: 'KasiBuy', tagline: 'Township commerce, delivered.', Icon: ShoppingBag, accentVar: 'var(--color-ubuntu-purple)' },
-  { slug: 'ubuntu-academy', name: 'Ubuntu Academy', tagline: 'Learn by doing. Earn by proof.', Icon: GraduationCap, accentVar: 'var(--color-ubuntu-green)' },
   { slug: 'the-workshop', name: 'The Workshop', tagline: 'Make, repair, build, create.', Icon: Hammer, accentVar: 'var(--color-ubuntu-indigo)' },
   { slug: 'fixeasy24', name: 'FixEasy24', tagline: 'On-demand repairs, round the clock.', Icon: Wrench, accentVar: 'var(--color-ubuntu-orange)' },
   { slug: 'ecocycle', name: 'EcoCycle', tagline: 'Waste becomes worth.', Icon: Recycle, accentVar: 'var(--color-ubuntu-green)' },

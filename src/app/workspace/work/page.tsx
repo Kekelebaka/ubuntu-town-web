@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   description: 'Review community work, discuss, and confirm.',
 };
 
-export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export default async function WorkDetailPage({ searchParams }: { searchParams: Promise<{ id?: string }> }) {

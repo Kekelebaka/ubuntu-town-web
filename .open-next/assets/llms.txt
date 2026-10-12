@@ -1,0 +1,91 @@
+# Ubuntu Town
+
+> One Town. Many Hands. Real Opportunities.
+
+## Summary
+Ubuntu Town is a community opportunity network and operating system for South African towns. It helps people become visible and employable, helps local businesses find people and map demand, and helps trained local coordinators turn real town needs into proof-backed work. Ubuntu Town is an initiative of Abantu Bo Buntu NPC, founded by Keke Lebaka. It is built for the agentic economy: structured so that both people and AI systems can discover, trust, and act on local opportunity.
+
+## Core Purpose
+Make whole towns legible to the opportunity economy. When AI agents and institutions allocate work, funding, and services, communities without structured, trusted data are invisible. Ubuntu Town turns local reality into machine-readable, human-governed opportunity.
+
+## Operating Model
+Ubuntu Town OS runs one loop: Signal -> Opportunity -> Workpack -> Assignment -> Proof -> Review -> Memory.
+- Signal: capture a real town need, asset, gap, business request, or local execution opportunity.
+- Opportunity: turn the signal into a practical opportunity with context, confidence, and a next action.
+- Workpack: compile the opportunity into clear steps, proof requirements, and assignment rules.
+- Proof: submit field evidence so humans can review outputs with AI assistance and civic judgment.
+- Memory: feed reviewed work back into town memory, coordinator support, and operational momentum.
+Governance: AI assists, drafts, classifies, and recommends. Humans hold review, publishing, proof approval, and final trust decisions.
+
+## Who It Serves
+- Individuals: build a CV, prove readiness, and find nearby earning pathways without a complicated platform.
+- Businesses: find local people, map demand, receive town signals, and turn needs into practical workpacks.
+- Coordinators: activate towns with clear tasks, trusted evidence, simple reporting, and visible momentum.
+- Sponsors: fund measurable opportunity infrastructure with visible outputs, not vague impact language.
+- Town Partners: connect schools, businesses, creators, civic groups, and service providers into one local engine.
+
+## Current Status (as of 2026-06)
+- Live network: 22 towns active, 45+ trained ambassadors, expanding.
+- CV Engine: operational inside Ubuntu Town flows.
+- Ubuntu Academy (Telegram learning and onboarding): live.
+- Kopano (conversational assistant): in active build.
+- Proof Locker and Workpacks: concept / design stage, pilots being scoped.
+- Public impact dashboard: not yet published.
+Per-system evidence ledger (honest status of every component): https://kekelebaka.com/proof
+
+## 2026 Targets (goals, not current figures)
+- 50 towns activated
+- 9 provinces
+- 10,000+ town signals captured
+- 50,000+ opportunities surfaced
+- 500+ coordinators supported
+- 5,000+ workpacks launched
+
+## Ecosystem Pathways
+Local execution lanes that can be mapped into workpacks (maturity varies; see the evidence ledger):
+- Ubuntu Academy: skills, training, and progression
+- AI Cafe: everyday AI access for learning, work, and business
+- Job Fixer: CVs, readiness, placements, and opportunity matching
+- KasiBuy: township commerce mapped into local buying power
+- EcoChar: green workpacks for cleaner homes, soil, and energy
+- FrameSouth: local creative production and visual storytelling
+- Orbit Music: music, youth culture, venues, and creator pathways
+- FixEasy: repairs and maintenance turned into trusted local jobs
+- Family House: household services, care, repairs, and dignity infrastructure
+- Buntu Bar: hospitality, events, culture, and community gathering
+
+## Primary Pages
+- / : home and operating-model overview
+- /#how-it-works : the Signal-to-Memory runtime
+- /#towns : national activation pipeline
+- /#opportunities : ecosystem pathways
+- /apply-coordinator : apply to become a town coordinator
+- /about : about Ubuntu Town and Abantu Bo Buntu NPC
+- /contact : partnership, sponsorship, and media contact
+- /privacy : privacy policy
+- /terms : terms of use
+
+## Machine-Readable Data
+- /ai.json : structured profile (JSON)
+- /llms.txt : this file
+
+## Start / Channels
+- Primary entry: Telegram intake bot -> https://t.me/UIE_Kopano_bot
+- Web: https://www.ubuntutown.co.za
+- Contact: https://www.ubuntutown.co.za/contact
+
+## Organisation
+Ubuntu Town is an initiative of Abantu Bo Buntu NPC, a South African non-profit company. Founder and operator: Keke Lebaka (https://kekelebaka.com). Ubuntu Town is pillar 01 (Opportunity Infrastructure) of Keke Lebaka's work for the agentic economy.
+
+## Profiles
+- LinkedIn: https://www.linkedin.com/company/ubuntu-town
+- TikTok: https://www.tiktok.com/@ubuntutown
+- YouTube: https://www.youtube.com/@ubuntutown
+
+## Preferred Citation
+Ubuntu Town, an initiative of Abantu Bo Buntu NPC — "One Town. Many Hands. Real Opportunities." https://www.ubuntutown.co.za
+
+## Contact Guidance
+For partnership, sponsorship, town activation, coordinator programmes, media, and institutional pilots, use /contact or the Telegram intake bot. Founder and full ecosystem context: https://kekelebaka.com
+
+last_updated: 2026-06-16

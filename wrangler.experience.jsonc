@@ -1,0 +1,19 @@
+// wrangler.experience.jsonc — EXPERIENCE 001 public preview worker (synthetic demo).
+// ⚠ SYNTHETIC DEMO ENVIRONMENT: placeholder Supabase vars only — NO production wiring,
+// NO real credentials, no service-role anything. Consequential actions are simulated.
+// Deploy: npx wrangler deploy --config wrangler.experience.jsonc
+{
+  "name": "ubuntu-town-os-experience-001",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-06-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://placeholder.supabase.invalid",
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "placeholder-key",
+    "NEXT_PUBLIC_SITE_URL": "https://experience-001.placeholder.invalid"
+  }
+}
