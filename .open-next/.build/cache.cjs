@@ -1,4 +1,4 @@
-globalThis.disableIncrementalCache = false;globalThis.disableDynamoDBCache = false;globalThis.openNextDebug = false;globalThis.openNextVersion = "4.1.4";globalThis.nextVersion = "15.5.27";
+globalThis.disableIncrementalCache = false;globalThis.disableDynamoDBCache = false;globalThis.openNextDebug = false;globalThis.openNextVersion = "4.1.9";globalThis.nextVersion = "15.5.27";
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -17,7 +17,7 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/@opennextjs/aws/dist/adapters/cache.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/adapters/cache.js
 var cache_exports = {};
 __export(cache_exports, {
   SOFT_TAG_PREFIX: () => SOFT_TAG_PREFIX,
@@ -25,7 +25,7 @@ __export(cache_exports, {
 });
 module.exports = __toCommonJS(cache_exports);
 
-// node_modules/@opennextjs/aws/dist/utils/error.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/error.js
 function isOpenNextError(e) {
   try {
     return "__openNextInternal" in e;
@@ -34,7 +34,7 @@ function isOpenNextError(e) {
   }
 }
 
-// node_modules/@opennextjs/aws/dist/adapters/logger.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/adapters/logger.js
 function debug(...args) {
   if (globalThis.openNextDebug) {
     console.log(...args);
@@ -84,10 +84,10 @@ function getOpenNextErrorLogLevel() {
   }
 }
 
-// node_modules/@opennextjs/aws/dist/utils/cacheHeaders.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/cacheHeaders.js
 var CACHE_TAGS_HEADER = "x-next-cache-tags";
 
-// node_modules/@opennextjs/aws/dist/utils/semver.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/semver.js
 function compareSemver(v1, operator, v2) {
   let versionDiff = 0;
   if (v1 === "latest") {
@@ -128,7 +128,7 @@ function compareSemver(v1, operator, v2) {
   }
 }
 
-// node_modules/@opennextjs/aws/dist/utils/cache.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/cache.js
 async function isStale(key, tags, lastModified) {
   if (!compareSemver(globalThis.nextVersion, ">=", "16.0.0")) {
     return false;
@@ -212,7 +212,7 @@ async function writeTags(tags) {
   await globalThis.tagCache.writeTags(tagsToWrite);
 }
 
-// node_modules/@opennextjs/aws/dist/utils/binary.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/binary.js
 var commonBinaryMimeTypes = /* @__PURE__ */ new Set([
   "application/octet-stream",
   // Docs
@@ -280,7 +280,13 @@ function isBinaryContentType(contentType) {
   return commonBinaryMimeTypes.has(value);
 }
 
-// node_modules/@opennextjs/aws/dist/adapters/cache.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/routeCacheKey.js
+var ROUTE_CACHE_KEY_PREFIX = /^\/?route-cache\/(?:PAGES|APP_PAGE|APP_ROUTE)\/[0-9a-f]{64}\/\$(?=\/)/;
+function getPathFromRouteCacheKey(key) {
+  return key.replace(ROUTE_CACHE_KEY_PREFIX, "");
+}
+
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/adapters/cache.js
 var SOFT_TAG_PREFIX = "_N_T_/";
 function isFetchCache(options) {
   if (typeof options === "boolean") {
@@ -427,7 +433,16 @@ var Cache = class {
     if (globalThis.openNextConfig.dangerous?.disableIncrementalCache) {
       return;
     }
-    const detachedPromise = globalThis.__openNextAls.getStore()?.pendingPromiseRunner.withResolvers();
+    const store = globalThis.__openNextAls.getStore();
+    const writePromise = this.writeCache(key, data, ctx);
+    if (store !== void 0) {
+      store.pendingPromiseRunner.add(writePromise);
+    }
+    if (data?.kind === "FETCH" || store === void 0) {
+      await writePromise;
+    }
+  }
+  async writeCache(key, data, ctx) {
     try {
       if (data === null || data === void 0) {
         await globalThis.incrementalCache.delete(key);
@@ -513,8 +528,6 @@ var Cache = class {
       debug("Finished setting cache");
     } catch (e) {
       error("Failed to set cache", e);
-    } finally {
-      detachedPromise?.resolve();
     }
   }
   async revalidateTag(tags, durations) {
@@ -545,7 +558,7 @@ var Cache = class {
         });
         await writeTags(tagsToWrite);
         if (paths.length > 0) {
-          await globalThis.cdnInvalidationHandler.invalidatePaths(paths.map((path) => ({
+          await globalThis.cdnInvalidationHandler.invalidatePaths(paths.map(getPathFromRouteCacheKey).map((path) => ({
             initialPath: path,
             rawPath: path,
             resolvedRoutes: [
@@ -603,7 +616,7 @@ var Cache = class {
           }
         }
         await writeTags(toInsert);
-        const uniquePaths = Array.from(new Set(toInsert.filter((t) => t.tag.startsWith(SOFT_TAG_PREFIX)).map((t) => `/${t.path}`)));
+        const uniquePaths = Array.from(new Set(toInsert.filter((t) => t.tag.startsWith(SOFT_TAG_PREFIX)).map((t) => getPathFromRouteCacheKey(`/${t.path}`))));
         if (uniquePaths.length > 0) {
           await globalThis.cdnInvalidationHandler.invalidatePaths(uniquePaths.map((path) => ({
             initialPath: path,

@@ -1,0 +1,31 @@
+// wrangler.experience-002.jsonc — EXPERIENCE 002 public preview deployment.
+// Worker: ubuntu-town-os-experience-002 (SEPARATE worker; Experience 001 untouched).
+// Access posture: read-only Supabase REST with the PUBLISHABLE/anon key (public by design —
+// the same key ships in the real site's browser bundle; RLS enforces all access).
+// NO service-role key. NO stored credentials. NO Management API. NO writes.
+// The Supabase values are runtime SERVER env (not NEXT_PUBLIC_) so they never enter client JS.
+{
+  "name": "ubuntu-town-os-experience-002",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "SUPABASE_URL": "https://afiokbhuxfdacbsipoqk.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_JKHeDgqBRGv4vwCMIdo23w_NbU_HGR_",
+    "EXPERIENCE_002": "1"
+  },
+  "env": {
+    "experience-002": {
+      "name": "ubuntu-town-os-experience-002",
+      "vars": {
+        "SUPABASE_URL": "https://afiokbhuxfdacbsipoqk.supabase.co",
+        "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_JKHeDgqBRGv4vwCMIdo23w_NbU_HGR_",
+        "EXPERIENCE_002": "1"
+      }
+    }
+  }
+}

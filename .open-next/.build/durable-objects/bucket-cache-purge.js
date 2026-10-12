@@ -1,9 +1,9 @@
-globalThis.openNextDebug = false;globalThis.openNextVersion = "4.1.4";globalThis.nextVersion = "15.5.27";
+globalThis.openNextDebug = false;globalThis.openNextVersion = "4.1.9";globalThis.nextVersion = "15.5.27";
 
-// node_modules/@opennextjs/cloudflare/dist/api/durable-objects/bucket-cache-purge.js
+// node_modules/.pnpm/@opennextjs+cloudflare@1.20.10_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react_fe9c32298d76cd27e30ded7ba802f8a9/node_modules/@opennextjs/cloudflare/dist/api/durable-objects/bucket-cache-purge.js
 import { DurableObject } from "cloudflare:workers";
 
-// node_modules/@opennextjs/aws/dist/utils/error.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/error.js
 function isOpenNextError(e) {
   try {
     return "__openNextInternal" in e;
@@ -12,7 +12,7 @@ function isOpenNextError(e) {
   }
 }
 
-// node_modules/@opennextjs/aws/dist/adapters/logger.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/adapters/logger.js
 function debug(...args) {
   if (globalThis.openNextDebug) {
     console.log(...args);
@@ -62,10 +62,7 @@ function getOpenNextErrorLogLevel() {
   }
 }
 
-// node_modules/@opennextjs/cloudflare/dist/api/cloudflare-context.js
-var cloudflareContextSymbol = Symbol.for("__cloudflare-context__");
-
-// node_modules/@opennextjs/cloudflare/dist/api/overrides/internal.js
+// node_modules/.pnpm/@opennextjs+cloudflare@1.20.10_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react_fe9c32298d76cd27e30ded7ba802f8a9/node_modules/@opennextjs/cloudflare/dist/api/overrides/internal.js
 var debugCache = (name, ...args) => {
   if (process.env.NEXT_PRIVATE_DEBUG_CACHE) {
     console.log(`[${name}] `, ...args);
@@ -110,7 +107,7 @@ async function internalPurgeCacheByTags(env, tags) {
   }
 }
 
-// node_modules/@opennextjs/cloudflare/dist/api/durable-objects/bucket-cache-purge.js
+// node_modules/.pnpm/@opennextjs+cloudflare@1.20.10_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react_fe9c32298d76cd27e30ded7ba802f8a9/node_modules/@opennextjs/cloudflare/dist/api/durable-objects/bucket-cache-purge.js
 var DEFAULT_BUFFER_TIME_IN_SECONDS = 5;
 var MAX_NUMBER_OF_TAGS_PER_PURGE = 100;
 var BucketCachePurge = class extends DurableObject {

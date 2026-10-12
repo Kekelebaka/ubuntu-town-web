@@ -30,13 +30,27 @@ const config: NextConfig = {
       },
     ],
   },
-  // EXPERIENCE 001 PREVIEW ONLY: when EXPERIENCE_ROOT_REDIRECT=1 at build time
-  // (the public preview build), the opening experience serves at the bare URL.
-  // The main app build does not set this flag and is unaffected.
-  ...(process.env.EXPERIENCE_ROOT_REDIRECT === '1'
+  // EXPERIENCE PREVIEW BUILDS ONLY (flags set at build time; the main app build
+  // sets neither and is unaffected):
+  // - EXPERIENCE_ROOT_REDIRECT=1 (Experience 001 preview) → bare URL serves /os.
+  // - EXPERIENCE_002_ROOT_REDIRECT=1 (Experience 002 real-data preview) → bare URL serves /real.
+  ...(process.env.EXPERIENCE_ROOT_REDIRECT === '1' || process.env.EXPERIENCE_002_ROOT_REDIRECT === '1'
     ? {
         async redirects() {
-          return [{ source: '/', destination: '/os', permanent: false }];
+          const rules = [
+            {
+              source: '/',
+              destination: process.env.EXPERIENCE_002_ROOT_REDIRECT === '1' ? '/real' : '/os',
+              permanent: false,
+            },
+          ];
+          // EXPERIENCE 002 quarantine: the synthetic /os world is NOT served on the
+          // real-data deployment — synthetic records must never be reachable there.
+          if (process.env.EXPERIENCE_002_ROOT_REDIRECT === '1') {
+            rules.push({ source: '/os', destination: '/real', permanent: false });
+            rules.push({ source: '/os/:path*', destination: '/real', permanent: false });
+          }
+          return rules;
         },
       }
     : {}),

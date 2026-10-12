@@ -320,7 +320,17 @@
     "_originalRedirects": [
       {
         "source": "/",
-        "destination": "/os",
+        "destination": "/real",
+        "permanent": false
+      },
+      {
+        "source": "/os",
+        "destination": "/real",
+        "permanent": false
+      },
+      {
+        "source": "/os/:path*",
+        "destination": "/real",
         "permanent": false
       }
     ]
@@ -348,6 +358,6 @@
     ".next/required-server-files.json"
   ],
   "ignore": [
-    "node_modules/next/dist/compiled/@ampproject/toolbox-optimizer/**/*"
+    "node_modules/.pnpm/next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/next/dist/compiled/@ampproject/toolbox-optimizer/**/*"
   ]
 }

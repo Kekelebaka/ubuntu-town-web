@@ -1,4 +1,4 @@
-globalThis.disableIncrementalCache = false;globalThis.disableDynamoDBCache = false;globalThis.openNextDebug = false;globalThis.openNextVersion = "4.1.4";globalThis.nextVersion = "15.5.27";
+globalThis.disableIncrementalCache = false;globalThis.disableDynamoDBCache = false;globalThis.openNextDebug = false;globalThis.openNextVersion = "4.1.9";globalThis.nextVersion = "15.5.27";
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -17,21 +17,21 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/@opennextjs/aws/dist/adapters/composable-cache.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/adapters/composable-cache.js
 var composable_cache_exports = {};
 __export(composable_cache_exports, {
   default: () => composable_cache_default
 });
 module.exports = __toCommonJS(composable_cache_exports);
 
-// node_modules/@opennextjs/aws/dist/adapters/logger.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/adapters/logger.js
 function debug(...args) {
   if (globalThis.openNextDebug) {
     console.log(...args);
   }
 }
 
-// node_modules/@opennextjs/aws/dist/utils/semver.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/semver.js
 function compareSemver(v1, operator, v2) {
   let versionDiff = 0;
   if (v1 === "latest") {
@@ -72,7 +72,7 @@ function compareSemver(v1, operator, v2) {
   }
 }
 
-// node_modules/@opennextjs/aws/dist/utils/cache.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/cache.js
 async function isStale(key, tags, lastModified) {
   if (!compareSemver(globalThis.nextVersion, ">=", "16.0.0")) {
     return false;
@@ -117,7 +117,7 @@ async function writeTags(tags) {
   await globalThis.tagCache.writeTags(tagsToWrite);
 }
 
-// node_modules/@opennextjs/aws/dist/utils/stream.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/stream.js
 var import_web = require("node:stream/web");
 async function fromReadableStream(stream, base64) {
   const chunks = [];
@@ -149,12 +149,14 @@ function toReadableStream(value, isBase64) {
   }, { highWaterMark: 0 });
 }
 
-// node_modules/@opennextjs/aws/dist/adapters/composable-cache.js
-var pendingWritePromiseMap = /* @__PURE__ */ new Map();
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/adapters/composable-cache.js
+var PENDING_WRITES_CACHE_KEY = "composable-cache:pending-writes";
+var getPendingWritePromiseMap = () => globalThis.__openNextAls?.getStore()?.requestCache?.getOrCreate(PENDING_WRITES_CACHE_KEY);
 var composable_cache_default = {
   async get(cacheKey) {
     try {
-      if (pendingWritePromiseMap.has(cacheKey)) {
+      const pendingWritePromiseMap = getPendingWritePromiseMap();
+      if (pendingWritePromiseMap?.has(cacheKey)) {
         const stored = pendingWritePromiseMap.get(cacheKey);
         if (stored) {
           return stored.then((entry) => ({
@@ -201,9 +203,10 @@ var composable_cache_default = {
       ...entry2,
       value: await fromReadableStream(entry2.value)
     }));
-    pendingWritePromiseMap.set(cacheKey, promiseEntry);
+    const pendingWritePromiseMap = getPendingWritePromiseMap();
+    pendingWritePromiseMap?.set(cacheKey, promiseEntry);
     const entry = await promiseEntry.finally(() => {
-      pendingWritePromiseMap.delete(cacheKey);
+      pendingWritePromiseMap?.delete(cacheKey);
     });
     await globalThis.incrementalCache.set(cacheKey, {
       ...entry,

@@ -42,6 +42,9 @@ export const PUBLIC_PATH_PREFIXES: readonly string[] = [
   // EXPERIENCE 001 (public synthetic demo environment — synthetic data only, no
   // production wiring, consequential actions simulated + human-gated). Explicit allowlist edit.
   '/os',
+  // EXPERIENCE 002 (public REAL operating picture — read-only public canonical data;
+  // operational layers shown as protected; explicit allowlist edit).
+  '/real',
   '/about',
   '/towns',
   '/town',

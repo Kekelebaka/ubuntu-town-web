@@ -13,9 +13,21 @@
     },
     {
       "source": "/",
-      "destination": "/os",
+      "destination": "/real",
       "statusCode": 307,
       "regex": "^(?!/_next)/(?:/)?$"
+    },
+    {
+      "source": "/os",
+      "destination": "/real",
+      "statusCode": 307,
+      "regex": "^(?!/_next)/os(?:/)?$"
+    },
+    {
+      "source": "/os/:path*",
+      "destination": "/real",
+      "statusCode": 307,
+      "regex": "^(?!/_next)/os(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
     }
   ],
   "headers": [],
@@ -104,6 +116,22 @@
         "nxtPslug": "nxtPslug"
       },
       "namedRegex": "^/province/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/real/province/[slug]",
+      "regex": "^/real/province/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/real/province/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/real/town/[slug]",
+      "regex": "^/real/town/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/real/town/(?<nxtPslug>[^/]+?)(?:/)?$"
     },
     {
       "page": "/town/[slug]",
@@ -264,6 +292,12 @@
       "regex": "^/pulse(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/pulse(?:/)?$"
+    },
+    {
+      "page": "/real",
+      "regex": "^/real(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/real(?:/)?$"
     },
     {
       "page": "/sign-up",

@@ -16,7 +16,7 @@ var define_IMAGES_QUALITIES_default = [75];
 // <define:__IMAGES_REMOTE_PATTERNS__>
 var define_IMAGES_REMOTE_PATTERNS_default = [{ protocol: "https", hostname: "^(?:(?!\\.)(?=.)[^/]*?\\.supabase\\.co\\/?)$", port: "", pathname: "^(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?))$" }, { protocol: "https", hostname: "^(?:(?!\\.)(?=.)[^/]*?\\.supabase\\.com\\/?)$", port: "", pathname: "^(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?))$" }, { protocol: "https", hostname: "^(?:^(?:images\\.unsplash\\.com)$)$", port: "", pathname: "^(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?))$" }, { protocol: "https", hostname: "^(?:(?!\\.)(?=.)[^/]*?\\.unsplash\\.com\\/?)$", port: "", pathname: "^(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?))$" }];
 
-// node_modules/@opennextjs/aws/dist/utils/error.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/utils/error.js
 function isOpenNextError(e) {
   try {
     return "__openNextInternal" in e;
@@ -25,7 +25,7 @@ function isOpenNextError(e) {
   }
 }
 
-// node_modules/@opennextjs/aws/dist/adapters/logger.js
+// node_modules/.pnpm/@opennextjs+aws@4.1.9_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react@19.3.0___5c750ec2029155983aaa2f8395609413/node_modules/@opennextjs/aws/dist/adapters/logger.js
 function debug(...args) {
   if (globalThis.openNextDebug) {
     console.log(...args);
@@ -75,7 +75,7 @@ function getOpenNextErrorLogLevel() {
   }
 }
 
-// node_modules/@opennextjs/cloudflare/dist/cli/templates/images.js
+// node_modules/.pnpm/@opennextjs+cloudflare@1.20.10_next@15.5.27_@types+node@20.19.43_react-dom@19.3.0_react_fe9c32298d76cd27e30ded7ba802f8a9/node_modules/@opennextjs/cloudflare/dist/cli/templates/images.js
 async function handleImageRequest(requestURL, requestHeaders, env) {
   const parseResult = parseImageRequest(requestURL, requestHeaders);
   if (!parseResult.ok) {
@@ -168,7 +168,7 @@ async function handleImageRequest(requestURL, requestHeaders, env) {
       format: GIF
     });
     const outputImageStream = imageTransformationResult.image();
-    const response2 = createImageResponse(outputImageStream, GIF, {
+    const response2 = createImageResponse(outputImageStream, imageTransformationResult.contentType(), {
       immutable
     });
     return response2;
@@ -191,7 +191,7 @@ async function handleImageRequest(requestURL, requestHeaders, env) {
       format: outputFormat
     });
     const outputImageStream = imageTransformationResult.image();
-    const response2 = createImageResponse(outputImageStream, outputFormat, {
+    const response2 = createImageResponse(outputImageStream, imageTransformationResult.contentType(), {
       immutable
     });
     return response2;
