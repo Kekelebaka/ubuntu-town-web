@@ -320,17 +320,27 @@
     "_originalRedirects": [
       {
         "source": "/",
-        "destination": "/real",
+        "destination": "/operate",
         "permanent": false
       },
       {
         "source": "/os",
-        "destination": "/real",
+        "destination": "/operate",
         "permanent": false
       },
       {
         "source": "/os/:path*",
-        "destination": "/real",
+        "destination": "/operate",
+        "permanent": false
+      },
+      {
+        "source": "/real",
+        "destination": "/operate",
+        "permanent": false
+      },
+      {
+        "source": "/real/:path*",
+        "destination": "/operate",
         "permanent": false
       }
     ]

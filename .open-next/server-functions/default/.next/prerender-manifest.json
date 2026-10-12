@@ -74,7 +74,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/coordinator": {
+    "/chat": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -87,8 +87,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/coordinator",
-      "dataRoute": "/coordinator.rsc",
+      "srcRoute": "/chat",
+      "dataRoute": "/chat.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -122,30 +122,6 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/chat": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/chat",
-      "dataRoute": "/chat.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
     "/fellowship": {
       "experimentalBypassFor": [
         {
@@ -161,6 +137,30 @@
       "initialRevalidateSeconds": false,
       "srcRoute": "/fellowship",
       "dataRoute": "/fellowship.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/coordinator": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/coordinator",
+      "dataRoute": "/coordinator.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -4466,6 +4466,150 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/os/initiative/syn-init-care-bushbuckridge": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/initiative/[id]",
+      "dataRoute": "/os/initiative/syn-init-care-bushbuckridge.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/initiative/syn-init-ecd-phuthaditjhaba": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/initiative/[id]",
+      "dataRoute": "/os/initiative/syn-init-ecd-phuthaditjhaba.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/initiative/syn-init-fixeasy-senekal": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/initiative/[id]",
+      "dataRoute": "/os/initiative/syn-init-fixeasy-senekal.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/initiative/syn-init-framesouth-soweto": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/initiative/[id]",
+      "dataRoute": "/os/initiative/syn-init-framesouth-soweto.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/initiative/syn-init-marketlink-klerksdorp": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/initiative/[id]",
+      "dataRoute": "/os/initiative/syn-init-marketlink-klerksdorp.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/initiative/syn-init-tradebridge-mthatha": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/initiative/[id]",
+      "dataRoute": "/os/initiative/syn-init-tradebridge-mthatha.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/os/learning/syn-learning-401": {
       "experimentalBypassFor": [
         {
@@ -4562,7 +4706,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/person/syn-person-amahle": {
+    "/os": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -4575,8 +4719,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/person/[id]",
-      "dataRoute": "/os/person/syn-person-amahle.rsc",
+      "srcRoute": "/os",
+      "dataRoute": "/os.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -4586,7 +4730,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/person/syn-person-bongani": {
+    "/os/opportunity/syn-opp-901": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -4599,8 +4743,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/person/[id]",
-      "dataRoute": "/os/person/syn-person-bongani.rsc",
+      "srcRoute": "/os/opportunity/[id]",
+      "dataRoute": "/os/opportunity/syn-opp-901.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -4610,7 +4754,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/person/syn-person-kagiso": {
+    "/os/opportunity/syn-opp-902": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -4623,8 +4767,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/person/[id]",
-      "dataRoute": "/os/person/syn-person-kagiso.rsc",
+      "srcRoute": "/os/opportunity/[id]",
+      "dataRoute": "/os/opportunity/syn-opp-902.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -4634,7 +4778,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/person/syn-person-naledi": {
+    "/os/opportunity/syn-opp-903": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -4647,8 +4791,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/person/[id]",
-      "dataRoute": "/os/person/syn-person-naledi.rsc",
+      "srcRoute": "/os/opportunity/[id]",
+      "dataRoute": "/os/opportunity/syn-opp-903.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -4658,7 +4802,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/person/syn-person-palesa": {
+    "/os/proof/syn-proof-110": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -4671,8 +4815,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/person/[id]",
-      "dataRoute": "/os/person/syn-person-palesa.rsc",
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-110.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -4682,7 +4826,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/person/syn-person-sipho": {
+    "/os/proof/syn-proof-111": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -4695,8 +4839,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/person/[id]",
-      "dataRoute": "/os/person/syn-person-sipho.rsc",
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-111.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -4706,7 +4850,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/person/syn-person-thabo": {
+    "/os/proof/syn-proof-112": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -4719,8 +4863,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/person/[id]",
-      "dataRoute": "/os/person/syn-person-thabo.rsc",
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-112.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -4730,7 +4874,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/national": {
+    "/os/proof/syn-proof-301": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -4743,8 +4887,176 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/national",
-      "dataRoute": "/os/national.rsc",
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-301.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/proof/syn-proof-302": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-302.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/proof/syn-proof-303": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-303.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/proof/syn-proof-304": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-304.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/proof/syn-proof-610": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-610.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/proof/syn-proof-611": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-611.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/proof/syn-proof-710": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-710.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/proof/syn-proof-810": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/proof/[id]",
+      "dataRoute": "/os/proof/syn-proof-810.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -5258,7 +5570,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/proof/syn-proof-110": {
+    "/os/person/syn-person-amahle": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -5271,8 +5583,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-110.rsc",
+      "srcRoute": "/os/person/[id]",
+      "dataRoute": "/os/person/syn-person-amahle.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -5282,7 +5594,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/proof/syn-proof-111": {
+    "/os/person/syn-person-bongani": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -5295,8 +5607,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-111.rsc",
+      "srcRoute": "/os/person/[id]",
+      "dataRoute": "/os/person/syn-person-bongani.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -5306,7 +5618,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/proof/syn-proof-112": {
+    "/os/person/syn-person-kagiso": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -5319,8 +5631,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-112.rsc",
+      "srcRoute": "/os/person/[id]",
+      "dataRoute": "/os/person/syn-person-kagiso.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -5330,7 +5642,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/proof/syn-proof-301": {
+    "/os/person/syn-person-naledi": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -5343,8 +5655,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-301.rsc",
+      "srcRoute": "/os/person/[id]",
+      "dataRoute": "/os/person/syn-person-naledi.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -5354,7 +5666,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/proof/syn-proof-302": {
+    "/os/person/syn-person-palesa": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -5367,8 +5679,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-302.rsc",
+      "srcRoute": "/os/person/[id]",
+      "dataRoute": "/os/person/syn-person-palesa.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -5378,7 +5690,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/proof/syn-proof-303": {
+    "/os/person/syn-person-sipho": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -5391,8 +5703,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-303.rsc",
+      "srcRoute": "/os/person/[id]",
+      "dataRoute": "/os/person/syn-person-sipho.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -5402,7 +5714,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/proof/syn-proof-304": {
+    "/os/person/syn-person-thabo": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -5415,8 +5727,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-304.rsc",
+      "srcRoute": "/os/person/[id]",
+      "dataRoute": "/os/person/syn-person-thabo.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -5426,7 +5738,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/proof/syn-proof-610": {
+    "/os/national": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -5439,368 +5751,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-610.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/proof/syn-proof-611": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-611.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/proof/syn-proof-710": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-710.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/proof/syn-proof-810": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/proof/[id]",
-      "dataRoute": "/os/proof/syn-proof-810.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/province/eastern-cape": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/province/[slug]",
-      "dataRoute": "/os/province/eastern-cape.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/province/free-state": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/province/[slug]",
-      "dataRoute": "/os/province/free-state.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/province/gauteng": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/province/[slug]",
-      "dataRoute": "/os/province/gauteng.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/province/kwazulu-natal": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/province/[slug]",
-      "dataRoute": "/os/province/kwazulu-natal.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/province/limpopo": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/province/[slug]",
-      "dataRoute": "/os/province/limpopo.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/province/mpumalanga": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/province/[slug]",
-      "dataRoute": "/os/province/mpumalanga.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/province/north-west": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/province/[slug]",
-      "dataRoute": "/os/province/north-west.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/province/northern-cape": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/province/[slug]",
-      "dataRoute": "/os/province/northern-cape.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/province/western-cape": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/province/[slug]",
-      "dataRoute": "/os/province/western-cape.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/opportunity/syn-opp-901": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/opportunity/[id]",
-      "dataRoute": "/os/opportunity/syn-opp-901.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/opportunity/syn-opp-902": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/opportunity/[id]",
-      "dataRoute": "/os/opportunity/syn-opp-902.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/opportunity/syn-opp-903": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/os/opportunity/[id]",
-      "dataRoute": "/os/opportunity/syn-opp-903.rsc",
+      "srcRoute": "/os/national",
+      "dataRoute": "/os/national.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -7010,7 +6962,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/initiative/syn-init-care-bushbuckridge": {
+    "/os/province/eastern-cape": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -7023,8 +6975,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/initiative/[id]",
-      "dataRoute": "/os/initiative/syn-init-care-bushbuckridge.rsc",
+      "srcRoute": "/os/province/[slug]",
+      "dataRoute": "/os/province/eastern-cape.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -7034,7 +6986,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/initiative/syn-init-ecd-phuthaditjhaba": {
+    "/os/province/free-state": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -7047,8 +6999,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/initiative/[id]",
-      "dataRoute": "/os/initiative/syn-init-ecd-phuthaditjhaba.rsc",
+      "srcRoute": "/os/province/[slug]",
+      "dataRoute": "/os/province/free-state.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -7058,7 +7010,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/initiative/syn-init-fixeasy-senekal": {
+    "/os/province/gauteng": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -7071,8 +7023,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/initiative/[id]",
-      "dataRoute": "/os/initiative/syn-init-fixeasy-senekal.rsc",
+      "srcRoute": "/os/province/[slug]",
+      "dataRoute": "/os/province/gauteng.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -7082,7 +7034,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/initiative/syn-init-framesouth-soweto": {
+    "/os/province/kwazulu-natal": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -7095,8 +7047,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/initiative/[id]",
-      "dataRoute": "/os/initiative/syn-init-framesouth-soweto.rsc",
+      "srcRoute": "/os/province/[slug]",
+      "dataRoute": "/os/province/kwazulu-natal.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -7106,7 +7058,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/initiative/syn-init-marketlink-klerksdorp": {
+    "/os/province/limpopo": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -7119,8 +7071,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/initiative/[id]",
-      "dataRoute": "/os/initiative/syn-init-marketlink-klerksdorp.rsc",
+      "srcRoute": "/os/province/[slug]",
+      "dataRoute": "/os/province/limpopo.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -7130,7 +7082,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/initiative/syn-init-tradebridge-mthatha": {
+    "/os/province/mpumalanga": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -7143,8 +7095,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os/initiative/[id]",
-      "dataRoute": "/os/initiative/syn-init-tradebridge-mthatha.rsc",
+      "srcRoute": "/os/province/[slug]",
+      "dataRoute": "/os/province/mpumalanga.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -7154,7 +7106,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os": {
+    "/os/province/north-west": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -7167,8 +7119,56 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/os",
-      "dataRoute": "/os.rsc",
+      "srcRoute": "/os/province/[slug]",
+      "dataRoute": "/os/province/north-west.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/province/northern-cape": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/province/[slug]",
+      "dataRoute": "/os/province/northern-cape.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/province/western-cape": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/os/province/[slug]",
+      "dataRoute": "/os/province/western-cape.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -7230,6 +7230,31 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/os/initiative/[id]": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "routeRegex": "^/os/initiative/([^/]+?)(?:/)?$",
+      "dataRoute": "/os/initiative/[id].rsc",
+      "fallback": null,
+      "dataRouteRegex": "^/os/initiative/([^/]+?)\\.rsc$",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/os/learning/[id]": {
       "experimentalBypassFor": [
         {
@@ -7246,106 +7271,6 @@
       "dataRoute": "/os/learning/[id].rsc",
       "fallback": null,
       "dataRouteRegex": "^/os/learning/([^/]+?)\\.rsc$",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/person/[id]": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "routeRegex": "^/os/person/([^/]+?)(?:/)?$",
-      "dataRoute": "/os/person/[id].rsc",
-      "fallback": null,
-      "dataRouteRegex": "^/os/person/([^/]+?)\\.rsc$",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/mission/[id]": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "routeRegex": "^/os/mission/([^/]+?)(?:/)?$",
-      "dataRoute": "/os/mission/[id].rsc",
-      "fallback": null,
-      "dataRouteRegex": "^/os/mission/([^/]+?)\\.rsc$",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/proof/[id]": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "routeRegex": "^/os/proof/([^/]+?)(?:/)?$",
-      "dataRoute": "/os/proof/[id].rsc",
-      "fallback": null,
-      "dataRouteRegex": "^/os/proof/([^/]+?)\\.rsc$",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/os/province/[slug]": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "routeRegex": "^/os/province/([^/]+?)(?:/)?$",
-      "dataRoute": "/os/province/[slug].rsc",
-      "fallback": null,
-      "dataRouteRegex": "^/os/province/([^/]+?)\\.rsc$",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -7380,6 +7305,81 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/os/proof/[id]": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "routeRegex": "^/os/proof/([^/]+?)(?:/)?$",
+      "dataRoute": "/os/proof/[id].rsc",
+      "fallback": null,
+      "dataRouteRegex": "^/os/proof/([^/]+?)\\.rsc$",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/mission/[id]": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "routeRegex": "^/os/mission/([^/]+?)(?:/)?$",
+      "dataRoute": "/os/mission/[id].rsc",
+      "fallback": null,
+      "dataRouteRegex": "^/os/mission/([^/]+?)\\.rsc$",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/os/person/[id]": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "routeRegex": "^/os/person/([^/]+?)(?:/)?$",
+      "dataRoute": "/os/person/[id].rsc",
+      "fallback": null,
+      "dataRouteRegex": "^/os/person/([^/]+?)\\.rsc$",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/os/town/[slug]": {
       "experimentalBypassFor": [
         {
@@ -7405,7 +7405,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/os/initiative/[id]": {
+    "/os/province/[slug]": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -7417,10 +7417,10 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "routeRegex": "^/os/initiative/([^/]+?)(?:/)?$",
-      "dataRoute": "/os/initiative/[id].rsc",
+      "routeRegex": "^/os/province/([^/]+?)(?:/)?$",
+      "dataRoute": "/os/province/[slug].rsc",
       "fallback": null,
-      "dataRouteRegex": "^/os/initiative/([^/]+?)\\.rsc$",
+      "dataRouteRegex": "^/os/province/([^/]+?)\\.rsc$",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -7433,8 +7433,8 @@
   },
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "bd80c492d38150dff169df0a95b15478",
-    "previewModeSigningKey": "4d7c634efbf15aebb6c2e25090dae10101e8807c632a27663af961121727d1cf",
-    "previewModeEncryptionKey": "064153d576428da6fa9c81348a0a2afa92ad952992df918698d26bd67cd07601"
+    "previewModeId": "544bcee47ef230639def31f3f9ae38c0",
+    "previewModeSigningKey": "cd7793eed72573af00f3546fda98e61ebdef10b709309253343e9011faf9dd31",
+    "previewModeEncryptionKey": "b4fd562a998281b74b0cc76a51a5baefc0e3c67e64c8793eab5e167419e367c6"
   }
 }

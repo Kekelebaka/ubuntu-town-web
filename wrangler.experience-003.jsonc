@@ -1,0 +1,30 @@
+// wrangler.experience-003.jsonc — EXPERIENCE 003 deployment (THE UBUNTU TOWN OPERATING SYSTEM).
+// Worker: ubuntu-town-os-experience-003 (SEPARATE worker; E001/E002 untouched).
+// Access: read-only Supabase REST with the PUBLISHABLE/anon key (public by design; RLS enforces
+// all access). NO service-role. NO stored credentials. NO writes. NO production mutation.
+// Runtime SERVER env only (not NEXT_PUBLIC_) — nothing enters client JS.
+{
+  "name": "ubuntu-town-os-experience-003",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "SUPABASE_URL": "https://afiokbhuxfdacbsipoqk.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_JKHeDgqBRGv4vwCMIdo23w_NbU_HGR_",
+    "EXPERIENCE_003": "1"
+  },
+  "env": {
+    "experience-003": {
+      "name": "ubuntu-town-os-experience-003",
+      "vars": {
+        "SUPABASE_URL": "https://afiokbhuxfdacbsipoqk.supabase.co",
+        "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_JKHeDgqBRGv4vwCMIdo23w_NbU_HGR_",
+        "EXPERIENCE_003": "1"
+      }
+    }
+  }
+}

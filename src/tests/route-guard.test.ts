@@ -90,6 +90,17 @@ export const ROUTE_MATRIX: MatrixRow[] = [
   { route: '/real', authRequired: false, role: null },
   { route: '/real/province/free-state', authRequired: false, role: null }, // /real/province/[slug]
   { route: '/real/town/senekal', authRequired: false, role: null }, // /real/town/[slug]
+  // --- public: EXPERIENCE 003 (operating system; read-only public data; explicit allowlist) ---
+  { route: '/operate', authRequired: false, role: null },
+  { route: '/operate/national', authRequired: false, role: null },
+  { route: '/operate/province/free-state', authRequired: false, role: null }, // /operate/province/[slug]
+  { route: '/operate/town/senekal', authRequired: false, role: null }, // /operate/town/[slug]
+  { route: '/operate/town/senekal/fixeasy', authRequired: false, role: null }, // /operate/town/[slug]/[initiative]
+  { route: '/operate/initiatives', authRequired: false, role: null },
+  { route: '/operate/initiative/fixeasy', authRequired: false, role: null }, // /operate/initiative/[key]
+  { route: '/operate/people', authRequired: false, role: null },
+  { route: '/operate/person/interim-town-coordinator', authRequired: false, role: null }, // /operate/person/[id]
+  { route: '/operate/work', authRequired: false, role: null },
 ];
 
 describe('route protection matrix — every route in src/app', () => {
@@ -97,7 +108,7 @@ describe('route protection matrix — every route in src/app', () => {
     // src/app contains 36 page.tsx files and 4 route.ts handlers:
     // /auth/callback, /auth/confirm (auth plumbing) and /api/release,
     // /api/revalidate (the "2 API routes").
-    expect(ROUTE_MATRIX).toHaveLength(53);
+    expect(ROUTE_MATRIX).toHaveLength(63);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/api/'))).toHaveLength(2);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/auth/'))).toHaveLength(4);
   });
@@ -137,6 +148,11 @@ describe('route protection matrix — every route in src/app', () => {
       '/os/opportunity/syn-opp-903': '/os/opportunity/[id]',
       '/real/province/free-state': '/real/province/[slug]',
       '/real/town/senekal': '/real/town/[slug]',
+      '/operate/province/free-state': '/operate/province/[slug]',
+      '/operate/town/senekal': '/operate/town/[slug]',
+      '/operate/town/senekal/fixeasy': '/operate/town/[slug]/[initiative]',
+      '/operate/initiative/fixeasy': '/operate/initiative/[key]',
+      '/operate/person/interim-town-coordinator': '/operate/person/[id]',
     };
     const matrixShapes = ROUTE_MATRIX.map(
       (r) => dynamicRepresentatives[r.route] ?? r.route

@@ -13,21 +13,33 @@
     },
     {
       "source": "/",
-      "destination": "/real",
+      "destination": "/operate",
       "statusCode": 307,
       "regex": "^(?!/_next)/(?:/)?$"
     },
     {
       "source": "/os",
-      "destination": "/real",
+      "destination": "/operate",
       "statusCode": 307,
       "regex": "^(?!/_next)/os(?:/)?$"
     },
     {
       "source": "/os/:path*",
-      "destination": "/real",
+      "destination": "/operate",
       "statusCode": 307,
       "regex": "^(?!/_next)/os(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/real",
+      "destination": "/operate",
+      "statusCode": 307,
+      "regex": "^(?!/_next)/real(?:/)?$"
+    },
+    {
+      "source": "/real/:path*",
+      "destination": "/operate",
+      "statusCode": 307,
+      "regex": "^(?!/_next)/real(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
     }
   ],
   "headers": [],
@@ -37,6 +49,47 @@
     "fallback": []
   },
   "dynamicRoutes": [
+    {
+      "page": "/operate/initiative/[key]",
+      "regex": "^/operate/initiative/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPkey": "nxtPkey"
+      },
+      "namedRegex": "^/operate/initiative/(?<nxtPkey>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/operate/person/[id]",
+      "regex": "^/operate/person/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/operate/person/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/operate/province/[slug]",
+      "regex": "^/operate/province/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/operate/province/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/operate/town/[slug]",
+      "regex": "^/operate/town/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/operate/town/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/operate/town/[slug]/[initiative]",
+      "regex": "^/operate/town/([^/]+?)/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug",
+        "nxtPinitiative": "nxtPinitiative"
+      },
+      "namedRegex": "^/operate/town/(?<nxtPslug>[^/]+?)/(?<nxtPinitiative>[^/]+?)(?:/)?$"
+    },
     {
       "page": "/os/initiative/[id]",
       "regex": "^/os/initiative/([^/]+?)(?:/)?$",
@@ -262,6 +315,36 @@
       "regex": "^/login(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/operate",
+      "regex": "^/operate(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate(?:/)?$"
+    },
+    {
+      "page": "/operate/initiatives",
+      "regex": "^/operate/initiatives(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate/initiatives(?:/)?$"
+    },
+    {
+      "page": "/operate/national",
+      "regex": "^/operate/national(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate/national(?:/)?$"
+    },
+    {
+      "page": "/operate/people",
+      "regex": "^/operate/people(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate/people(?:/)?$"
+    },
+    {
+      "page": "/operate/work",
+      "regex": "^/operate/work(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate/work(?:/)?$"
     },
     {
       "page": "/os",

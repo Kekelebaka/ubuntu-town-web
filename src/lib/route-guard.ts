@@ -45,6 +45,9 @@ export const PUBLIC_PATH_PREFIXES: readonly string[] = [
   // EXPERIENCE 002 (public REAL operating picture — read-only public canonical data;
   // operational layers shown as protected; explicit allowlist edit).
   '/real',
+  // EXPERIENCE 003 (public operating system — read-only public data; operational layers
+  // shown as protected; explicit allowlist edit).
+  '/operate',
   '/about',
   '/towns',
   '/town',
