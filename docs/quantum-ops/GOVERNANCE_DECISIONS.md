@@ -1,5 +1,22 @@
 # GOVERNANCE DECISIONS (Phase 8)
 
+## GOVERNANCE DECISION RECORD (2026-10-12 — controlled release authorisation)
+Decision-maker: product operator (Kekelebaka) via the Quantum Ops Release Execution Order. These are
+**internal product governance decisions**, NOT external/institutional ratification.
+
+**C-05 — RATIFIED.** The 50-town Blueprint roster (`blueprint-roster.json`) is **ratified as the current
+product cohort**, subject to governed amendment. Distinctions preserved and unchanged:
+- 50 Blueprint cohort towns (product cohort);
+- 81 canonical town rows in the database (a separate database fact).
+These describe different things and are not collapsed.
+
+**C-06 — PROVENANCE-HELD EXCEPTION.** Migrations 0015–0017 remain **provenance-held exceptions** until their
+provenance is resolved through a governed process. Migration history is NOT silently rewritten; 0015–0017 are
+NOT treated as validated architectural precedent. (Evidence to date — recovered production ledger + live 46-table
+`uto` — indicates they were never applied, but this is held, not closed.)
+
+---
+
 Rule (§8): do not silently resolve; do not manufacture a decision. For each blocker: (1) can engineering
 resolve it from existing evidence? (2) if yes → resolution documented/implemented; (3) if no → explicit
 GOVERNANCE DECISION REQUIRED. Standing facts preserved: 50 Blueprint towns (product cohort) ≠ 81 DB rows
