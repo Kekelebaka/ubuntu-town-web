@@ -103,6 +103,15 @@ export const ROUTE_MATRIX: MatrixRow[] = [
   { route: '/operate/work', authRequired: false, role: null },
   { route: '/operate/work/setup-local-sales-corridor-in-bethlehem', authRequired: false, role: null }, // /operate/work/[id]
   { route: '/operate/missions', authRequired: false, role: null },
+  // /operate/admin* is an EXPLICIT ALLOWLIST CHANGE: the route is public-facing but its
+  // content is gated server-side by the session + uto.is_hq() (decideAdminAccess, fail closed)
+  // and every write re-checks the gate and is decided by RLS. Navigation never implies authority.
+  { route: '/operate/admin', authRequired: false, role: null },
+  { route: '/operate/admin/people', authRequired: false, role: null },
+  { route: '/operate/admin/towns', authRequired: false, role: null },
+  { route: '/operate/admin/town/senekal', authRequired: false, role: null }, // /operate/admin/town/[slug]
+  { route: '/operate/api/admin/people', authRequired: false, role: null }, // API re-checks is_hq; 403 otherwise
+  { route: '/operate/api/admin/towns', authRequired: false, role: null },
 ];
 
 describe('route protection matrix — every route in src/app', () => {
@@ -110,7 +119,7 @@ describe('route protection matrix — every route in src/app', () => {
     // src/app contains 36 page.tsx files and 4 route.ts handlers:
     // /auth/callback, /auth/confirm (auth plumbing) and /api/release,
     // /api/revalidate (the "2 API routes").
-    expect(ROUTE_MATRIX).toHaveLength(65);
+    expect(ROUTE_MATRIX).toHaveLength(71);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/api/'))).toHaveLength(2);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/auth/'))).toHaveLength(4);
   });
@@ -156,6 +165,7 @@ describe('route protection matrix — every route in src/app', () => {
       '/operate/initiative/fixeasy': '/operate/initiative/[key]',
       '/operate/person/interim-town-coordinator': '/operate/person/[id]',
       '/operate/work/setup-local-sales-corridor-in-bethlehem': '/operate/work/[id]',
+      '/operate/admin/town/senekal': '/operate/admin/town/[slug]',
     };
     const matrixShapes = ROUTE_MATRIX.map(
       (r) => dynamicRepresentatives[r.route] ?? r.route

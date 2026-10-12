@@ -50,6 +50,14 @@
   },
   "dynamicRoutes": [
     {
+      "page": "/operate/admin/town/[slug]",
+      "regex": "^/operate/admin/town/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/operate/admin/town/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/operate/initiative/[key]",
       "regex": "^/operate/initiative/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -329,6 +337,36 @@
       "regex": "^/operate(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/operate(?:/)?$"
+    },
+    {
+      "page": "/operate/admin",
+      "regex": "^/operate/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate/admin(?:/)?$"
+    },
+    {
+      "page": "/operate/admin/people",
+      "regex": "^/operate/admin/people(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate/admin/people(?:/)?$"
+    },
+    {
+      "page": "/operate/admin/towns",
+      "regex": "^/operate/admin/towns(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate/admin/towns(?:/)?$"
+    },
+    {
+      "page": "/operate/api/admin/people",
+      "regex": "^/operate/api/admin/people(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate/api/admin/people(?:/)?$"
+    },
+    {
+      "page": "/operate/api/admin/towns",
+      "regex": "^/operate/api/admin/towns(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate/api/admin/towns(?:/)?$"
     },
     {
       "page": "/operate/initiatives",

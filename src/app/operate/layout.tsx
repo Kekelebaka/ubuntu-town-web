@@ -17,6 +17,7 @@ const NAV = [
   { label: 'Initiatives', href: '/operate/initiatives' },
   { label: 'People', href: '/operate/people' },
   { label: 'My Work', href: '/operate/work' },
+  { label: 'Admin', href: '/operate/admin' },
 ];
 
 export default function OperateLayout({ children }: { children: React.ReactNode }) {

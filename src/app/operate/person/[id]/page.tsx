@@ -128,13 +128,14 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
           coach={[]}
           proposal={{
             title: 'ASSIGN OWNER',
-            detail: 'PROPOSAL — PENDING HUMAN APPROVAL: appoint a verified person to this role. Consequential assignment remains human-approved and is never executed by the system.',
+            detail: 'PROPOSAL — PENDING HUMAN APPROVAL: appoint a verified person to this role. An HQ admin can now do this for real from Administration → People & roles (the grant is previewed, human-confirmed and decided by the database). The system never self-executes an assignment.',
             evidence: ['vacancy object (the evidence of the gap)'],
           }} />
       </div>
 
       <div className="mt-8">
         <NextMoves moves={[
+          { label: 'ASSIGN OWNER — Administration → People & roles (HQ)', href: '/operate/admin/people' },
           { label: 'Open the ownership map', href: '/operate/people' },
           { label: 'Open My Work', href: '/operate/work' },
           { label: 'Open the Portfolio OS', href: '/operate/initiatives' },
