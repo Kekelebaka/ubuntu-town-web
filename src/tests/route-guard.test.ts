@@ -54,6 +54,9 @@ export const ROUTE_MATRIX: MatrixRow[] = [
   { route: '/update-password', authRequired: true, role: null },
   // --- protected: operating system shell ---
   { route: '/pulse', authRequired: true, role: null }, // Town Pulse (derived/read-only engine projection)
+  { route: '/passport', authRequired: true, role: null }, // Town Passport national rollup (read-only intelligence layer)
+  { route: '/passport/province/free-state', authRequired: true, role: null }, // /passport/province/[slug]
+  { route: '/passport/town/senekal', authRequired: true, role: null }, // /passport/town/[slug]
   { route: '/workspace', authRequired: true, role: null },
   { route: '/workspace/new', authRequired: true, role: null },
   { route: '/workspace/people', authRequired: true, role: null },
@@ -115,11 +118,11 @@ export const ROUTE_MATRIX: MatrixRow[] = [
 ];
 
 describe('route protection matrix — every route in src/app', () => {
-  it('covers 36 pages + 2 /auth route handlers + 2 API routes', () => {
-    // src/app contains 36 page.tsx files and 4 route.ts handlers:
+  it('covers every page + 2 /auth route handlers + 2 API routes', () => {
+    // src/app page/route files are enumerated below ("is complete" test);
     // /auth/callback, /auth/confirm (auth plumbing) and /api/release,
     // /api/revalidate (the "2 API routes").
-    expect(ROUTE_MATRIX).toHaveLength(71);
+    expect(ROUTE_MATRIX).toHaveLength(74);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/api/'))).toHaveLength(2);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/auth/'))).toHaveLength(4);
   });
@@ -166,6 +169,8 @@ describe('route protection matrix — every route in src/app', () => {
       '/operate/person/interim-town-coordinator': '/operate/person/[id]',
       '/operate/work/setup-local-sales-corridor-in-bethlehem': '/operate/work/[id]',
       '/operate/admin/town/senekal': '/operate/admin/town/[slug]',
+      '/passport/province/free-state': '/passport/province/[slug]',
+      '/passport/town/senekal': '/passport/town/[slug]',
     };
     const matrixShapes = ROUTE_MATRIX.map(
       (r) => dynamicRepresentatives[r.route] ?? r.route
