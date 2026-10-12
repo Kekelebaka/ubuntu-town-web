@@ -4,6 +4,7 @@
 
 import Link from 'next/link';
 import { getCanonicalTowns, provinceGroups, provinceSlug } from '@/lib/e003/os';
+import { rosterByProvince, isBlueprintTown, ROSTER_COUNT } from '@/lib/e003/roster';
 import { packForTown } from '@/lib/e003/field-intelligence/packs';
 import { Stamp, Section, ContextBar, NextMoves, StateBlock } from '@/components/e003/os-ui';
 import CoS from '@/components/e003/CoS';
@@ -27,6 +28,7 @@ export default async function ProvincePage({ params }: { params: Promise<{ slug:
   }
 
   const packTowns = group.towns.filter((t) => packForTown(t.name));
+  const rosterTowns = rosterByProvince(group.province);
   const founding = group.towns.filter((t) => t.is_founding).length;
 
   return (
@@ -38,6 +40,7 @@ export default async function ProvincePage({ params }: { params: Promise<{ slug:
         <h1 className="mt-2 text-3xl font-black">{group.province.toUpperCase()}</h1>
         <p className="mt-3 max-w-2xl text-sm text-[#E9DDF5]">What is happening in this province? Every number below is derived from child records — nothing is invented at province level.</p>
         <div className="mt-4 flex flex-wrap gap-2 text-[11px]">
+          <span className="rounded-full border border-[#F5C97E] px-3 py-1 text-[#F5C97E]">{rosterTowns.length} Blueprint roster towns (strategic)</span>
           <span className="rounded-full border border-white/30 px-3 py-1">{group.towns.length} canonical database rows</span>
           <span className="rounded-full border border-white/30 px-3 py-1">{founding} founding-flagged (ratification pending)</span>
           <span className="rounded-full border border-white/30 px-3 py-1">{packTowns.length} with field intelligence</span>
@@ -70,7 +73,7 @@ export default async function ProvincePage({ params }: { params: Promise<{ slug:
                   <div>
                     <p className="text-sm font-semibold text-[#241A33]">{t.name}</p>
                     <p className="text-[11px] text-[#8B7FA3]">
-                      record status {t.status ?? 'unset'} · recruitment {t.recruitment_status ?? 'unset'} ·
+                      {isBlueprintTown(t.slug) ? '★ BLUEPRINT COHORT' : 'database row · outside the Blueprint cohort'} · record status {t.status ?? 'unset'} · recruitment {t.recruitment_status ?? 'unset'} ·
                       applicants {t.applicant_count ?? 0}{t.opportunity_notes ? ' · opportunity context available' : ''}
                       {packForTown(t.name) ? ' · field intelligence' : ''}
                     </p>

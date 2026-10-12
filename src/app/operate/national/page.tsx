@@ -4,7 +4,8 @@
 
 import Link from 'next/link';
 import { getCanonicalTowns, provinceGroups, provinceSlug, geographyDeltas, nationalStatements } from '@/lib/e003/os';
-import { CANONICAL_TEN, RECONCILIATION_SUMMARY } from '@/lib/e003/registry';
+import { CANONICAL_TEN, DATABASE_ONLY_ROWS, RECONCILIATION_SUMMARY, REMOVED_FROM_PORTFOLIO } from '@/lib/e003/registry';
+import { strategicGeography, ROSTER_COUNT, ROSTER_PROVINCES, isBlueprintTown } from '@/lib/e003/roster';
 import { FIELD_PACKS } from '@/lib/e003/field-intelligence/packs';
 import { Stamp, StateBlock, Section, ContextBar, StatementRow, NextMoves, ReconciliationChip } from '@/components/e003/os-ui';
 import CoS from '@/components/e003/CoS';
@@ -59,8 +60,26 @@ export default async function National() {
         </div>
       </Section>
 
+      {/* STRATEGIC GEOGRAPHY — resolves against the Blueprint roster */}
+      <Section title="Strategic geography — the Blueprint cohort" right={<Stamp kind="authored" />}>
+        <div className="rounded-2xl border border-[#D9C7EA] bg-[#F7F1FB] p-5">
+          <p className="text-xs leading-relaxed text-[#5A4E6D]">
+            <span className="font-semibold text-[#5B2A86]">{strategicGeography().cohortLabel}</span> — {strategicGeography().cohortNote}
+          </p>
+          <p className="mt-2 text-[10px] text-[#8A5410]">Roster status: {strategicGeography().ratificationStatus}</p>
+          <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {strategicGeography().provinces.map((p) => (
+              <div key={p.province} className="rounded-xl border border-[#E3D5F0] bg-white px-3 py-2">
+                <p className="text-[11px] font-bold text-[#241A33]">{p.province} <span className="text-[#8B7FA3]">· {p.towns.length} roster towns</span></p>
+                <p className="mt-0.5 text-[10px] text-[#5A4E6D]">{p.towns.map((t) => t.name).join(' · ')}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Section>
+
       {/* PROVINCES */}
-      <Section title="The network — 9 provinces" right={<Stamp kind="computed" />}>
+      <Section title="Database coverage — 81 canonical rows (non-strategic)" right={<Stamp kind="computed" />}>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {provinces.map((p) => {
             const packs = FIELD_PACKS.filter((fp) => p.towns.some((t) => t.name === fp.town)).length;
@@ -133,7 +152,7 @@ export default async function National() {
         <div className="mt-3">
           <ReconciliationChip
             state={`${RECONCILIATION_SUMMARY.linked} linked · ${RECONCILIATION_SUMMARY.possibleUnresolved} unresolved · ${RECONCILIATION_SUMMARY.dbAbsent} database-absent · ${RECONCILIATION_SUMMARY.dbOnly} database-only rows`}
-            note="The catalog holds 12 rows against the canonical ten. Database-only rows (Job Fixer, Ubuntu Academy, EcoChar, Buntu Bar, Ubuntu Town-platform) are never presented as canonical initiatives. Human decision required — nothing is merged, renamed, deleted or promoted." />
+            note={`The catalog holds 12 rows against the canonical ten. DECIDED 2026-10-12: ${REMOVED_FROM_PORTFOLIO.map((r) => r.name).join(", ")} are REMOVED from the active portfolio (historical rows preserved — not deleted, not merged). Still open: Buntu Bar (possible relation to Ubuntu Socials, C-01) and the Ubuntu Town platform row. None is ever presented as an active canonical initiative.`} />
         </div>
       </Section>
 

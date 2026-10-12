@@ -78,7 +78,6 @@ export function NationalActivationPipeline() {
 
   const liveSystems: LiveStatus[] = [
     { name: 'CV Engine', status: 'Live' },
-    { name: 'Ubuntu Academy', status: 'Live' },
     { name: 'Kopano assistant', status: 'In Build' },
     { name: 'Workpacks', status: 'Concept' },
   ];

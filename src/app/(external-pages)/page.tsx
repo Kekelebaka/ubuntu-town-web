@@ -7,10 +7,8 @@ const ecosystemBrands = [
   { icon: '🔧', name: 'FixEasy24', desc: 'Verified plumbers, electricians, handymen. Local repair and service provider network.' },
   { icon: '🛒', name: 'KasiBuy', desc: 'Local commerce — spaza deals, WhatsApp catalogues, community ordering. Shop local.' },
   { icon: '🏠', name: 'FamilyHouse', desc: 'Home-based hospitality. Verified accommodation for visitors, events, and travelers.' },
-  { icon: '🌿', name: 'EcoChar', desc: 'Charcoal production training. 5-day practical programme from setup to distribution.' },
   { icon: '🍹', name: 'BuntuBar', desc: 'Mobile bar and beverage workshops. Event trade, compliance, and local hospitality.' },
   { icon: '🤖', name: 'AI Café', desc: 'CVs, tenders, business profiles, admin services. AI-enabled local digital access.' },
-  { icon: '🎓', name: 'Ubuntu Academy', desc: 'Skills workshops — CV readiness, digital skills, tender basics, business marketing.' },
   { icon: '🎵', name: 'Orbit Music', desc: 'Youth AI music creation workshops. Create songs, learn, earn from streams and briefs.' },
 ];
 

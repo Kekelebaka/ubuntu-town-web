@@ -1,0 +1,30 @@
+// wrangler.experience-005.jsonc — EXPERIENCE 005 (OPERATING SYSTEM + TOP ADMINISTRATION).
+// Worker: ubuntu-town-os-experience-005 (SEPARATE worker; E001-E004 untouched).
+// Auth: standard Supabase auth (sign-in) + database authority (uto.is_hq / RLS).
+// NO service-role. NO auth-admin API. NO stored credentials. Writes run under the signed-in
+// session and are decided by RLS at the database.
+{
+  "name": "ubuntu-town-os-work-staging",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "SUPABASE_URL": "https://afiokbhuxfdacbsipoqk.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_JKHeDgqBRGv4vwCMIdo23w_NbU_HGR_",
+    "EXPERIENCE_005": "1"
+  },
+  "env": {
+    "experience-005": {
+      "name": "ubuntu-town-os-work-staging",
+      "vars": {
+        "SUPABASE_URL": "https://afiokbhuxfdacbsipoqk.supabase.co",
+        "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_JKHeDgqBRGv4vwCMIdo23w_NbU_HGR_",
+        "EXPERIENCE_005": "1"
+      }
+    }
+  }
+}

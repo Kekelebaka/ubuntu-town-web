@@ -3,7 +3,7 @@
 // the portfolio; database-only rows are marked, never promoted.
 
 import Link from 'next/link';
-import { CANONICAL_TEN, DATABASE_ONLY_ROWS, RECONCILIATION_SUMMARY } from '@/lib/e003/registry';
+import { CANONICAL_TEN, DATABASE_ONLY_ROWS, RECONCILIATION_SUMMARY, REMOVED_FROM_PORTFOLIO } from '@/lib/e003/registry';
 import { getCanonicalTowns, provinceGroups } from '@/lib/e003/os';
 import { packForTown } from '@/lib/e003/field-intelligence/packs';
 import { Stamp, Section, ContextBar, NextMoves, ReconciliationChip } from '@/components/e003/os-ui';
@@ -75,6 +75,17 @@ export default async function Portfolio() {
                   <Stamp kind={i.reconciliation.includes('UNRESOLVED') ? 'contradiction' : 'records_not_accessible'} />
                 </div>
                 <p className="mt-1 text-xs text-[#5A4E6D]">{i.reconciliationNote}</p>
+              </li>
+            ))}
+            {/* DECIDED 2026-10-12 — recorded, preserved, never active */}
+            {REMOVED_FROM_PORTFOLIO.map((r) => (
+              <li key={r.key} className="px-5 py-3.5">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <p className="text-sm font-semibold text-[#8A5410]">{r.name} <span className="text-xs font-normal">— REMOVED FROM ACTIVE PORTFOLIO (2026-10-12)</span></p>
+                  <Stamp kind="contradiction" />
+                </div>
+                <p className="mt-1 text-xs text-[#5A4E6D]">{r.tagline}</p>
+                <p className="mt-1 text-[11px] text-[#8A5410]">{r.note}</p>
               </li>
             ))}
             {DATABASE_ONLY_ROWS.map((r) => (

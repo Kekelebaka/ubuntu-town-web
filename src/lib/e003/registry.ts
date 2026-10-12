@@ -104,12 +104,19 @@ export const CANONICAL_TEN: CanonicalInitiative[] = [
 ];
 
 // Real DB rows with no canonical counterpart (rendered ONLY in reconciliation contexts).
+// HUMAN DECISION 2026-10-12 (portfolio authority): Job Fixer, Ubuntu Academy and EcoChar are
+// REMOVED from the active Ubuntu Town operating portfolio. Their production rows are preserved
+// as historical records — NOT deleted, NOT merged, NOT reinterpreted. They can never appear as
+// active Ubuntu Town initiatives anywhere in the product.
+export const REMOVED_FROM_PORTFOLIO = [
+  { key: 'job-fixer', name: 'Job Fixer', tagline: 'Every CV is a door.', note: 'REMOVED FROM ACTIVE PORTFOLIO (human decision 2026-10-12). Historical database row preserved — not deleted, not merged, not invented into another initiative.' },
+  { key: 'ubuntu-academy', name: 'Ubuntu Academy', tagline: 'Skills Create Opportunity.', note: 'REMOVED FROM ACTIVE PORTFOLIO (human decision 2026-10-12). Historical database row preserved.' },
+  { key: 'ecochar', name: 'EcoChar', tagline: 'Waste to Wealth. Sustainable Charcoal.', note: 'REMOVED FROM ACTIVE PORTFOLIO (human decision 2026-10-12). Historical database row preserved.' },
+] as const;
+
 export const DATABASE_ONLY_ROWS = [
   { key: 'ubuntu-town', name: 'Ubuntu Town', tagline: 'One Town. Many Hands. Real Opportunities.', badge: 'PLATFORM', note: 'The operating platform itself — not one of the ten activation engines.' },
-  { key: 'job-fixer', name: 'Job Fixer', tagline: 'Every CV is a door.', badge: 'PATHWAY', note: 'DATABASE-ONLY RECORD — portfolio status unreconciled. Never presented as canonical.' },
-  { key: 'ubuntu-academy', name: 'Ubuntu Academy', tagline: 'Skills Create Opportunity.', badge: 'PATHWAY', note: 'DATABASE-ONLY RECORD — portfolio status unreconciled.' },
-  { key: 'ecochar', name: 'EcoChar', tagline: 'Waste to Wealth. Sustainable Charcoal.', badge: 'PATHWAY', note: 'DATABASE-ONLY RECORD — portfolio status unreconciled.' },
-  { key: 'buntu-bar', name: 'Buntu Bar', tagline: 'Where the community gathers.', badge: 'PATHWAY', note: 'DATABASE-ONLY RECORD — possible relation to "Ubuntu Socials" is UNRESOLVED (see C-01). Never merged.' },
+  { key: 'buntu-bar', name: 'Buntu Bar', tagline: 'Where the community gathers.', badge: 'PATHWAY', note: 'DATABASE-ONLY RECORD — possible relation to "Ubuntu Socials" is UNRESOLVED (see C-01). Never merged. NOT an active initiative.' },
 ];
 
 export const RECONCILIATION_SUMMARY = {
@@ -119,6 +126,7 @@ export const RECONCILIATION_SUMMARY = {
   possibleUnresolved: CANONICAL_TEN.filter((c) => c.reconciliation === 'POSSIBLE BLUEPRINT MATCH — UNRESOLVED').length,
   dbAbsent: CANONICAL_TEN.filter((c) => c.reconciliation === 'BLUEPRINT INITIATIVE — DATABASE RECORD ABSENT').length,
   dbOnly: DATABASE_ONLY_ROWS.length,
+  removedFromPortfolio: REMOVED_FROM_PORTFOLIO.length,
 };
 
 export function initiativeByKey(key: string): CanonicalInitiative | undefined {

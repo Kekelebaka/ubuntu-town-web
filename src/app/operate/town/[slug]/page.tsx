@@ -8,6 +8,7 @@ import { townStatements, buildCell, type CanonicalTown } from '@/lib/e003/os';
 import { CANONICAL_TEN } from '@/lib/e003/registry';
 import { packForTown, packProvenance } from '@/lib/e003/field-intelligence/packs';
 import { signalsForTown } from '@/lib/e003/loop';
+import { cohortStamp } from '@/lib/e003/roster';
 import { Stamp, StateBlock, Section, ContextBar, StatementRow, NextMoves, PlaceholderOwner, Metric } from '@/components/e003/os-ui';
 import CoS from '@/components/e003/CoS';
 
@@ -28,6 +29,7 @@ export default async function TownPage({ params }: { params: Promise<{ slug: str
   }
 
   const pack = packForTown(town.name);
+  const cohort = cohortStamp(town.slug);
   const signals = signalsForTown(town);
   const legacy = (await getLegacyNarratives()).find((l) => l.slug === town.slug);
   const statements = townStatements(town, pack);
@@ -41,7 +43,11 @@ export default async function TownPage({ params }: { params: Promise<{ slug: str
       <section className="rounded-3xl bg-gradient-to-br from-[#241A33] via-[#3B2A52] to-[#5B2A86] px-8 py-10 text-white shadow-lg">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#F5C97E]">{town.province} · canonical database record</p>
         <h1 className="mt-2 text-4xl font-black">{town.name.toUpperCase()}</h1>
-        <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
+        <div className="mt-3">
+          <span className={`rounded-full px-3 py-1 text-[10px] font-bold ${cohort.inCohort ? 'bg-[#F5C97E] text-[#241A33]' : 'bg-white/15 text-white border border-white/30'}`}>{cohort.label}</span>
+          <p className="mt-1 max-w-2xl text-[10px] text-[#E9DDF5]">{cohort.note}</p>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2 text-[11px]">
           <span className="rounded-full border border-white/30 px-3 py-1">record status {town.status ?? 'unset'}</span>
           <span className="rounded-full border border-white/30 px-3 py-1">recruitment {town.recruitment_status ?? 'unset'}</span>
           <span className="rounded-full border border-white/30 px-3 py-1">applicants {town.applicant_count ?? 0}</span>
