@@ -24,6 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Environment-separation guard: fail if any staging config references a production
+      # identifier (Supabase ref / Pages project / prod key). Pure node, no install needed.
+      - name: Env separation guard (staging must not touch production)
+        run: node scripts/guard-env-separation.mjs
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20

@@ -1,8 +1,20 @@
-// wrangler.experience-005.jsonc — EXPERIENCE 005 (OPERATING SYSTEM + TOP ADMINISTRATION).
-// Worker: ubuntu-town-os-experience-005 (SEPARATE worker; E001-E004 untouched).
+// wrangler.work-staging.jsonc — STAGING deploy config for the work/operating surface.
+//
+// ⚠ ENVIRONMENT SEPARATION (Phase 2 fix):
+//   Before this fix, this file pointed at the PRODUCTION Supabase project
+//   (afiokbhuxfdacbsipoqk) under an E005 copy-paste header — a staging deploy would have
+//   read/written PRODUCTION data. That path is now eliminated:
+//     STAGING     -> staging Supabase    (lgbkfthojyxhwemgkpgo)
+//     PRODUCTION  -> production Supabase (afiokbhuxfdacbsipoqk) — only via deploy-web.yml.
+//   A CI guard (scripts/guard-env-separation.mjs) now FAILS if any staging config references
+//   a production identifier. Do not reintroduce production refs here.
+//
 // Auth: standard Supabase auth (sign-in) + database authority (uto.is_hq / RLS).
 // NO service-role. NO auth-admin API. NO stored credentials. Writes run under the signed-in
 // session and are decided by RLS at the database.
+//
+// NOTE: set SUPABASE_PUBLISHABLE_KEY to the STAGING project's publishable key before deploy.
+// It is intentionally a placeholder so no production key is baked into staging config.
 {
   "name": "ubuntu-town-os-work-staging",
   "main": ".open-next/worker.js",
@@ -13,17 +25,17 @@
     "binding": "ASSETS"
   },
   "vars": {
-    "SUPABASE_URL": "https://afiokbhuxfdacbsipoqk.supabase.co",
-    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_JKHeDgqBRGv4vwCMIdo23w_NbU_HGR_",
-    "EXPERIENCE_005": "1"
+    "SUPABASE_URL": "https://lgbkfthojyxhwemgkpgo.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_REPLACE_WITH_STAGING_PUBLISHABLE_KEY",
+    "ENVIRONMENT": "staging"
   },
   "env": {
-    "experience-005": {
+    "work-staging": {
       "name": "ubuntu-town-os-work-staging",
       "vars": {
-        "SUPABASE_URL": "https://afiokbhuxfdacbsipoqk.supabase.co",
-        "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_JKHeDgqBRGv4vwCMIdo23w_NbU_HGR_",
-        "EXPERIENCE_005": "1"
+        "SUPABASE_URL": "https://lgbkfthojyxhwemgkpgo.supabase.co",
+        "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_REPLACE_WITH_STAGING_PUBLISHABLE_KEY",
+        "ENVIRONMENT": "staging"
       }
     }
   }
