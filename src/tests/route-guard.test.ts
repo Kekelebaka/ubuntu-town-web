@@ -101,6 +101,8 @@ export const ROUTE_MATRIX: MatrixRow[] = [
   { route: '/operate/people', authRequired: false, role: null },
   { route: '/operate/person/interim-town-coordinator', authRequired: false, role: null }, // /operate/person/[id]
   { route: '/operate/work', authRequired: false, role: null },
+  { route: '/operate/work/setup-local-sales-corridor-in-bethlehem', authRequired: false, role: null }, // /operate/work/[id]
+  { route: '/operate/missions', authRequired: false, role: null },
 ];
 
 describe('route protection matrix — every route in src/app', () => {
@@ -108,7 +110,7 @@ describe('route protection matrix — every route in src/app', () => {
     // src/app contains 36 page.tsx files and 4 route.ts handlers:
     // /auth/callback, /auth/confirm (auth plumbing) and /api/release,
     // /api/revalidate (the "2 API routes").
-    expect(ROUTE_MATRIX).toHaveLength(63);
+    expect(ROUTE_MATRIX).toHaveLength(65);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/api/'))).toHaveLength(2);
     expect(ROUTE_MATRIX.filter((r) => r.route.startsWith('/auth/'))).toHaveLength(4);
   });
@@ -153,6 +155,7 @@ describe('route protection matrix — every route in src/app', () => {
       '/operate/town/senekal/fixeasy': '/operate/town/[slug]/[initiative]',
       '/operate/initiative/fixeasy': '/operate/initiative/[key]',
       '/operate/person/interim-town-coordinator': '/operate/person/[id]',
+      '/operate/work/setup-local-sales-corridor-in-bethlehem': '/operate/work/[id]',
     };
     const matrixShapes = ROUTE_MATRIX.map(
       (r) => dynamicRepresentatives[r.route] ?? r.route

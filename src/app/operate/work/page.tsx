@@ -60,7 +60,8 @@ export default async function MyWork() {
                     <p className="mt-1.5 text-xs text-[#5B2A86]"><span className="font-semibold">Next action:</span> {w.nextAction}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1.5">
-                    <Link href={`/operate/town/${w.context.town.toLowerCase().replace(/\s+/g, '-')}`} className="rounded-full border border-[#D9C7EA] px-3 py-1 text-[11px] font-semibold text-[#5B2A86] hover:bg-[#F3EBFA]">open context</Link>
+                    <Link href={`/operate/work/${w.id.replace(/^wk:/, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`} className="rounded-full border border-[#D9C7EA] px-3 py-1 text-[11px] font-semibold text-[#5B2A86] hover:bg-[#F3EBFA]">open work item</Link>
+                    <Link href={`/operate/town/${w.context.town.toLowerCase().replace(/\s+/g, '-')}`} className="rounded-full border border-[#EADFD2] px-3 py-1 text-[10px] font-semibold text-[#8B7FA3] hover:bg-[#FAF5EE]">open context</Link>
                     <span className="rounded-full border border-[#E7C9A0] px-3 py-1 text-[10px] font-bold text-[#8A5410]">START — PROPOSAL ONLY</span>
                   </div>
                 </div>

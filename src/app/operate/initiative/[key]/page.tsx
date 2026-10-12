@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import { getCanonicalTowns, buildCell } from '@/lib/e003/os';
 import { initiativeByKey, CANONICAL_TEN, type CanonicalInitiative } from '@/lib/e003/registry';
-import { packForTown } from '@/lib/e003/field-intelligence/packs';
+import { packForTown, FIELD_PACKS } from '@/lib/e003/field-intelligence/packs';
 import { Stamp, StateBlock, Section, ContextBar, StatementRow, NextMoves, PlaceholderOwner, ReconciliationChip } from '@/components/e003/os-ui';
 import { initiativeStatements } from '@/lib/e003/os';
 import CoS from '@/components/e003/CoS';
@@ -40,6 +40,13 @@ export default async function InitiativePage({ params }: { params: Promise<{ key
 
   const towns = await getCanonicalTowns();
   const statements = initiativeStatements(initiative);
+  // REAL evidence seeding for BMC blocks — only where legitimate evidence exists.
+  const bmcEvidence: Record<string, string[]> = {
+    'Key Partners': FIELD_PACKS.flatMap((p) => p.ecosystem_fit.slice(0, 1).map((e) => `${e.entity} (fit ${e.fit_score}, research, ${p.town})`)).slice(0, 3),
+    'Key Resources': packForTown('Senekal') ? [`Senekal township nodes: ${packForTown('Senekal')!.township_nodes.join(', ')} (research)`] : [],
+    'Customer Segments': key === 'fixeasy' && packForTown('Senekal') ? [`Senekal: foundation-stage farming enterprises are young, informal and services-poor (research)`] : [],
+    'Value Proposition': initiative.purpose ? [`Canonical purpose: “${initiative.purpose}” (database description where linked)`] : [],
+  };
   const packTowns = towns.filter((t) => packForTown(t.name));
 
   return (
@@ -82,10 +89,17 @@ export default async function InitiativePage({ params }: { params: Promise<{ key
               <p className="mt-1 text-[10px] text-[#8B7FA3]">{shape}</p>
               <div className="mt-3 space-y-1.5 text-[11px]">
                 <p className="rounded-lg border border-[#EED9B8] bg-[#FDF9F1] px-2.5 py-1.5 text-[#8A5410]"><span className="font-semibold">Hypothesis:</span> required — not yet authored</p>
-                <p className="text-[#5A4E6D]"><span className="font-semibold text-[#241A33]">Evidence:</span> none linked</p>
+                <div className="text-[#5A4E6D]"><span className="font-semibold text-[#241A33]">Evidence:</span>{' '}
+                  {(bmcEvidence[block] ?? []).length > 0 ? (
+                    <ul className="mt-1 space-y-1">
+                      {(bmcEvidence[block] ?? []).map((e) => <li key={e} className="rounded border border-[#DCEBDD] bg-[#F2F8F4] px-2 py-1 text-[10px] text-[#2F7D5C]">{e}</li>)}
+                    </ul>
+                  ) : <span> none linked</span>}
+                </div>
                 <p className="text-[#5A4E6D]"><span className="font-semibold text-[#241A33]">Status:</span> ASSUMED (untested)</p>
                 <p className="text-[#5A4E6D]"><span className="font-semibold text-[#241A33]">Experiment:</span> none proposed</p>
                 <p className="text-[#5A4E6D]"><span className="font-semibold text-[#241A33]">Learning:</span> —</p>
+                <p className="text-[#5A4E6D]"><span className="font-semibold text-[#241A33]">Next implication:</span> follows from learning — none yet (honest, not filler)</p>
               </div>
             </div>
           ))}

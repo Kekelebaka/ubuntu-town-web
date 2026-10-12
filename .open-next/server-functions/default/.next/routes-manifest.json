@@ -91,6 +91,14 @@
       "namedRegex": "^/operate/town/(?<nxtPslug>[^/]+?)/(?<nxtPinitiative>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/operate/work/[id]",
+      "regex": "^/operate/work/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/operate/work/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/os/initiative/[id]",
       "regex": "^/os/initiative/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -327,6 +335,12 @@
       "regex": "^/operate/initiatives(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/operate/initiatives(?:/)?$"
+    },
+    {
+      "page": "/operate/missions",
+      "regex": "^/operate/missions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/operate/missions(?:/)?$"
     },
     {
       "page": "/operate/national",

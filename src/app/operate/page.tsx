@@ -5,7 +5,8 @@
 import Link from 'next/link';
 import { getCanonicalTowns, provinceGroups, geographyDeltas, derivedWorkQueue, nationalStatements, type CanonicalTown } from '@/lib/e003/os';
 import { CANONICAL_TEN, RECONCILIATION_SUMMARY } from '@/lib/e003/registry';
-import { FIELD_PACKS, packForTown } from '@/lib/e003/field-intelligence/packs';
+import { packForTown, FIELD_PACKS } from '@/lib/e003/field-intelligence/packs';
+import { whatChanged, LEARNING_LOOP_NOTE } from '@/lib/e003/loop';
 import { Stamp, StateBlock, Section, ContextBar, NextMoves, PlaceholderOwner } from '@/components/e003/os-ui';
 import CoS from '@/components/e003/CoS';
 
@@ -16,6 +17,7 @@ export default async function Home() {
   const provinces = provinceGroups(towns);
   const deltas = geographyDeltas(towns, 30);
   const queue = derivedWorkQueue(towns);
+  const changed = whatChanged(towns, 30);
   const statements = nationalStatements(towns);
   const packTowns = FIELD_PACKS.map((p) => ({ pack: p, town: towns.find((t) => t.name === p.town) })).filter((x) => x.town);
 
@@ -70,6 +72,53 @@ export default async function Home() {
         </div>
       </Section>
 
+      {/* B2. WHAT CHANGED */}
+      <Section title="What changed" right={<Stamp kind="computed" />}>
+        <div className="rounded-2xl border border-[#EADFD2] bg-white p-5 shadow-sm">
+          <p className="text-xs leading-relaxed text-[#5A4E6D]">{changed.note}</p>
+          {changed.items.length > 0 && (
+            <ul className="mt-3 space-y-2">
+              {changed.items.map((c) => (
+                <li key={c.object} className="rounded-xl border border-[#F1E8DC] px-3 py-2">
+                  <p className="text-xs font-semibold text-[#241A33]">{c.object} <span className="text-[#8B7FA3]">· {c.since}</span></p>
+                  <p className="mt-0.5 text-[11px] text-[#5A4E6D]">{c.change} {c.why} <span className="text-[#8B7FA3]">Evidence: {c.evidence}</span></p>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-2 text-[10px] text-[#8B7FA3]">CHANGE HISTORY NOT YET AVAILABLE at object level — this system will not manufacture a delta from a timestamp.</p>
+        </div>
+      </Section>
+
+      {/* B3. WHAT DID I LEARN */}
+      <Section title="What did I learn">
+        <div className="rounded-2xl border border-[#E7C9A0] bg-[#FDF9F1] p-5">
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A5410]">Learning feed</p>
+            <Stamp kind="absent" />
+          </div>
+          <p className="mt-2 text-xs leading-relaxed text-[#5A4E6D]">{LEARNING_LOOP_NOTE}</p>
+        </div>
+      </Section>
+
+      {/* B4. WHAT SHOULD HAPPEN NEXT */}
+      <Section title="What should happen next" right={<Stamp kind="derived" />}>
+        <div className="rounded-2xl border border-[#D9B27C] bg-[#FDF3E3] p-5">
+          <p className="text-sm font-semibold text-[#241A33]">
+            {queue[0]?.nextAction ?? 'No derivable next action exists in accessible records.'}
+          </p>
+          <p className="mt-1 text-[11px] text-[#5A4E6D]">
+            {queue[0] ? `From: ${queue[0].what} (${queue[0].context.town}) — research-derived guidance, not an assignment.` : 'INSUFFICIENT EVIDENCE.'}
+          </p>
+          {queue[0] && (
+            <Link href={`/operate/work/${queue[0].id.replace(/^wk:/, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`}
+              className="mt-3 inline-block rounded-full bg-[#D9822B] px-5 py-2.5 text-sm font-semibold text-white">
+              Open this work item →
+            </Link>
+          )}
+        </div>
+      </Section>
+
       {/* C. YOUR WORK */}
       <Section title="Your work" right={<Stamp kind="derived" />}>
         <div className="overflow-hidden rounded-2xl border border-[#EADFD2] bg-white shadow-sm">
@@ -82,7 +131,10 @@ export default async function Home() {
                     <p className="mt-0.5 text-xs text-[#5A4E6D]">{w.why}</p>
                     <p className="mt-1 text-[11px] text-[#8B7FA3]">{w.context.town} · {w.source} · proof required: {w.evidence.join(', ') || '—'}</p>
                   </div>
-                  <Link href={`/operate/town/${w.context.town.toLowerCase().replace(/\s+/g, '-')}`} className="text-xs font-semibold text-[#5B2A86] hover:underline">open context →</Link>
+                  <div className="flex flex-col items-end gap-1">
+                    <Link href={`/operate/work/${w.id.replace(/^wk:/, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`} className="text-xs font-semibold text-[#5B2A86] hover:underline">open work item →</Link>
+                    <Link href={`/operate/town/${w.context.town.toLowerCase().replace(/\s+/g, '-')}`} className="text-[11px] text-[#8B7FA3] hover:underline">open context</Link>
+                  </div>
                 </div>
               </li>
             ))}

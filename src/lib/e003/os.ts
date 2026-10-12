@@ -129,9 +129,10 @@ export interface WorkQueueItem {
   what: string;
   why: string;
   owner: { display: string; placeholder: true; real_person: false };
-  context: { town: string; initiative?: string };
+  context: { town: string; townSlug: string; initiative?: string; packId: string };
   evidence: string[];
   nextAction: string;
+  priority: number;
   claim: 'DERIVED';
   source: string;
 }
@@ -147,9 +148,10 @@ export function derivedWorkQueue(towns: CanonicalTown[]): WorkQueueItem[] {
         what: w.title,
         why: w.why_this_town,
         owner: { display: 'Ubuntu — Interim Town Coordinator · OWNER REQUIRED', placeholder: true, real_person: false },
-        context: { town: town.name },
+        context: { town: town.name, townSlug: town.slug, packId: pack.pack_id || '(pack id missing)' },
         evidence: w.proof_required,
         nextAction: pack.first_3_actions[i] ?? pack.first_3_actions[0] ?? 'Define first action with the town coordinator.',
+        priority: Number(w.priority),
         claim: 'DERIVED',
         source: `Field intelligence ${pack.pack_id} · priority ${w.priority}`,
       });

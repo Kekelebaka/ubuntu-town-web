@@ -167,6 +167,31 @@ export default async function CellPage({ params }: { params: Promise<{ slug: str
         </div>
       </Section>
 
+      {/* EVIDENCE QUALITY — how trustworthy is each claim */}
+      <Section title="Evidence quality — how trustworthy is each claim">
+        <div className="overflow-hidden rounded-2xl border border-[#EADFD2] bg-white shadow-sm">
+          <ul className="divide-y divide-[#F1E8DC]">
+            {[
+              ['Town record (status, recruitment, applicants)', 'REAL', 'Live canonical row, read-only, RLS-enforced.'],
+              ['Field intelligence (demand, workpacks, next actions)', 'DERIVED', 'Research artefacts, review_required — real but not operational truth.'],
+              ['Ownership', 'VACANCY', 'Unfilled ownership rendered as a vacancy object — never a fake person.'],
+              ['Deployment status', 'RECORDS NOT ACCESSIBLE', 'No deployment records are readable; the cell must not imply activity.'],
+              ['Capacity & economics', 'INSUFFICIENT EVIDENCE / NOT YET MEASURED', 'No accessible records; no value invented.'],
+              ['Proof', 'PROOF GAP', 'Standards exist (research); captured evidence is protected.'],
+              ['Learning', 'ABSENT', 'The learnings object is absent from the schema (verified).'],
+            ].map(([claim, cls, note]) => (
+              <li key={claim} className="flex flex-wrap items-start justify-between gap-3 px-5 py-3">
+                <div className="max-w-3xl">
+                  <p className="text-xs font-semibold text-[#241A33]">{claim}</p>
+                  <p className="mt-0.5 text-[11px] text-[#5A4E6D]">{note}</p>
+                </div>
+                <span className={`rounded-full px-2.5 py-1 text-[9px] font-bold ${cls === 'REAL' ? 'bg-[#F2F8F4] text-[#2F7D5C]' : cls === 'VACANCY' || cls === 'PROOF GAP' ? 'bg-[#FDF9F1] text-[#8A5410]' : cls === 'DERIVED' ? 'bg-[#FDF3E3] text-[#8A5410]' : 'bg-[#FAF5EE] text-[#5A4E6D]'}`}>{cls}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Section>
+
       {/* NEXT ACTION + RISKS */}
       <Section title="Next action · risks">
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">

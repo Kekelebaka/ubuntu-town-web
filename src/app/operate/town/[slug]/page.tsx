@@ -7,6 +7,7 @@ import { getLegacyNarratives } from '@/lib/e002/real';
 import { townStatements, buildCell, type CanonicalTown } from '@/lib/e003/os';
 import { CANONICAL_TEN } from '@/lib/e003/registry';
 import { packForTown, packProvenance } from '@/lib/e003/field-intelligence/packs';
+import { signalsForTown } from '@/lib/e003/loop';
 import { Stamp, StateBlock, Section, ContextBar, StatementRow, NextMoves, PlaceholderOwner, Metric } from '@/components/e003/os-ui';
 import CoS from '@/components/e003/CoS';
 
@@ -27,6 +28,7 @@ export default async function TownPage({ params }: { params: Promise<{ slug: str
   }
 
   const pack = packForTown(town.name);
+  const signals = signalsForTown(town);
   const legacy = (await getLegacyNarratives()).find((l) => l.slug === town.slug);
   const statements = townStatements(town, pack);
   const founding = town.is_founding;
@@ -69,6 +71,31 @@ export default async function TownPage({ params }: { params: Promise<{ slug: str
           ))}
         </div>
       </Section>
+
+      {/* SIGNALS — real recorded signal objects */}
+      <div id="signals">
+        <Section title="Signals — what the town is signalling" right={<Stamp kind={signals.some((s) => s.class === 'REAL') ? 'real' : 'derived'} />}>
+          {signals.length > 0 ? (
+            <ul className="space-y-2">
+              {signals.map((s) => (
+                <li key={s.id} className="rounded-2xl border border-[#EADFD2] bg-white p-4 shadow-sm">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <p className="max-w-3xl text-sm text-[#241A33]">{s.text}</p>
+                    <Stamp kind={s.class === 'REAL' ? 'real' : 'derived'} />
+                  </div>
+                  <p className="mt-1 text-[10px] text-[#8B7FA3]">{s.source} · {s.limitation}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <StateBlock title="No signals recorded" body="No opportunity notes or research opportunity domains exist for this town in accessible records. This is INSUFFICIENT EVIDENCE of activity — not evidence of absence." />
+          )}
+          <div className="mt-3 rounded-2xl border border-[#D9B27C] bg-[#FDF3E3] p-4">
+            <p className="text-xs text-[#5A4E6D]"><span className="font-semibold text-[#8A5410]">Signal → mission:</span> acting on a signal becomes a PROPOSED MISSION (pending human approval), then work, proof and learning.</p>
+            <Link href="/operate/missions" className="mt-1 inline-block text-xs font-semibold text-[#8A5410] hover:underline">open Missions →</Link>
+          </div>
+        </Section>
+      </div>
 
       {/* WHAT IS MOVING / NEEDS ATTENTION */}
       <Section title="What is moving?">

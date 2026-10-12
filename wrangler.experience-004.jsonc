@@ -1,0 +1,29 @@
+// wrangler.experience-004.jsonc — EXPERIENCE 004 (FULL-LOOP AUTONOMOUS BUILD).
+// Worker: ubuntu-town-os-experience-004 (SEPARATE worker; E001/E002/E003 untouched).
+// Read-only Supabase REST with the PUBLISHABLE/anon key (public by design; RLS enforces all
+// access). NO service-role. NO stored credentials. NO writes. NO production mutation.
+{
+  "name": "ubuntu-town-os-experience-004",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "SUPABASE_URL": "https://afiokbhuxfdacbsipoqk.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_JKHeDgqBRGv4vwCMIdo23w_NbU_HGR_",
+    "EXPERIENCE_004": "1"
+  },
+  "env": {
+    "experience-004": {
+      "name": "ubuntu-town-os-experience-004",
+      "vars": {
+        "SUPABASE_URL": "https://afiokbhuxfdacbsipoqk.supabase.co",
+        "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_JKHeDgqBRGv4vwCMIdo23w_NbU_HGR_",
+        "EXPERIENCE_004": "1"
+      }
+    }
+  }
+}

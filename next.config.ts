@@ -36,11 +36,12 @@ const config: NextConfig = {
   // - EXPERIENCE_002_ROOT_REDIRECT=1 (Experience 002 real-data preview) → bare URL serves /real.
   ...(process.env.EXPERIENCE_ROOT_REDIRECT === '1' ||
     process.env.EXPERIENCE_002_ROOT_REDIRECT === '1' ||
-    process.env.EXPERIENCE_003_ROOT_REDIRECT === '1'
+    process.env.EXPERIENCE_003_ROOT_REDIRECT === '1' ||
+    process.env.EXPERIENCE_004_ROOT_REDIRECT === '1'
     ? {
         async redirects() {
           const is002 = process.env.EXPERIENCE_002_ROOT_REDIRECT === '1';
-          const is003 = process.env.EXPERIENCE_003_ROOT_REDIRECT === '1';
+          const is003 = process.env.EXPERIENCE_003_ROOT_REDIRECT === '1' || process.env.EXPERIENCE_004_ROOT_REDIRECT === '1';
           const root = is003 ? '/operate' : is002 ? '/real' : '/os';
           const rules = [{ source: '/', destination: root, permanent: false }];
           // EXPERIENCE 002 quarantine: the synthetic /os world is NOT served on the
